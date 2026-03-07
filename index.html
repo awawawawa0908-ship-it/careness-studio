@@ -1243,8 +1243,6 @@ let activeClipIdx = 0;
 let trimIn = 0, trimOut = 0, vidDuration = 0;
 let subtitles = [];      // {start, end, text}
 let capturedThumb = null;
-let tppoPatterns = [];   // last TPPO results
-let currentTppoIdx = -1;
 
 // ── INIT ──
 window.addEventListener('load', () => {
@@ -1572,16 +1570,13 @@ async function genImage() {
     let msg = e.message || '不明なエラー';
     // ユーザー向けの日本語エラーメッセージ
     if (msg.includes('timeout') || msg.includes('Timeout')) {
-      msg = '⏱ 画像生成がタイムアウトしました。
-Pollinations.ai が混雑しています。30秒待ってから「再生成」を押してください。';
+      msg = '⏱ 画像生成がタイムアウトしました。Pollinations.ai が混雑しています。30秒待ってから「再生成」を押してください。';
     } else if (msg.includes('Failed to fetch') || msg.includes('NetworkError') || msg.includes('load_error')) {
-      msg = '🌐 ネットワークエラー。
-インターネット接続を確認して「再生成」を押してください。';
+      msg = '🌐 ネットワークエラー。インターネット接続を確認して「再生成」を押してください。';
     } else if (msg.includes('tainted') || msg.includes('CORS')) {
       msg = '🔒 CORS エラー。別のブラウザ（Chrome推奨）でお試しください。';
     }
-    err.innerHTML = msg.replace(/
-/g, '<br>');
+    err.innerHTML = msg.replace(/\n/g, '<br>');
     err.classList.add('on');
     setBtn('IMG_BTN', false);
   }
@@ -2259,35 +2254,26 @@ function parseTPPOResult(txt, typeInfo) {
   pats.forEach((m, i) => {
     const blk = m[1];
     const badge = (blk.match(/BADGE:\s*(\w+)/)?.[1] || 'NEW').toUpperCase();
-    const title = blk.match(/TITLE:\s*([^
-]+)/)?.[1]?.trim() || '';
+    const title = blk.match(/TITLE:\s*([^\n]+)/)?.[1]?.trim() || '';
     const desc = blk.match(/DESC:\s*([\s\S]*?)(?:HOOK:|STRUCTURE:|TPPO:|===|$)/)?.[1]?.trim() || '';
-    const hook = blk.match(/HOOK:\s*([^
-]+)/)?.[1]?.trim() || '';
+    const hook = blk.match(/HOOK:\s*([^\n]+)/)?.[1]?.trim() || '';
     const structure = blk.match(/STRUCTURE:\s*([\s\S]*?)(?:TPPO:|===|$)/)?.[1]?.trim() || '';
-    const tppo = blk.match(/TPPO:\s*([\s\S]*?)(?:
-===|$)/)?.[1]?.trim() || '';
+    const tppo = blk.match(/TPPO:\s*([\s\S]*?)(?:\n===|$)/)?.[1]?.trim() || '';
     tppoPatterns.push({badge, title, desc, hook, structure, tppo, typeInfo});
 
     const bmap = {HOT:'tb-hot', RISE:'tb-rise', NEW:'tb-new'};
     const d = document.createElement('div');
     d.className = 'trend-card';
 
-    const structLines = structure ? structure.split('
-')
+    const structLines = structure ? structure.split('\n')
       .filter(l => l.trim())
-      .map(l => `<div style="font-size:11px;color:var(--mt);padding:2px 0;
-        display:flex;gap:6px;align-items:flex-start">
-        <span style="color:var(--nv2);font-weight:700;flex-shrink:0">▸</span>
-        <span>${l.replace(/^[・\-\*\d\.]+\s*/,'')}</span>
-      </div>`).join('') : '';
+      .map(l => `<div style="font-size:11px;color:var(--mt);padding:2px 0;display:flex;gap:6px;align-items:flex-start"><span style="color:var(--nv2);font-weight:700;flex-shrink:0">▸</span><span>${l.replace(/^[・\-\*\d\.]+\s*/,'')}</span></div>`).join('') : '';
 
     d.innerHTML = `
       <div class="trend-badge ${bmap[badge]||'tb-new'}">${badge}</div>
       <div class="trend-ttl">${title}</div>
       <div class="trend-desc">${desc}</div>
-      ${hook ? `<div style="background:rgba(26,52,96,.06);border-radius:6px;
-        padding:8px 10px;margin-top:7px;margin-bottom:4px">
+      ${hook ? `<div style="background:rgba(26,52,96,.06);border-radius:6px;\n        padding:8px 10px;margin-top:7px;margin-bottom:4px">
         <div style="font-size:9px;font-weight:700;color:var(--nv4);margin-bottom:3px">💡 フック文例</div>
         <div style="font-size:12px;font-weight:700;color:var(--tx)">${hook}</div>
       </div>` : ''}
@@ -2488,8 +2474,7 @@ function parseMonitorResult(txt) {
     dateEl.textContent = '調査日：' + new Date().toLocaleDateString('ja-JP');
     scoreEl.innerHTML = '';
 
-    const lines = sm[1].trim().split('
-').filter(l => l.trim());
+    const lines = sm[1].trim().split('\n').filter(l => l.trim());
     lines.forEach(line => {
       const parts = line.split(':');
       if (parts.length < 3) return;
@@ -2539,13 +2524,10 @@ function parseMonitorResult(txt) {
   const trends = [...txt.matchAll(/===TREND_\d+===\s*([\s\S]*?)(?===TREND|===KEYWORDS|$)/g)];
   trends.forEach((m, i) => {
     const blk = m[1];
-    const title = blk.match(/TITLE:\s*([^
-]+)/)?.[1]?.trim() || '';
-    const type = blk.match(/TYPE:\s*([^
-]+)/)?.[1]?.trim() || '';
+    const title = blk.match(/TITLE:\s*([^\n]+)/)?.[1]?.trim() || '';
+    const type = blk.match(/TYPE:\s*([^\n]+)/)?.[1]?.trim() || '';
     const why = blk.match(/WHY:\s*([\s\S]*?)(?:ACTION:|===|$)/)?.[1]?.trim() || '';
-    const action = blk.match(/ACTION:\s*([^
-]+)/)?.[1]?.trim() || '';
+    const action = blk.match(/ACTION:\s*([^\n]+)/)?.[1]?.trim() || '';
 
     const d = document.createElement('div');
     d.className = 'trend-card';
@@ -2554,12 +2536,10 @@ function parseMonitorResult(txt) {
         <div style="background:var(--nv2);color:#fff;font-size:11px;font-weight:900;
           width:22px;height:22px;border-radius:50%;display:grid;place-items:center">${i+1}</div>
         <div class="trend-ttl" style="margin:0">${title}</div>
-        ${type?`<span style="font-size:9px;background:var(--bg2);border:1px solid var(--brd);
-          padding:2px 7px;border-radius:8px;color:var(--nv4);white-space:nowrap">${type}</span>`:''}
+        ${type?`<span style="font-size:9px;background:var(--bg2);border:1px solid var(--brd);\n          padding:2px 7px;border-radius:8px;color:var(--nv4);white-space:nowrap">${type}</span>`:''}
       </div>
       <div class="trend-desc">${why}</div>
-      ${action?`<div style="background:rgba(13,122,64,.07);border:1px solid rgba(13,122,64,.2);
-        border-radius:6px;padding:8px 10px;margin-top:8px">
+      ${action?`<div style="background:rgba(13,122,64,.07);border:1px solid rgba(13,122,64,.2);\n        border-radius:6px;padding:8px 10px;margin-top:8px">
         <div style="font-size:9px;font-weight:700;color:var(--gn);margin-bottom:2px">✦ ケアネス北島の実践アクション</div>
         <div style="font-size:12px;font-weight:700;color:var(--tx)">${action}</div>
       </div>`:''}
