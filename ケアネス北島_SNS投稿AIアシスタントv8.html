@@ -1,0 +1,2688 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>Careness SNS Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{
+  --nv:#0f2444;--nv2:#1a3460;--nv3:#243f70;--nv4:#3a5a9a;
+  --ac:#2e7fff;--ac2:#1a6fee;
+  --bg:#f0f4fb;--bg2:#e4ecf8;--bg3:#d8e5f5;
+  --wh:#ffffff;--tx:#0f1e35;--mt:#5a7090;--lt:#8aaccc;
+  --brd:rgba(15,36,68,.12);--brd2:rgba(15,36,68,.20);
+  --gn:#0d7a40;--gn2:#d1f0de;--yw:#8a6200;--yw2:#fff3cc;
+  --rd:#b01818;--rd2:#fde8e8;
+  --r:14px;--r2:10px;--r3:7px;
+  --sh:0 2px 14px rgba(15,36,68,.09);
+  --sh2:0 8px 32px rgba(15,36,68,.16);
+}
+body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--tx);
+  min-height:100vh;overflow-x:hidden;padding-bottom:72px;font-size:14px}
+
+/* ── HEADER ── */
+.hdr{height:52px;background:var(--nv);display:flex;align-items:center;
+  padding:0 14px;gap:10px;position:sticky;top:0;z-index:200;
+  box-shadow:0 2px 16px rgba(0,0,0,.30)}
+.hlogo{font-size:13px;font-weight:900;letter-spacing:1.5px;color:#fff;
+  padding:5px 10px;border:1px solid rgba(255,255,255,.25);border-radius:6px;
+  background:rgba(255,255,255,.08)}
+.hapi-btn{margin-left:auto;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);
+  color:rgba(255,255,255,.85);font-size:11px;font-weight:700;padding:5px 12px;
+  border-radius:20px;cursor:pointer;font-family:inherit;transition:all .2s;white-space:nowrap}
+.hapi-btn:hover,.hapi-btn.ok{background:rgba(255,255,255,.18);color:#fff}
+
+/* ── TABS ── */
+.tabbar{position:fixed;bottom:0;left:0;right:0;z-index:200;
+  background:var(--wh);border-top:1px solid var(--brd2);
+  display:flex;height:64px;box-shadow:0 -4px 20px rgba(15,36,68,.10)}
+.tab{flex:1;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;gap:2px;cursor:pointer;border:none;background:none;
+  font-size:9px;font-weight:700;letter-spacing:.2px;color:var(--mt);
+  transition:all .2s;font-family:inherit;position:relative;padding:0}
+.tab .ticon{font-size:19px;line-height:1;transition:transform .2s}
+.tab.on{color:var(--nv2)}
+.tab.on .ticon{transform:translateY(-2px)}
+.tab.on::after{content:'';position:absolute;bottom:0;left:20%;right:20%;
+  height:3px;background:var(--nv2);border-radius:2px 2px 0 0}
+
+/* ── PANE ── */
+.pane{display:none;padding:14px 14px 8px;max-width:640px;margin:0 auto}
+.pane.on{display:block;animation:fup .28s ease}
+@keyframes fup{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+/* ── PAGE HEADER ── */
+.phdr{margin-bottom:14px}
+.phdr-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.phdr-badge{font-size:9px;font-weight:700;letter-spacing:2px;color:var(--nv4);
+  background:var(--bg2);padding:3px 10px;border-radius:10px;border:1px solid var(--brd2);
+  white-space:nowrap;margin-top:4px}
+.phdr h2{font-size:19px;font-weight:900;color:var(--nv);line-height:1.3;margin-top:4px}
+.phdr p{font-size:11px;color:var(--mt);margin-top:4px;line-height:1.65}
+
+/* ── CARD ── */
+.card{background:var(--wh);border:1px solid var(--brd);border-radius:var(--r);
+  padding:14px;margin-bottom:12px;box-shadow:var(--sh)}
+.card-hd{font-size:10px;font-weight:700;letter-spacing:.5px;color:var(--mt);
+  text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:7px}
+.card-hd::before{content:'';flex-shrink:0;width:3px;height:14px;
+  background:var(--nv2);border-radius:2px}
+.card-hd .step-n{margin-left:auto;background:var(--nv2);color:#fff;
+  font-size:9px;font-weight:900;padding:2px 7px;border-radius:10px}
+
+/* ── FORM ── */
+label.fl{display:block;margin-bottom:10px}
+label.fl .lb{display:flex;align-items:center;gap:5px;
+  font-size:10px;font-weight:700;color:var(--nv);margin-bottom:4px}
+label.fl .lb em{font-style:normal;font-size:9px;color:var(--mt);font-weight:400}
+.fi,.fs,.ft{width:100%;background:var(--bg);border:1.5px solid var(--brd);
+  border-radius:var(--r3);color:var(--tx);font-family:inherit;font-size:13px;
+  outline:none;transition:border .2s,box-shadow .2s;padding:9px 11px}
+.ft{resize:vertical;min-height:64px;line-height:1.7}
+.fi:focus,.fs:focus,.ft:focus{border-color:var(--nv2);
+  box-shadow:0 0 0 3px rgba(26,52,96,.07)}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+@media(max-width:380px){.g2{grid-template-columns:1fr}}
+
+/* ── TYPE SELECTOR ── */
+.typrow{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:12px}
+@media(max-width:360px){.typrow{grid-template-columns:repeat(2,1fr)}}
+.tyb{background:var(--bg2);border:1.5px solid var(--brd);border-radius:var(--r2);
+  padding:9px 4px;cursor:pointer;text-align:center;transition:all .2s;
+  display:flex;flex-direction:column;align-items:center;gap:4px}
+.tyb:hover{border-color:var(--nv3)}
+.tyb.on{border-color:var(--nv2);background:rgba(26,52,96,.06);
+  box-shadow:0 0 0 1px var(--nv2)}
+.tyb .tic{width:30px;height:30px;border-radius:8px;display:grid;
+  place-items:center;font-size:14px;font-weight:900;color:#fff}
+.tyb .tnm{font-size:11px;font-weight:700;color:var(--tx)}
+.tyb .tdy{font-size:9px;color:var(--mt)}
+
+/* ── BUTTONS ── */
+.gbtn{width:100%;padding:13px;border:none;cursor:pointer;
+  background:var(--nv2);color:#fff;font-family:inherit;
+  font-size:13px;font-weight:700;border-radius:var(--r2);
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  transition:all .2s;box-shadow:var(--sh)}
+.gbtn:hover:not(:disabled){background:var(--nv3);transform:translateY(-1px);box-shadow:var(--sh2)}
+.gbtn:disabled{background:var(--bg3);color:var(--mt);cursor:not-allowed;box-shadow:none}
+.gbtn .ld-spin{width:15px;height:15px;border:2px solid rgba(255,255,255,.3);
+  border-top-color:#fff;border-radius:50%;animation:spin .65s linear infinite;display:none}
+.gbtn.loading .ld-spin{display:block}.gbtn.loading .btxt{display:none}
+.sbtn{padding:8px 14px;background:var(--bg2);border:1.5px solid var(--brd);
+  color:var(--nv2);font-size:11px;font-weight:700;border-radius:var(--r3);
+  cursor:pointer;transition:all .2s;font-family:inherit;white-space:nowrap}
+.sbtn:hover{background:var(--nv2);color:#fff;border-color:var(--nv2)}
+.ibtn{padding:7px 13px;background:transparent;border:1.5px solid var(--brd);
+  color:var(--mt);font-size:11px;font-weight:700;border-radius:var(--r3);
+  cursor:pointer;transition:all .2s;font-family:inherit}
+.ibtn:hover{border-color:var(--nv2);color:var(--nv2)}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── RESULTS ── */
+.res{display:none}.res.on{display:block;animation:fup .3s ease}
+.rcard{background:var(--wh);border:1.5px solid var(--nv2);border-radius:var(--r2);
+  padding:14px;margin-bottom:10px;position:relative}
+.rlbl{font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;
+  color:var(--nv4);margin-bottom:8px}
+.rtxt{font-size:13px;line-height:1.9;color:var(--tx);white-space:pre-wrap;word-break:break-word}
+.cpbtn{position:absolute;top:12px;right:12px;background:var(--bg);
+  border:1px solid var(--brd);color:var(--nv2);font-size:10px;font-weight:700;
+  padding:4px 10px;border-radius:6px;cursor:pointer;transition:all .2s;font-family:inherit}
+.cpbtn:hover,.cpbtn.done{background:var(--nv2);color:#fff}
+
+/* ── NOTES ── */
+.note{border-radius:var(--r3);padding:9px 12px;font-size:11px;line-height:1.7;margin-bottom:10px}
+.nb{background:rgba(26,52,96,.05);border:1px solid var(--brd2);color:var(--tx)}
+.ng{background:var(--gn2);border:1px solid rgba(13,122,64,.2);color:var(--gn)}
+.ny{background:var(--yw2);border:1px solid rgba(138,98,0,.2);color:var(--yw)}
+.nr{background:var(--rd2);border:1px solid rgba(176,24,24,.2);color:var(--rd)}
+.note strong{font-weight:700}
+
+/* ── CVR SCORE ── */
+.cvr-box{background:var(--bg);border:1.5px solid var(--brd2);border-radius:var(--r2);
+  padding:12px;margin-top:10px}
+.cvr-hd{display:flex;align-items:center;justify-content:space-between;
+  font-size:10px;font-weight:700;color:var(--nv);margin-bottom:9px}
+.cvr-pct{font-size:16px;font-weight:900;color:var(--nv2)}
+.cvr-row{display:flex;align-items:center;gap:7px;font-size:11px;margin-bottom:5px}
+.cvr-ck{width:16px;height:16px;border-radius:50%;flex-shrink:0;
+  display:grid;place-items:center;font-size:9px;font-weight:900}
+.cvr-ck.ok{background:var(--gn);color:#fff}
+.cvr-ck.no{background:var(--bg3);color:var(--mt);border:1.5px solid var(--brd)}
+
+/* ── IMAGE AREA ── */
+.img-wrap{width:100%;aspect-ratio:1;border-radius:var(--r2);overflow:hidden;
+  background:var(--bg2);position:relative;margin-bottom:12px;
+  display:flex;align-items:center;justify-content:center}
+.img-wrap canvas,.img-wrap img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.ip{text-align:center;color:var(--mt);z-index:1}
+.ip-ico{font-size:36px;opacity:.2;margin-bottom:8px}
+.ip-txt{font-size:12px}
+.gen-overlay{position:absolute;inset:0;background:rgba(15,36,68,.72);
+  display:none;flex-direction:column;align-items:center;justify-content:center;
+  gap:10px;z-index:10}
+.gen-overlay.on{display:flex}
+.gen-ring{width:40px;height:40px;border:3px solid rgba(255,255,255,.2);
+  border-top-color:#fff;border-radius:50%;animation:spin 1s linear infinite}
+.gen-msg{color:#fff;font-size:12px;font-weight:700}
+
+/* ── THUMBNAIL PAIR ── */
+.thumb-pair{display:grid;grid-template-columns:16fr 9fr;gap:8px;margin-bottom:12px}
+.thumb-wrap{background:var(--bg2);border:1px solid var(--brd);
+  border-radius:var(--r3);overflow:hidden}
+.thumb-wrap canvas{width:100%;display:block}
+.thumb-lbl{font-size:9px;font-weight:700;color:var(--mt);
+  text-align:center;padding:4px;background:var(--wh);border-top:1px solid var(--brd)}
+
+/* ── VIDEO ── */
+.vid-upload{border:2px dashed var(--brd2);border-radius:var(--r);
+  padding:24px;text-align:center;cursor:pointer;transition:all .2s;
+  background:var(--bg2);position:relative}
+.vid-upload:hover{border-color:var(--nv2);background:rgba(26,52,96,.04)}
+.vid-upload input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.vid-preview{width:100%;border-radius:var(--r2);overflow:hidden;
+  background:#000;margin-bottom:10px}
+.vid-preview video{width:100%;max-height:200px;display:block}
+
+/* ── TIMELINE ── */
+.timeline{background:var(--nv);border-radius:var(--r3);height:52px;
+  position:relative;overflow:hidden;user-select:none;cursor:pointer;margin:8px 0}
+.tl-waves{position:absolute;inset:0;display:flex;align-items:center;padding:4px 6px;gap:1px}
+.tl-wave-bar{flex:1;border-radius:1px;background:rgba(255,255,255,.18)}
+.tl-range{position:absolute;top:0;bottom:0;background:rgba(100,180,255,.25);
+  border-top:2px solid rgba(100,180,255,.8);border-bottom:2px solid rgba(100,180,255,.8)}
+.tl-handle{position:absolute;top:0;bottom:0;width:6px;cursor:ew-resize;
+  background:rgba(255,255,255,.9);border-radius:3px;
+  box-shadow:0 0 0 2px rgba(100,180,255,.7)}
+.tl-playhead{position:absolute;top:0;bottom:0;width:2px;background:#ff6b35;
+  pointer-events:none;transition:left .1s linear}
+.tl-info{display:flex;justify-content:space-between;font-size:10px;color:var(--mt);
+  font-family:'DM Mono',monospace;margin-top:3px}
+
+/* ── CLIP LIST ── */
+.clips-list{display:flex;flex-direction:column;gap:6px;margin-bottom:10px}
+.clip-item{background:var(--bg2);border:1px solid var(--brd);border-radius:var(--r3);
+  padding:9px 12px;display:flex;align-items:center;gap:8px}
+.clip-order{width:22px;height:22px;border-radius:50%;background:var(--nv2);
+  color:#fff;font-size:10px;font-weight:900;display:grid;place-items:center;flex-shrink:0}
+.clip-info{flex:1;min-width:0}
+.clip-name{font-size:11px;font-weight:700;color:var(--tx);truncate;overflow:hidden;
+  text-overflow:ellipsis;white-space:nowrap}
+.clip-dur{font-size:10px;color:var(--mt);font-family:'DM Mono',monospace}
+.clip-del{background:none;border:none;color:var(--mt);cursor:pointer;
+  font-size:13px;padding:3px 6px;border-radius:4px;transition:all .2s}
+.clip-del:hover{color:var(--rd);background:var(--rd2)}
+
+/* ── SUBTITLES ── */
+.sub-list{display:flex;flex-direction:column;gap:5px;margin-bottom:10px}
+.sub-item{background:var(--bg2);border:1px solid var(--brd);border-radius:var(--r3);
+  padding:8px 10px;display:flex;align-items:center;gap:7px}
+.sub-time{font-size:10px;font-weight:700;color:var(--nv2);white-space:nowrap;
+  min-width:70px;font-family:'DM Mono',monospace}
+.sub-text{flex:1;font-size:12px;color:var(--tx)}
+.sub-del{background:none;border:none;color:var(--mt);cursor:pointer;
+  font-size:12px;padding:2px 5px;border-radius:4px;transition:all .2s}
+.sub-del:hover{color:var(--rd);background:var(--rd2)}
+
+/* ── TPPO ── */
+.trend-card{background:var(--wh);border:1px solid var(--brd);
+  border-radius:var(--r2);padding:13px;margin-bottom:8px}
+.trend-badge{display:inline-block;font-size:9px;font-weight:700;
+  padding:2px 8px;border-radius:10px;margin-bottom:6px;letter-spacing:.5px}
+.tb-hot{background:rgba(176,24,24,.1);color:var(--rd)}
+.tb-rise{background:var(--gn2);color:var(--gn)}
+.tb-new{background:var(--bg2);color:var(--nv4)}
+.trend-ttl{font-size:13px;font-weight:700;margin-bottom:4px;color:var(--tx)}
+.trend-desc{font-size:11px;color:var(--mt);line-height:1.65}
+.trend-hook{font-size:11px;color:var(--nv2);font-weight:700;margin-top:5px}
+
+/* ── GUIDE ── */
+.gnav{display:flex;gap:6px;overflow-x:auto;margin-bottom:14px;padding-bottom:4px;scrollbar-width:none}
+.gnav::-webkit-scrollbar{display:none}
+.gnbtn{padding:6px 14px;background:var(--bg2);border:1.5px solid var(--brd);
+  color:var(--mt);font-size:11px;font-weight:700;border-radius:20px;
+  cursor:pointer;transition:all .2s;font-family:inherit;white-space:nowrap}
+.gnbtn.on{background:var(--nv2);color:#fff;border-color:var(--nv2)}
+.gsec{display:none}.gsec.on{display:block}
+
+.g-step{display:flex;gap:12px;margin-bottom:14px}
+.g-num{width:28px;height:28px;border-radius:50%;background:var(--nv2);
+  color:#fff;font-size:11px;font-weight:900;display:grid;place-items:center;flex-shrink:0;margin-top:1px}
+.g-body .gt{font-size:13px;font-weight:700;margin-bottom:3px}
+.g-body .gd{font-size:12px;color:var(--mt);line-height:1.7}
+.g-tag{display:inline-block;background:rgba(26,52,96,.07);color:var(--nv2);
+  font-size:10px;font-weight:700;padding:2px 8px;border-radius:5px;
+  margin:3px 3px 0 0}
+.gdiv{height:1px;background:var(--brd);margin:2px 0 14px 40px}
+
+.theory{background:linear-gradient(135deg,var(--nv) 0%,var(--nv3) 100%);
+  border-radius:var(--r);padding:16px;color:#fff;margin-bottom:12px}
+.theory h3{font-size:14px;font-weight:900;margin-bottom:7px}
+.theory p{font-size:11px;line-height:1.7;color:rgba(255,255,255,.8)}
+.flow{display:flex;align-items:center;flex-wrap:wrap;gap:4px;margin-top:10px}
+.fstep{background:rgba(255,255,255,.12);padding:4px 10px;border-radius:5px;
+  font-size:11px;font-weight:700;color:#fff;white-space:nowrap}
+.farrow{color:rgba(255,255,255,.45);font-size:11px}
+
+/* ── SCREEN OVERLAY ── */
+.overlay{position:fixed;inset:0;z-index:500;background:rgba(15,36,68,.55);
+  backdrop-filter:blur(8px);display:none;align-items:flex-end;justify-content:center}
+.overlay.on{display:flex}
+.sheet{background:var(--wh);border-radius:20px 20px 0 0;padding:22px 16px 30px;
+  width:100%;max-width:500px;animation:sheetup .28s ease;position:relative}
+@keyframes sheetup{from{transform:translateY(100%)}to{transform:none}}
+.sheet-ttl{font-size:16px;font-weight:900;color:var(--nv);margin-bottom:3px}
+.sheet-sub{font-size:11px;color:var(--mt);margin-bottom:16px;line-height:1.6}
+.sheet-close{position:absolute;top:16px;right:16px;width:30px;height:30px;
+  border-radius:50%;background:var(--bg2);border:none;color:var(--mt);
+  font-size:16px;cursor:pointer;display:grid;place-items:center}
+
+/* ── LOADING ── */
+.ldov{position:fixed;inset:0;z-index:600;background:rgba(240,244,251,.92);
+  backdrop-filter:blur(10px);display:none;
+  flex-direction:column;align-items:center;justify-content:center;gap:12px}
+.ldov.on{display:flex}
+.ld-ring{width:46px;height:46px;border:3px solid var(--brd2);
+  border-top-color:var(--nv2);border-radius:50%;animation:spin .9s linear infinite}
+.ld-msg{font-size:14px;font-weight:700;color:var(--nv)}
+.ld-sub{font-size:11px;color:var(--mt)}
+.ld-bg{width:180px;height:3px;background:var(--bg3);border-radius:2px;overflow:hidden}
+.ld-fill{height:100%;background:var(--nv2);border-radius:2px;
+  width:0%;transition:width .4s}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:76px;left:50%;transform:translateX(-50%) translateY(10px);
+  background:var(--nv);color:#fff;font-size:12px;font-weight:700;
+  padding:8px 18px;border-radius:8px;opacity:0;transition:all .22s;
+  z-index:700;pointer-events:none;white-space:nowrap;max-width:90vw;
+  text-align:center}
+.toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ── ERROR ── */
+.err{background:var(--rd2);border:1px solid rgba(176,24,24,.25);
+  border-radius:var(--r3);padding:10px 12px;font-size:11px;color:var(--rd);
+  line-height:1.65;display:none;margin-top:8px}
+.err.on{display:block}
+
+
+/* ── TPPO MODE SWITCH ── */
+.tppo-mode{background:var(--wh);border:1.5px solid var(--brd);border-radius:var(--r2);
+  padding:12px 8px;cursor:pointer;text-align:center;transition:all .2s;
+  display:flex;flex-direction:column;align-items:center;gap:3px;font-family:inherit}
+.tppo-mode:hover{border-color:var(--nv2)}
+.tppo-mode.on{border-color:var(--nv2);background:rgba(26,52,96,.06);
+  box-shadow:0 0 0 1px var(--nv2)}
+.tppo-mode .mt{color:var(--mt);font-size:10px}
+
+/* ── TPPO TYPE GRID ── */
+.tppo-type{background:var(--bg2);border:1.5px solid var(--brd);border-radius:var(--r2);
+  padding:10px 4px;cursor:pointer;text-align:center;transition:all .2s;
+  display:flex;flex-direction:column;align-items:center;gap:3px;
+  font-size:11px;font-weight:700;color:var(--tx);font-family:inherit}
+.tppo-type:hover{border-color:var(--nv2)}
+.tppo-type.on{border-color:var(--nv2);background:rgba(26,52,96,.07);
+  box-shadow:0 0 0 1px var(--nv2)}
+.tppo-type-ico{width:32px;height:32px;border-radius:8px;display:grid;
+  place-items:center;font-size:14px;font-weight:900;color:#fff}
+.tppo-type-day{font-size:9px;color:var(--mt);font-weight:400}
+
+/* ── TPPO META TAGS ── */
+.tppo-meta-tag{display:inline-block;font-size:10px;font-weight:700;
+  padding:3px 9px;border-radius:10px;background:var(--bg2);
+  border:1px solid var(--brd2);color:var(--nv2)}
+
+/* ── MONITOR SCORE BAR ── */
+.score-row{display:flex;align-items:center;gap:8px}
+.score-label{font-size:11px;font-weight:700;color:var(--tx);min-width:72px}
+.score-bar-bg{flex:1;height:10px;background:var(--bg3);border-radius:5px;overflow:hidden}
+.score-bar-fill{height:100%;border-radius:5px;transition:width .6s ease}
+.score-val{font-size:11px;font-weight:700;color:var(--nv2);min-width:32px;text-align:right}
+.score-badge{font-size:9px;font-weight:700;padding:2px 6px;border-radius:8px;
+  white-space:nowrap}
+
+/* ── KW CHIP ── */
+.kw-chip{padding:5px 12px;background:var(--bg2);border:1.5px solid var(--brd);
+  border-radius:20px;font-size:11px;font-weight:700;color:var(--nv2);
+  cursor:pointer;transition:all .2s;white-space:nowrap}
+.kw-chip:hover{background:var(--nv2);color:#fff;border-color:var(--nv2)}
+.kw-chip.hot{border-color:rgba(176,24,24,.4);color:var(--rd)}
+.kw-chip.rise{border-color:rgba(13,122,64,.4);color:var(--gn)}
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--bg3);border-radius:2px}
+</style>
+</head>
+<body>
+
+<!-- ローディング -->
+<div class="ldov" id="LDO">
+  <div class="ld-ring"></div>
+  <div class="ld-msg" id="LD_MSG">処理中...</div>
+  <div class="ld-sub" id="LD_SUB"></div>
+  <div class="ld-bg"><div class="ld-fill" id="LD_FILL"></div></div>
+</div>
+
+<!-- トースト -->
+<div class="toast" id="TOAST"></div>
+
+<!-- API設定シート -->
+<div class="overlay" id="API_OL" onclick="if(event.target===this)closeAPI()">
+  <div class="sheet">
+    <button class="sheet-close" onclick="closeAPI()">✕</button>
+    <div class="sheet-ttl">🔑 API設定</div>
+    <div class="sheet-sub">投稿文生成・TPPO調査に必要です<br>画像生成・動画編集は設定不要（無料）</div>
+    <label class="fl">
+      <div class="lb">Cloudflare Worker URL</div>
+      <input class="fi" id="AP_WORKER" placeholder="https://careness-proxy.xxx.workers.dev">
+    </label>
+    <label class="fl">
+      <div class="lb">Anthropic APIキー</div>
+      <input class="fi" type="password" id="AP_KEY" placeholder="sk-ant-api03-...">
+    </label>
+    <button class="gbtn" onclick="saveAPI()"><span class="btxt">保存する</span></button>
+    <div class="err" id="API_ERR"></div>
+  </div>
+</div>
+
+<!-- ── HEADER ── -->
+<header class="hdr">
+  <div class="hlogo">CARENESS STUDIO</div>
+  <button class="hapi-btn" id="APIBTN" onclick="openAPI()">⚙️ API設定</button>
+</header>
+
+<!-- ════════ PANE: 投稿文 ════════ -->
+<div class="pane on" id="P_cap">
+  <div class="phdr">
+    <div class="phdr-top">
+      <div><div class="phdr-badge">CVR CAPTION</div>
+        <h2>LINE誘導に直結する<br>投稿文を生成</h2></div>
+    </div>
+    <p>バズではなくCV（LINE登録・体験予約）に最適化した投稿文を自動生成します</p>
+  </div>
+
+  <div class="card">
+    <div class="card-hd">STEP 1　投稿タイプを選ぶ <span class="step-n">必須</span></div>
+    <div class="typrow">
+      <div class="tyb on" onclick="selCapType(this,'know')">
+        <div class="tic" style="background:linear-gradient(135deg,#0f2444,#2e5ea0)">知</div>
+        <div class="tnm">豆知識</div><div class="tdy">水曜</div>
+      </div>
+      <div class="tyb" onclick="selCapType(this,'voice')">
+        <div class="tic" style="background:linear-gradient(135deg,#0d3a18,#1e7a38)">声</div>
+        <div class="tnm">会員の声</div><div class="tdy">木曜</div>
+      </div>
+      <div class="tyb" onclick="selCapType(this,'event')">
+        <div class="tic" style="background:linear-gradient(135deg,#3a2800,#7a5800)">報</div>
+        <div class="tnm">イベント</div><div class="tdy">土曜</div>
+      </div>
+      <div class="tyb" onclick="selCapType(this,'announce')">
+        <div class="tic" style="background:linear-gradient(135deg,#3a0808,#8a1515)">告</div>
+        <div class="tnm">告知</div><div class="tdy">随時</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-hd">STEP 2　内容を入力 <span class="step-n">必須</span></div>
+
+    <div id="CF_know">
+      <label class="fl"><div class="lb">テーマ・キーワード</div>
+        <input class="fi" id="K_theme" placeholder="例：遺伝子と運動効率、姿勢と疲れ、睡眠と代謝"></label>
+      <div class="g2">
+        <label class="fl"><div class="lb">ターゲット</div>
+          <select class="fs" id="K_target">
+            <option>幅広く</option><option>40〜50代女性</option>
+            <option>30〜40代男性</option><option>運動初心者</option>
+            <option>腰痛・肩こりあり</option>
+          </select></label>
+        <label class="fl"><div class="lb">CVRフレーム <em>構成</em></div>
+          <select class="fs" id="K_frame">
+            <option value="PASONA">PASONA（悩み→解決）</option>
+            <option value="BFAB">BFAB（証拠→メリット）</option>
+            <option value="QUIZ">クイズ形式（参加型）</option>
+          </select></label>
+      </div>
+    </div>
+
+    <div id="CF_voice" style="display:none">
+      <div class="g2">
+        <label class="fl"><div class="lb">年代</div>
+          <select class="fs" id="V_age"><option>40代</option><option>30代</option>
+            <option>50代</option><option>60代</option></select></label>
+        <label class="fl"><div class="lb">入会前の悩み</div>
+          <input class="fi" id="V_prob" placeholder="腰痛・体重増加"></label>
+      </div>
+      <label class="fl"><div class="lb">成果 <em>数字があると効果的</em></div>
+        <input class="fi" id="V_result" placeholder="3ヶ月で-5kg・腰痛がなくなった"></label>
+    </div>
+
+    <div id="CF_event" style="display:none">
+      <div class="g2">
+        <label class="fl"><div class="lb">イベント名</div>
+          <input class="fi" id="E_name" placeholder="3月ウォーキング会"></label>
+        <label class="fl"><div class="lb">参加人数</div>
+          <input class="fi" id="E_count" placeholder="12名"></label>
+      </div>
+      <label class="fl"><div class="lb">コメント <em>任意</em></div>
+        <input class="fi" id="E_comment" placeholder="笑顔があふれた時間でした"></label>
+    </div>
+
+    <div id="CF_announce" style="display:none">
+      <div class="g2">
+        <label class="fl"><div class="lb">イベント名</div>
+          <input class="fi" id="A_name" placeholder="無料体質チェック体験会"></label>
+        <label class="fl"><div class="lb">日時</div>
+          <input class="fi" id="A_date" placeholder="4月5日（土）14:00〜"></label>
+      </div>
+      <label class="fl"><div class="lb">定員・条件</div>
+        <input class="fi" id="A_cond" placeholder="先着10名・完全無料"></label>
+    </div>
+
+    <button class="gbtn" id="CAP_BTN" onclick="genCaption()">
+      <div class="ld-spin"></div>
+      <span class="btxt">✦ AIで投稿文を生成する</span>
+    </button>
+    <div class="err" id="CAP_ERR"></div>
+  </div>
+
+  <div class="res" id="RES_cap">
+    <div class="rcard">
+      <div class="rlbl">投稿キャプション</div>
+      <button class="cpbtn" onclick="doCopy('RES_CAP_TXT',this)">コピー</button>
+      <div class="rtxt" id="RES_CAP_TXT"></div>
+    </div>
+    <div class="rcard">
+      <div class="rlbl">ハッシュタグ</div>
+      <button class="cpbtn" onclick="doCopy('RES_HT_TXT',this)">コピー</button>
+      <div class="rtxt" id="RES_HT_TXT"></div>
+    </div>
+    <div class="cvr-box">
+      <div class="cvr-hd">CVRチェック <span class="cvr-pct" id="CVR_PCT">—</span></div>
+      <div id="CVR_LIST"></div>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
+      <button class="sbtn" onclick="sendToImg()">→ この内容で画像を生成</button>
+      <button class="ibtn" onclick="genCaption()">再生成</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════════ PANE: 画像＋サムネ ════════ -->
+<div class="pane" id="P_img">
+  <div class="phdr">
+    <div class="phdr-badge">IMAGE + THUMBNAIL</div>
+    <h2>投稿画像＋サムネを<br>セットで自動生成</h2>
+    <p>テーマを入れるだけ。AI背景＋日本語テキスト合成＋サムネイルを一括生成</p>
+  </div>
+
+  <div class="card">
+    <div class="card-hd">投稿タイプを選ぶ</div>
+    <div class="typrow">
+      <div class="tyb on" onclick="selImgType(this,'know')">
+        <div class="tic" style="background:linear-gradient(135deg,#0f2444,#2e5ea0)">知</div>
+        <div class="tnm">豆知識</div><div class="tdy">水曜</div>
+      </div>
+      <div class="tyb" onclick="selImgType(this,'voice')">
+        <div class="tic" style="background:linear-gradient(135deg,#0d3a18,#1e7a38)">声</div>
+        <div class="tnm">会員の声</div><div class="tdy">木曜</div>
+      </div>
+      <div class="tyb" onclick="selImgType(this,'event')">
+        <div class="tic" style="background:linear-gradient(135deg,#3a2800,#7a5800)">報</div>
+        <div class="tnm">イベント</div><div class="tdy">土曜</div>
+      </div>
+      <div class="tyb" onclick="selImgType(this,'thumb')">
+        <div class="tic" style="background:linear-gradient(135deg,#1a0838,#402a7a)">サ</div>
+        <div class="tnm">サムネ専用</div><div class="tdy">リール</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-hd">テーマを入力</div>
+    <label class="fl"><div class="lb">投稿テーマ（日本語でOK）</div>
+      <input class="fi" id="IM_TITLE" placeholder="例：遺伝子でわかるあなたの運動タイプ"></label>
+    <label class="fl"><div class="lb">サブタイトル <em>任意</em></div>
+      <input class="fi" id="IM_SUB" placeholder="例：速筋タイプは高強度トレーニングが最適"></label>
+    <div id="PROMPT_AREA" style="display:none">
+      <div class="note nb" style="font-size:11px">
+        <strong>AIが生成したプロンプト：</strong><br>
+        <span id="PROMPT_TXT" style="color:var(--nv2)"></span>
+      </div>
+    </div>
+    <button class="gbtn" id="IMG_BTN" onclick="genImage()">
+      <div class="ld-spin"></div>
+      <span class="btxt">✦ 画像＋サムネをセット生成する</span>
+    </button>
+    <div class="err" id="IMG_ERR"></div>
+  </div>
+
+  <div class="res" id="RES_img">
+    <div class="card">
+      <div class="card-hd">投稿用画像（1080×1080）</div>
+      <div class="img-wrap" id="IMG_AREA">
+        <div class="ip"><div class="ip-ico">🖼</div><div class="ip-txt">生成してください</div></div>
+        <div class="gen-overlay" id="IMG_OVL">
+          <div class="gen-ring"></div>
+          <div class="gen-msg" id="IMG_OVL_MSG">AI画像を生成中...</div>
+        </div>
+        <canvas id="POST_CVS" style="display:none"></canvas>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="gbtn" onclick="dlPost()" style="flex:1;padding:11px;font-size:12px">
+          <span class="btxt">ダウンロード（投稿用）</span>
+        </button>
+        <button class="ibtn" onclick="genImage()">再生成</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-hd">サムネイル（自動生成）</div>
+      <div class="thumb-pair">
+        <div class="thumb-wrap">
+          <canvas id="TH1"></canvas>
+          <div class="thumb-lbl">横型 16:9</div>
+        </div>
+        <div class="thumb-wrap">
+          <canvas id="TH2"></canvas>
+          <div class="thumb-lbl">縦型 9:16</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button class="sbtn" style="flex:1" onclick="dlThumb(1)">横型DL</button>
+        <button class="sbtn" style="flex:1" onclick="dlThumb(2)">縦型DL</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════ PANE: 動画編集 ════════ -->
+<div class="pane" id="P_vid">
+  <div class="phdr">
+    <div class="phdr-badge">VIDEO EDITOR</div>
+    <h2>動画カット・字幕・<br>サムネ自動生成</h2>
+    <p>複数クリップを繋いで・カットして・字幕を追加。書き出しまで全部ここで完結</p>
+  </div>
+
+  <!-- クリップ管理 -->
+  <div class="card">
+    <div class="card-hd">STEP 1　動画クリップをアップロード</div>
+    <div class="note nb">複数の動画を追加して繋げることができます（クリップ結合機能）</div>
+    <div class="vid-upload" id="VID_UPLOAD">
+      <input type="file" accept="video/*" multiple id="VID_FILE" onchange="addClips(event)">
+      <div style="font-size:28px;opacity:.3;margin-bottom:8px">📹</div>
+      <div style="font-size:13px;font-weight:700;margin-bottom:2px">タップして動画を選択</div>
+      <div style="font-size:11px;color:var(--mt)">MP4・MOV対応　複数選択OK</div>
+    </div>
+    <div class="clips-list" id="CLIPS_LIST"></div>
+  </div>
+
+  <div id="VID_EDIT" style="display:none">
+    <!-- プレビュー -->
+    <div class="card">
+      <div class="card-hd">プレビュー</div>
+      <div class="vid-preview">
+        <video id="VID_PLAYER" controls playsinline></video>
+      </div>
+    </div>
+
+    <!-- カット -->
+    <div class="card">
+      <div class="card-hd">STEP 2　カット（トリミング）</div>
+      <div style="display:flex;justify-content:space-between;
+        font-size:11px;font-weight:700;color:var(--nv);margin-bottom:4px">
+        <span>開始: <code id="TL_IN_T">0:00</code></span>
+        <span>長さ: <code id="TL_DUR_T">0:00</code></span>
+        <span>終了: <code id="TL_OUT_T">0:00</code></span>
+      </div>
+      <div class="timeline" id="TL">
+        <div class="tl-waves" id="TL_WAVES"></div>
+        <div class="tl-range" id="TL_RANGE"></div>
+        <div class="tl-handle" id="TL_IN" style="left:0%;margin-left:-3px"></div>
+        <div class="tl-handle" id="TL_OUT" style="right:0%;margin-right:-3px"></div>
+        <div class="tl-playhead" id="TL_HEAD" style="left:0%"></div>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:4px;flex-wrap:wrap">
+        <button class="sbtn" onclick="previewTrim()">▶ カット箇所を確認</button>
+        <div style="flex:1"></div>
+        <label style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--mt)">
+          出力形式
+          <select class="fs" id="VID_FMT" style="padding:6px 10px;font-size:12px;width:auto">
+            <option value="reel">リール 9:16</option>
+            <option value="feed">フィード 1:1</option>
+            <option value="story">ストーリーズ 9:16</option>
+          </select>
+        </label>
+      </div>
+    </div>
+
+    <!-- 字幕 -->
+    <div class="card">
+      <div class="card-hd">STEP 3　字幕を追加</div>
+      <div class="note ny"><strong>Instagram視聴の85%は無音。</strong>字幕は必ず入れてください。</div>
+      <div class="sub-list" id="SUB_LIST"></div>
+      <div style="display:grid;grid-template-columns:72px 1fr auto;gap:7px;align-items:end;margin-bottom:8px">
+        <label class="fl" style="margin:0">
+          <div class="lb">時間</div>
+          <input class="fi" id="SUB_T" placeholder="0:05" style="padding:8px 9px">
+        </label>
+        <label class="fl" style="margin:0">
+          <div class="lb">字幕テキスト</div>
+          <input class="fi" id="SUB_TXT" placeholder="例：遺伝子でわかる最適な運動法"
+            onkeydown="if(event.key==='Enter')addSub()">
+        </label>
+        <button class="sbtn" style="margin-top:auto" onclick="addSub()">追加</button>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <span style="font-size:11px;color:var(--mt)">スタイル：</span>
+        <select class="fs" id="SUB_STYLE" style="width:auto;padding:6px 10px;font-size:12px">
+          <option value="bottom">下部 白テキスト</option>
+          <option value="insta">Instagram風 背景あり</option>
+          <option value="center">中央 大文字</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- サムネイルキャプチャ -->
+    <div class="card">
+      <div class="card-hd">STEP 4　サムネイルを取得</div>
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+        <input type="range" id="THUMB_SEEK" min="0" max="100" value="10" step="0.5"
+          oninput="seekThumb(this.value)"
+          style="flex:1;accent-color:var(--nv2)">
+        <code style="font-size:10px;color:var(--mt);min-width:36px" id="THUMB_TIME">0:00</code>
+      </div>
+      <canvas id="VID_THUMB" style="width:100%;border-radius:8px;display:block;background:var(--bg2)"></canvas>
+      <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap">
+        <button class="sbtn" onclick="captureVidThumb()">このフレームをサムネに</button>
+        <button class="sbtn" onclick="genThumbFromVid()">✦ AIサムネを自動生成</button>
+      </div>
+      <div class="thumb-pair" id="VID_THUMB_PAIR" style="display:none;margin-top:10px">
+        <div class="thumb-wrap">
+          <canvas id="VTH1"></canvas>
+          <div class="thumb-lbl">横型 16:9</div>
+        </div>
+        <div class="thumb-wrap">
+          <canvas id="VTH2"></canvas>
+          <div class="thumb-lbl">縦型 9:16</div>
+        </div>
+      </div>
+      <div id="VID_THUMB_DL" style="display:none;margin-top:8px">
+        <div style="display:flex;gap:8px">
+          <button class="sbtn" style="flex:1" onclick="dlVidThumb(1)">横型DL</button>
+          <button class="sbtn" style="flex:1" onclick="dlVidThumb(2)">縦型DL</button>
+        </div>
+      </div>
+    </div>
+
+    <button class="gbtn" id="VID_EXP_BTN" onclick="exportVid()">
+      <div class="ld-spin"></div>
+      <span class="btxt">✦ 動画を書き出す（字幕合成）</span>
+    </button>
+    <div class="note nb" style="margin-top:8px;font-size:10px">
+      WebM形式で書き出し。Instagramへのアップロードに対応しています。
+    </div>
+    <div class="err" id="VID_ERR"></div>
+  </div>
+</div>
+
+<!-- ════════ PANE: TPPO ════════ -->
+<div class="pane" id="P_tppo">
+  <div class="phdr">
+    <div class="phdr-badge">TPPO RESEARCH</div>
+    <h2>目的別TPPO &amp;<br>トレンドモニター</h2>
+    <p>投稿タイプ別にバズパターンを調査。豆知識・会員の声・リール・カルーセル全対応</p>
+  </div>
+
+  <!-- モード切替 -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px">
+    <button class="tppo-mode on" id="TM_PURPOSE" onclick="switchTPPOMode('purpose')">
+      <div style="font-size:16px">🎯</div>
+      <div style="font-size:12px;font-weight:700">目的別TPPO</div>
+      <div style="font-size:10px;color:var(--mt)">タイプ別バズを調査</div>
+    </button>
+    <button class="tppo-mode" id="TM_MONITOR" onclick="switchTPPOMode('monitor')">
+      <div style="font-size:16px">📡</div>
+      <div style="font-size:12px;font-weight:700">トレンドモニター</div>
+      <div style="font-size:10px;color:var(--mt)">全体トレンドを把握</div>
+    </button>
+  </div>
+
+  <!-- 目的別TPPO -->
+  <div id="TPPO_PURPOSE">
+    <div class="card">
+      <div class="card-hd">STEP 1　投稿タイプを選ぶ</div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:7px">
+        <button class="tppo-type on" onclick="selTPPOType(this,'know')">
+          <div class="tppo-type-ico" style="background:linear-gradient(135deg,#0f2444,#2e5ea0)">知</div>
+          <div>豆知識</div><div class="tppo-type-day">水曜</div>
+        </button>
+        <button class="tppo-type" onclick="selTPPOType(this,'voice')">
+          <div class="tppo-type-ico" style="background:linear-gradient(135deg,#0d3a18,#1e7a38)">声</div>
+          <div>会員の声</div><div class="tppo-type-day">木曜</div>
+        </button>
+        <button class="tppo-type" onclick="selTPPOType(this,'event')">
+          <div class="tppo-type-ico" style="background:linear-gradient(135deg,#3a2800,#7a5800)">報</div>
+          <div>イベント</div><div class="tppo-type-day">土曜</div>
+        </button>
+        <button class="tppo-type" onclick="selTPPOType(this,'announce')">
+          <div class="tppo-type-ico" style="background:linear-gradient(135deg,#3a0808,#8a1515)">告</div>
+          <div>告知</div><div class="tppo-type-day">随時</div>
+        </button>
+        <button class="tppo-type" onclick="selTPPOType(this,'reel')">
+          <div class="tppo-type-ico" style="background:linear-gradient(135deg,#1a0838,#5020a0)">▶</div>
+          <div>リール</div><div class="tppo-type-day">縦動画</div>
+        </button>
+        <button class="tppo-type" onclick="selTPPOType(this,'carousel')">
+          <div class="tppo-type-ico" style="background:linear-gradient(135deg,#0a2a2a,#0a6060)">⧉</div>
+          <div>カルーセル</div><div class="tppo-type-day">複数枚</div>
+        </button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-hd">STEP 2　調査条件を設定</div>
+      <div class="g2">
+        <label class="fl"><div class="lb">ジャンル</div>
+          <select class="fs" id="TP_GENRE">
+            <option>フィットネス・筋トレ</option>
+            <option>ダイエット・体重管理</option>
+            <option>遺伝子・体質改善</option>
+            <option>40〜50代の健康</option>
+            <option>姿勢改善・腰痛</option>
+            <option>食事・栄養管理</option>
+            <option>メンタル・ストレス管理</option>
+          </select></label>
+        <label class="fl"><div class="lb">ターゲット <em>任意</em></div>
+          <select class="fs" id="TP_TARGET">
+            <option value="">指定なし</option>
+            <option>40〜50代女性</option>
+            <option>30〜40代男性</option>
+            <option>運動初心者</option>
+            <option>ダイエット希望</option>
+            <option>腰痛・肩こりあり</option>
+          </select></label>
+      </div>
+      <label class="fl"><div class="lb">追加リクエスト <em>任意</em></div>
+        <input class="fi" id="TP_REQ" placeholder="例：保存率が高い構成、小規模ジムの成功事例"></label>
+      <button class="gbtn" id="TP_BTN" onclick="runTPPO()">
+        <div class="ld-spin"></div>
+        <span class="btxt">✦ このタイプのバズパターンを調査する</span>
+      </button>
+      <div class="err" id="TP_ERR"></div>
+    </div>
+
+    <div class="res" id="RES_tppo">
+      <div id="TP_TYPE_BANNER" style="background:var(--nv);color:#fff;border-radius:var(--r2);
+        padding:10px 14px;margin-bottom:10px;display:none;align-items:center;gap:10px">
+        <span id="TP_TYPE_ICO" style="font-size:20px"></span>
+        <div style="flex:1">
+          <div style="font-size:10px;opacity:.65">調査タイプ</div>
+          <div style="font-size:13px;font-weight:700" id="TP_TYPE_LBL"></div>
+        </div>
+        <div style="font-size:10px;opacity:.55" id="TP_UPDATED"></div>
+      </div>
+      <div class="note nb" id="TP_SUMMARY" style="font-size:12px;line-height:1.8;display:none"></div>
+      <div id="TP_CARDS"></div>
+      <div class="card" id="TP_ORIG" style="display:none">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+          <div class="card-hd" style="margin:0">TPPO化：ケアネス北島バージョン</div>
+          <div style="display:flex;gap:6px">
+            <button class="ibtn" id="TP_REGEN_BTN" style="font-size:10px;padding:5px 10px">再生成</button>
+            <button class="sbtn" style="font-size:10px;padding:5px 10px" onclick="doCopy('TP_ORIG_TXT',this)">コピー</button>
+          </div>
+        </div>
+        <div id="TP_ORIG_META" style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:8px"></div>
+        <div class="rtxt" id="TP_ORIG_TXT" style="font-size:12px;line-height:1.95;white-space:pre-wrap"></div>
+        <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
+          <button class="sbtn" onclick="sendTPPOtoCap()">→ 投稿文タブに送る</button>
+          <button class="sbtn" onclick="sendTPPOtoImg()">→ 画像タブに送る</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- トレンドモニター -->
+  <div id="TPPO_MONITOR" style="display:none">
+    <div class="card">
+      <div class="card-hd">今週のInstagramトレンドを一括調査</div>
+      <div class="note nb" style="margin-bottom:10px">
+        フィットネス・健康ジャンル全体のトレンドを調査。どの投稿タイプがバズっているか一目でわかります
+      </div>
+      <div class="g2">
+        <label class="fl"><div class="lb">調査期間</div>
+          <select class="fs" id="MON_PERIOD">
+            <option value="week">今週（直近7日）</option>
+            <option value="month">今月（直近30日）</option>
+          </select></label>
+        <label class="fl"><div class="lb">地域</div>
+          <select class="fs" id="MON_REGION">
+            <option value="japan">日本全体</option>
+            <option value="local">地方・地域密着</option>
+          </select></label>
+      </div>
+      <button class="gbtn" id="MON_BTN" onclick="runMonitor()">
+        <div class="ld-spin"></div>
+        <span class="btxt">📡 全タイプのトレンドを一括調査する</span>
+      </button>
+      <div class="err" id="MON_ERR"></div>
+    </div>
+
+    <div class="res" id="RES_monitor">
+      <div class="card" id="MON_SCOREBOARD" style="display:none">
+        <div class="card-hd">投稿タイプ別 トレンドスコア</div>
+        <div id="MON_SCORES" style="display:flex;flex-direction:column;gap:8px;margin-bottom:8px"></div>
+        <div style="font-size:10px;color:var(--mt);text-align:right" id="MON_DATE"></div>
+      </div>
+      <div id="MON_CARDS"></div>
+      <div class="card" id="MON_KEYWORDS" style="display:none">
+        <div class="card-hd">📈 急上昇キーワード TOP10</div>
+        <div id="MON_KW_LIST" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px"></div>
+        <div style="font-size:10px;color:var(--mt)">タップすると目的別TPPOで調査できます</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════ PANE: 使い方 ════════ -->
+<div class="pane" id="P_guide">
+  <div class="phdr">
+    <div class="phdr-badge">HOW TO USE</div>
+    <h2>使い方ガイド</h2>
+    <p>各機能を詳しく説明します。まずはCVR理論から読むと効果が上がります</p>
+  </div>
+
+  <div class="gnav">
+    <button class="gnbtn on" onclick="showG('cvr',this)">CVR理論</button>
+    <button class="gnbtn" onclick="showG('cap',this)">投稿文の使い方</button>
+    <button class="gnbtn" onclick="showG('img',this)">画像生成の使い方</button>
+    <button class="gnbtn" onclick="showG('vid',this)">動画編集の使い方</button>
+    <button class="gnbtn" onclick="showG('tppo',this)">TPPOの使い方</button>
+    <button class="gnbtn" onclick="showG('setup',this)">初期設定</button>
+  </div>
+
+  <!-- CVR理論 -->
+  <div class="gsec on" id="G_cvr">
+    <div class="theory">
+      <h3>📌 なぜCVR重視なのか？</h3>
+      <p>フォロワーが増えても売上に繋がらなければ意味がありません。<br>
+      ケアネス北島の目標は <strong>LINE登録 → 体験予約 → 入会</strong> のファネルを回すことです。<br>
+      Instagramは「認知」ではなく<strong>「行動を促す」</strong>ツールとして設計します。</p>
+      <div class="flow">
+        <div class="fstep">Instagram投稿</div><div class="farrow">→</div>
+        <div class="fstep">LINE登録</div><div class="farrow">→</div>
+        <div class="fstep">体験予約</div><div class="farrow">→</div>
+        <div class="fstep">来館</div><div class="farrow">→</div>
+        <div class="fstep">入会 ✓</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-hd">CVR投稿の3大原則</div>
+      <div class="g-step">
+        <div class="g-num">1</div>
+        <div class="g-body">
+          <div class="gt">冒頭1行でスクロールを止める</div>
+          <div class="gd">「え、自分のことだ」と思わせる一文が必須。<br>数字・疑問形・意外性のどれかを必ず入れる。</div>
+          <span class="g-tag">40代から筋肉は毎年1%減る</span>
+          <span class="g-tag">あなたの疲れは姿勢が原因かも</span>
+          <span class="g-tag">なぜ同じ運動でも差がでるの？</span>
+        </div>
+      </div>
+      <div class="gdiv"></div>
+      <div class="g-step">
+        <div class="g-num">2</div>
+        <div class="g-body">
+          <div class="gt">具体的な数字・実績を入れる</div>
+          <div class="gd">「痩せました」より「3ヶ月で-5kg」。<br>信頼度と行動意欲が大きく変わります。</div>
+          <span class="g-tag">体重・数値</span>
+          <span class="g-tag">期間</span>
+          <span class="g-tag">会員数・満足度</span>
+        </div>
+      </div>
+      <div class="gdiv"></div>
+      <div class="g-step">
+        <div class="g-num">3</div>
+        <div class="g-body">
+          <div class="gt">必ずLINEへのCTAで終わる</div>
+          <div class="gd">「プロフのLINEから無料体験予約」を毎回最後に入れる。<br>これがないと投稿がそこで完結してしまいます。</div>
+          <span class="g-tag">プロフリンクへ</span>
+          <span class="g-tag">LINE登録</span>
+          <span class="g-tag">無料体験</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 投稿文 -->
+  <div class="gsec" id="G_cap">
+    <div class="card">
+      <div class="card-hd">投稿文タブの使い方</div>
+      <div class="g-step">
+        <div class="g-num">1</div>
+        <div class="g-body">
+          <div class="gt">曜日に合わせてタイプを選ぶ</div>
+          <div class="gd">水曜=豆知識、木曜=会員の声、土曜=イベント。<br>告知は月1〜2回のキャンペーン告知に使います。</div>
+        </div>
+      </div>
+      <div class="gdiv"></div>
+      <div class="g-step">
+        <div class="g-num">2</div>
+        <div class="g-body">
+          <div class="gt">CVRフレームを選ぶ（豆知識のみ）</div>
+          <div class="gd">
+            <strong>PASONA</strong>：問題提起→解決策の王道パターン。初回はこれ。<br>
+            <strong>BFAB</strong>：数字や実績から入るパターン。実績投稿に◎。<br>
+            <strong>クイズ</strong>：参加型で保存率が上がりやすい。
+          </div>
+        </div>
+      </div>
+      <div class="gdiv"></div>
+      <div class="g-step">
+        <div class="g-num">3</div>
+        <div class="g-body">
+          <div class="gt">生成後にCVRチェックで確認</div>
+          <div class="gd">5項目のチェックリストが表示されます。<br>100%になるよう足りない要素を確認してください。</div>
+        </div>
+      </div>
+      <div class="gdiv"></div>
+      <div class="g-step">
+        <div class="g-num">4</div>
+        <div class="g-body">
+          <div class="gt">「この内容で画像を生成」ボタンを活用</div>
+          <div class="gd">投稿文のテーマが画像タブに自動引き継ぎされます。<br>投稿文→画像→サムネを一気に揃えられます。</div>
+        </div>
+      </div>
+    </div>
+    <div class="note ng"><strong>ワンポイント：</strong>「再生成」を押すたびに違うパターンで生成されます。気に入るまで何度でも試してください。</div>
+  </div>
+
+  <!-- 画像生成 -->
+  <div class="gsec" id="G_img">
+    <div class="card">
+      <div class="card-hd">画像生成タブの使い方</div>
+      <div class="g-step">
+        <div class="g-num">1</div>
+        <div class="g-body">
+          <div class="gt">テーマを日本語で入力するだけ</div>
+          <div class="gd">AIが自動で英語のプロンプトに変換し、Pollinationsで背景を生成します。<br>APIキーがなくても画像生成は無料で使えます。</div>
+        </div>
+      </div>
+      <div class="gdiv"></div>
+      <div class="g-step">
+        <div class="g-num">2</div>
+        <div class="g-body">
+          <div class="gt">投稿用画像とサムネイルが同時に生成される</div>
+          <div class="gd">
+            1080×1080の投稿画像と、横型16:9・縦型9:16のサムネを自動生成。<br>
+            生成後にそれぞれダウンロードできます。
+          </div>
+          <span class="g-tag">投稿用 1:1</span>
+          <span class="g-tag">サムネ 16:9</span>
+          <span class="g-tag">サムネ 9:16</span>
+        </div>
+      </div>
+      <div class="gdiv"></div>
+      <div class="g-step">
+        <div class="g-num">3</div>
+        <div class="g-body">
+          <div class="gt">文字化けしない仕組み</div>
+          <div class="gd">AIには「文字なしの背景画像のみ」を生成させます。<br>日本語テキストはCanvas（ブラウザ描画機能）で後から正確に重ねているので、文字化けが起きません。</div>
+        </div>
+      </div>
+    </div>
+    <div class="note ny"><strong>ヒント：</strong>背景画像は毎回ランダムに変わります。同じテーマでも「再生成」を何度か押して、気に入る背景を選んでください。</div>
+  </div>
+
+  <!-- 動画編集 -->
+  <div class="gsec" id="G_vid">
+    <div class="card">
+      <div class="card-hd">動画編集タブの使い方</div>
+      <div class="g-step">
+        <div class="g-num">1</div>
+        <div class="g-body">
+          <div class="gt">動画をアップロード（複数OK）</div>
+          <div class="gd">複数の動画を選んで追加できます。追加した順番に繋がります。<br>不要なクリップは✕で削除できます。</div>
+        </div>
+      </div>
+      <div class="gdiv"></div>
+      <div class="g-step">
+        <div class="g-num">2</div>
+        <div class="g-body">
+          <div class="gt">タイムラインでカット位置を調整</div>
+          <div class="gd">タイムラインの左右のつまみをドラッグして、使いたい区間を選びます。<br>「カット箇所を確認」で実際の動画で確認できます。</div>
+        </div>
+      </div>
+      <div class="gdiv"></div>
+      <div class="g-step">
+        <div class="g-num">3</div>
+        <div class="g-body">
+          <div class="gt">字幕を追加する</div>
+          <div class="gd">時間（例：0:05）と字幕テキストを入力して「追加」を押します。<br>スタイルは3種類から選べます。</div>
+          <span class="g-tag">0:00 オープニング</span>
+          <span class="g-tag">0:10 本題</span>
+          <span class="g-tag">0:25 LINE誘導</span>
+        </div>
+      </div>
+      <div class="gdiv"></div>
+      <div class="g-step">
+        <div class="g-num">4</div>
+        <div class="g-body">
+          <div class="gt">サムネイルを取得する</div>
+          <div class="gd">スライダーで好きなフレームを選んでサムネイルに。<br>「AIサムネを自動生成」でテーマに合った画像も作れます。</div>
+        </div>
+      </div>
+    </div>
+    <div class="note nb"><strong>書き出し：</strong>WebM形式で保存されます。Instagramへのアップロードに対応しています。</div>
+  </div>
+
+  <!-- TPPO -->
+  <div class="gsec" id="G_tppo">
+    <div class="card">
+      <div class="card-hd">TPPOとは？</div>
+      <div class="g-body" style="font-size:12px;line-height:1.9">
+        <span style="font-size:15px;font-weight:900;color:var(--nv2)">T</span>徹底的に
+        <span style="font-size:15px;font-weight:900;color:var(--nv2)">P</span>パクって
+        <span style="font-size:15px;font-weight:900;color:var(--nv2)">P</span>パクって
+        <span style="font-size:15px;font-weight:900;color:var(--nv2)">O</span>オリジナル化する<br><br>
+        今Instagramで実際に成果が出ているコンテンツの<strong>構成・フック・形式</strong>を参考にして、それをケアネス北島の強みと掛け合わせます。<br>コピーではなく「学習→昇華」です。
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-hd">TPPOタブの使い方</div>
+      <div class="g-step">
+        <div class="g-num">1</div>
+        <div class="g-body">
+          <div class="gt">ジャンルと形式を選んで「調査する」</div>
+          <div class="gd">AIがウェブ検索でリアルタイムのトレンドを調査します（APIキー必要）。</div>
+        </div>
+      </div>
+      <div class="gdiv"></div>
+      <div class="g-step">
+        <div class="g-num">2</div>
+        <div class="g-body">
+          <div class="gt">バズパターンを確認する</div>
+          <div class="gd">3種類のトレンドパターンが表示されます。<br>HOT=今バズっている、RISE=急上昇中、NEW=新しいトレンド。</div>
+        </div>
+      </div>
+      <div class="gdiv"></div>
+      <div class="g-step">
+        <div class="g-num">3</div>
+        <div class="g-body">
+          <div class="gt">「このパターンでTPPO化」を押す</div>
+          <div class="gd">バズパターンをベースにケアネス北島の強み（遺伝子解析・InBody・姿勢カルテ）を盛り込んだ投稿文を自動生成します。</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 初期設定 -->
+  <div class="gsec" id="G_setup">
+    <div class="note ny" style="margin-bottom:12px">
+      <strong>投稿文生成・TPPO調査のみ必要です。</strong><br>
+      画像生成・動画編集は設定不要（無料）で使えます。
+    </div>
+    <div class="card">
+      <div class="card-hd">STEP A　Cloudflare Worker作成（無料）</div>
+      <div class="g-step">
+        <div class="g-num">1</div>
+        <div class="g-body">
+          <div class="gt">下のURLでアカウント作成</div>
+          <div class="gd" style="font-family:'DM Mono',monospace;font-size:11px;color:var(--nv2)">
+            https://dash.cloudflare.com/sign-up</div>
+        </div>
+      </div>
+      <div class="gdiv"></div>
+      <div class="g-step">
+        <div class="g-num">2</div>
+        <div class="g-body">
+          <div class="gt">左メニュー「Compute & AI」→「Workers & Pages」→「Create application」</div>
+          <div class="gd">「Start with Hello World!」→「Get started」→ 名前は「careness-proxy」→「Deploy」</div>
+        </div>
+      </div>
+      <div class="gdiv"></div>
+      <div class="g-step">
+        <div class="g-num">3</div>
+        <div class="g-body">
+          <div class="gt">「Edit code」でコードを全部削除して以下を貼り付け → 「Deploy」</div>
+          <div style="background:#0f1e35;border-radius:8px;padding:10px;margin-top:7px;position:relative">
+            <button onclick="copyWorkerCode()" class="sbtn"
+              style="position:absolute;top:8px;right:8px;font-size:9px;padding:3px 8px">コピー</button>
+            <pre id="WORKER_CODE" style="font-size:9px;color:#8ab4f8;font-family:'DM Mono',monospace;
+              line-height:1.7;overflow-x:auto;padding-right:60px">export default {
+  async fetch(request) {
+    if (request.method === "OPTIONS") {
+      return new Response(null, { headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type" }});
+    }
+    const { apiKey, ...body } = await request.json();
+    const res = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: { "Content-Type": "application/json",
+        "x-api-key": apiKey,
+        "anthropic-version": "2023-06-01" },
+      body: JSON.stringify(body)
+    });
+    const data = await res.json();
+    return new Response(JSON.stringify(data), {
+      headers: { "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*" }});
+  }
+};</pre>
+          </div>
+        </div>
+      </div>
+      <div class="gdiv"></div>
+      <div class="g-step">
+        <div class="g-num">4</div>
+        <div class="g-body">
+          <div class="gt">表示されるURLをコピー</div>
+          <div class="gd">例：https://careness-proxy.あなたのID.workers.dev</div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-hd">STEP B　Anthropic APIキー取得</div>
+      <div class="g-step">
+        <div class="g-num">1</div>
+        <div class="g-body">
+          <div class="gt">console.anthropic.com でアカウント作成</div>
+        </div>
+      </div>
+      <div class="gdiv"></div>
+      <div class="g-step">
+        <div class="g-num">2</div>
+        <div class="g-body">
+          <div class="gt">「API Keys」→「Create Key」でキーを取得</div>
+          <div class="gd">sk-ant- から始まる文字列をコピーして保管してください。</div>
+        </div>
+      </div>
+    </div>
+    <div class="note ng">
+      設定完了後、右上の「⚙️ API設定」からWorker URLとAPIキーを入力して保存してください。
+    </div>
+  </div>
+</div>
+
+<!-- ── TABBAR ── -->
+<nav class="tabbar">
+  <button class="tab on" id="TB_cap" onclick="showTab('cap')">
+    <span class="ticon">✍️</span>投稿文
+  </button>
+  <button class="tab" id="TB_img" onclick="showTab('img')">
+    <span class="ticon">🎨</span>画像
+  </button>
+  <button class="tab" id="TB_vid" onclick="showTab('vid')">
+    <span class="ticon">🎬</span>動画編集
+  </button>
+  <button class="tab" id="TB_tppo" onclick="showTab('tppo')">
+    <span class="ticon">📊</span>TPPO
+  </button>
+  <button class="tab" id="TB_guide" onclick="showTab('guide')">
+    <span class="ticon">📖</span>使い方
+  </button>
+</nav>
+
+<script>
+// ════════════════════════════════════════
+// STATE
+// ════════════════════════════════════════
+let apiKey = localStorage.getItem('cn_key') || '';
+let workerUrl = localStorage.getItem('cn_worker') || '';
+let capType = 'know';
+let imgType = 'know';
+let lastTheme = '';
+let lastBgImg = null;
+let clips = [];          // {file, name, url, duration}
+let activeClipIdx = 0;
+let trimIn = 0, trimOut = 0, vidDuration = 0;
+let subtitles = [];      // {start, end, text}
+let capturedThumb = null;
+let tppoPatterns = [];   // last TPPO results
+let currentTppoIdx = -1;
+
+// ── INIT ──
+window.addEventListener('load', () => {
+  if (apiKey && workerUrl) setAPIStatus(true);
+  buildWaveform();
+  document.getElementById('VID_THUMB').width = 640;
+  document.getElementById('VID_THUMB').height = 360;
+  // pre-draw thumb placeholder
+  const tc = document.getElementById('VID_THUMB').getContext('2d');
+  tc.fillStyle = '#e4ecf8'; tc.fillRect(0,0,640,360);
+});
+
+// ════════════════════════════════════════
+// UI UTILITIES
+// ════════════════════════════════════════
+function showTab(t) {
+  ['cap','img','vid','tppo','guide'].forEach(id => {
+    document.getElementById('P_'+id).classList.toggle('on', id===t);
+    document.getElementById('TB_'+id).classList.toggle('on', id===t);
+  });
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function toast(msg, dur=2800) {
+  const el = document.getElementById('TOAST');
+  el.textContent = msg; el.classList.add('on');
+  clearTimeout(el._t);
+  el._t = setTimeout(() => el.classList.remove('on'), dur);
+}
+
+let _ldTimer;
+function ld(msg, sub='', ms=8000) {
+  document.getElementById('LD_MSG').textContent = msg;
+  document.getElementById('LD_SUB').textContent = sub;
+  const fill = document.getElementById('LD_FILL');
+  fill.style.transition = 'none'; fill.style.width = '0%';
+  document.getElementById('LDO').classList.add('on');
+  clearTimeout(_ldTimer);
+  let p = 0;
+  const step = () => {
+    p = Math.min(p + (100/ms)*120, 90);
+    fill.style.transition = '120ms'; fill.style.width = p+'%';
+    if (p < 90) _ldTimer = setTimeout(step, 120);
+  };
+  _ldTimer = setTimeout(step, 120);
+}
+function hld() {
+  clearTimeout(_ldTimer);
+  const fill = document.getElementById('LD_FILL');
+  fill.style.transition = '300ms'; fill.style.width = '100%';
+  setTimeout(() => document.getElementById('LDO').classList.remove('on'), 350);
+}
+
+function doCopy(id, btn) {
+  navigator.clipboard.writeText(document.getElementById(id).textContent || '').then(() => {
+    const orig = btn.textContent;
+    btn.textContent = '✓ コピー済'; btn.classList.add('done');
+    setTimeout(() => { btn.textContent = orig; btn.classList.remove('done'); }, 2000);
+    toast('コピーしました');
+  });
+}
+
+function showRes(id) {
+  const el = document.getElementById(id);
+  el.classList.add('on');
+  setTimeout(() => el.scrollIntoView({behavior:'smooth',block:'start'}), 80);
+}
+
+function setBtn(id, loading) {
+  const b = document.getElementById(id);
+  b.classList.toggle('loading', loading);
+  b.disabled = loading;
+}
+
+// ════════════════════════════════════════
+// API 設定
+// ════════════════════════════════════════
+function openAPI() { document.getElementById('API_OL').classList.add('on'); }
+function closeAPI() { document.getElementById('API_OL').classList.remove('on'); }
+function setAPIStatus(ok) {
+  const b = document.getElementById('APIBTN');
+  b.textContent = ok ? '✅ API設定済' : '⚙️ API設定';
+  b.classList.toggle('ok', ok);
+}
+function saveAPI() {
+  const w = document.getElementById('AP_WORKER').value.trim();
+  const k = document.getElementById('AP_KEY').value.trim();
+  const err = document.getElementById('API_ERR');
+  if (!w) { err.textContent = 'Worker URLを入力してください'; err.classList.add('on'); return; }
+  if (!k.startsWith('sk-ant-')) { err.textContent = 'APIキーが正しくありません（sk-ant-...で始まる文字列）'; err.classList.add('on'); return; }
+  err.classList.remove('on');
+  workerUrl = w; apiKey = k;
+  localStorage.setItem('cn_worker', w); localStorage.setItem('cn_key', k);
+  setAPIStatus(true); closeAPI(); toast('API設定を保存しました');
+}
+
+async function callAPI(body) {
+  if (!apiKey || !workerUrl) { openAPI(); throw new Error('API設定が必要です'); }
+  const r = await fetch(workerUrl, {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({apiKey, ...body})
+  });
+  if (!r.ok) throw new Error('HTTP ' + r.status + ' — Worker URLを確認してください');
+
+  // レスポンステキストを取得してからパース（空チェック付き）
+  const rawText = await r.text();
+  if (!rawText || rawText.trim() === '') {
+    throw new Error('APIからの応答が空です。Worker URLとAPIキーを確認してください');
+  }
+
+  let d;
+  try {
+    d = JSON.parse(rawText);
+  } catch(e) {
+    // レスポンスが途中で切れた場合などの対策
+    const preview = rawText.substring(0, 120);
+    throw new Error(`JSONパースエラー。応答: "${preview}..." — Cloudflare Workerの設定を確認してください`);
+  }
+
+  if (d.error) {
+    const msg = d.error.message || JSON.stringify(d.error);
+    if (msg.includes('authentication')) throw new Error('APIキーが無効です。正しいキーを設定してください');
+    if (msg.includes('credit') || msg.includes('balance')) throw new Error('APIクレジットが不足しています');
+    throw new Error(msg);
+  }
+
+  // tool_use(web_search)の結果も含めてテキストを抽出
+  const textBlocks = (d.content || []).filter(b => b.type === 'text').map(b => b.text || '');
+  const combined = textBlocks.join('').trim();
+  if (!combined) {
+    // tool_result内のテキストも探す
+    const toolResults = (d.content || [])
+      .filter(b => b.type === 'tool_result')
+      .flatMap(b => (b.content || []).filter(c => c.type === 'text').map(c => c.text || ''));
+    return toolResults.join('').trim() || '（AIからの応答テキストがありませんでした）';
+  }
+  return combined;
+}
+
+// ════════════════════════════════════════
+// 投稿文生成
+// ════════════════════════════════════════
+function selCapType(el, t) {
+  el.closest('.typrow').querySelectorAll('.tyb').forEach(b => b.classList.remove('on'));
+  el.classList.add('on'); capType = t;
+  ['know','voice','event','announce'].forEach(k =>
+    document.getElementById('CF_'+k).style.display = k===t ? 'block' : 'none');
+}
+
+async function genCaption() {
+  const err = document.getElementById('CAP_ERR');
+  err.classList.remove('on');
+
+  let topic = '';
+  if (capType === 'know') {
+    topic = document.getElementById('K_theme').value.trim();
+    if (!topic) { toast('テーマを入力してください'); return; }
+    lastTheme = topic;
+  } else if (capType === 'voice') {
+    const age = document.getElementById('V_age').value;
+    const prob = document.getElementById('V_prob').value || '体の変化';
+    const res = document.getElementById('V_result').value;
+    topic = `タイプ:会員の声 年代:${age} 悩み:${prob} 成果:${res}`;
+  } else if (capType === 'event') {
+    topic = `タイプ:イベント報告 名前:${document.getElementById('E_name').value||'イベント'} 人数:${document.getElementById('E_count').value} コメント:${document.getElementById('E_comment').value}`;
+  } else {
+    topic = `タイプ:告知 名前:${document.getElementById('A_name').value||'体験会'} 日時:${document.getElementById('A_date').value} 条件:${document.getElementById('A_cond').value}`;
+  }
+
+  const frame = document.getElementById('K_frame')?.value || 'PASONA';
+  const target = document.getElementById('K_target')?.value || '幅広く';
+
+  setBtn('CAP_BTN', true);
+  ld('AIが投稿文を生成中...', 'CVR最適化された構成で作成しています', 6000);
+
+  const sys = `あなたはケアネス北島（徳島県北島町・遺伝子解析×InBody×姿勢カルテのジム、会員約200名）のCVR特化SNSコピーライターです。
+
+目的：Instagram投稿を見た人がLINEを送り、体験予約につながること（バズ・フォロワー増加は副次的）
+
+投稿タイプ：${capType==='know'?'豆知識':capType==='voice'?'会員の声':capType==='event'?'イベント報告':'告知'}
+${capType==='know'?'CVRフレーム：'+frame+'\nターゲット：'+target:''}
+
+必須要素：
+1. 冒頭1行：「え、自分のことだ」と思わせる一文（数字・疑問形・意外性のいずれか）
+2. 本文：共感→問題→解決策（ケアネスの強み）→証拠の流れ
+3. 最後：「プロフのLINEから無料体験予約できます」または類似のCTA
+4. 絵文字：3〜5個
+5. 8〜14行、改行多め、読みやすく
+
+出力形式（このままコピペできる形で）：
+===CAPTION===
+（投稿文本文のみ）
+===HASHTAGS===
+（#ケアネス北島 #北島町 #板野郡 #徳島 含む15〜20個）
+===CVR_CHECK===
+数字入り:YES/NO
+悩み共感:YES/NO
+解決策明確:YES/NO
+CTA明確:YES/NO
+ハッシュタグ適切:YES/NO`;
+
+  try {
+    const txt = await callAPI({
+      model: 'claude-haiku-4-5-20251001', max_tokens: 1200,
+      system: sys,
+      messages: [{role:'user', content: topic}]
+    });
+
+    const cm = txt.match(/===CAPTION===\s*([\s\S]*?)===HASHTAGS===/);
+    const hm = txt.match(/===HASHTAGS===\s*([\s\S]*?)(?:===CVR_CHECK===|$)/);
+    const ckm = txt.match(/===CVR_CHECK===\s*([\s\S]*)$/);
+
+    document.getElementById('RES_CAP_TXT').textContent = cm ? cm[1].trim() : txt;
+    document.getElementById('RES_HT_TXT').textContent = hm ? hm[1].trim() : '#ケアネス北島';
+    if (ckm) buildCVRScore(ckm[1]);
+    showRes('RES_cap');
+    toast('投稿文が生成されました');
+  } catch(e) {
+    err.textContent = 'エラー：' + e.message + '\n\nAPI設定を確認してください（右上のボタン）';
+    err.classList.add('on');
+  } finally {
+    hld(); setBtn('CAP_BTN', false);
+  }
+}
+
+function buildCVRScore(raw) {
+  const checks = [
+    {k:'数字入り', l:'具体的な数字・実績が入っている'},
+    {k:'悩み共感', l:'ターゲットの悩みに共感している'},
+    {k:'解決策明確', l:'解決策・ケアネスの強みが伝わる'},
+    {k:'CTA明確', l:'LINEへのCTAで終わっている'},
+    {k:'ハッシュタグ適切', l:'ハッシュタグが15〜20個ある'},
+  ];
+  let ok = 0;
+  const html = checks.map(c => {
+    const m = raw.match(new RegExp(c.k+':(YES|NO)'));
+    const isOk = m && m[1]==='YES';
+    if (isOk) ok++;
+    return `<div class="cvr-row">
+      <div class="cvr-ck ${isOk?'ok':'no'}">${isOk?'✓':'—'}</div>
+      <span>${c.l}</span>
+    </div>`;
+  }).join('');
+  document.getElementById('CVR_LIST').innerHTML = html;
+  document.getElementById('CVR_PCT').textContent = (ok*20)+'%';
+}
+
+function sendToImg() {
+  const theme = document.getElementById('K_theme')?.value || lastTheme;
+  if (theme) document.getElementById('IM_TITLE').value = theme;
+  showTab('img');
+}
+
+// ════════════════════════════════════════
+// 画像＋サムネイル生成
+// ════════════════════════════════════════
+function selImgType(el, t) {
+  el.closest('.typrow').querySelectorAll('.tyb').forEach(b => b.classList.remove('on'));
+  el.classList.add('on'); imgType = t;
+}
+
+async function genImage() {
+  const title = document.getElementById('IM_TITLE').value.trim();
+  const sub = document.getElementById('IM_SUB').value.trim();
+  const err = document.getElementById('IMG_ERR');
+  err.classList.remove('on');
+  if (!title) { toast('テーマを入力してください'); return; }
+
+  setBtn('IMG_BTN', true);
+  showOvl(true, 'AIプロンプトを生成中...');
+
+  let prompt = '';
+
+  // AIプロンプト生成（APIあり）
+  if (apiKey && workerUrl) {
+    try {
+      const hints = {
+        know: 'health science concept, educational fitness visualization',
+        voice: 'japanese person fitness success transformation, gym lifestyle',
+        event: 'group outdoor fitness activity japanese community',
+        thumb: 'premium professional fitness studio, aspirational health brand',
+      };
+      prompt = await callAPI({
+        model: 'claude-haiku-4-5-20251001', max_tokens: 100,
+        messages: [{role:'user', content:
+          `Create Pollinations AI image prompt for Instagram background.\nTheme: ${title}. Style: ${hints[imgType]}.\nRules: photorealistic, cinematic, dark navy tones, specific subject matching theme, NO text NO words. One sentence.`}]
+      });
+    } catch(e) { prompt = ''; }
+  }
+  if (!prompt) prompt = buildAutoPrompt(title, imgType);
+
+  document.getElementById('PROMPT_TXT').textContent = prompt;
+  document.getElementById('PROMPT_AREA').style.display = 'block';
+  showOvl(true, 'AI背景を生成中... (20〜30秒)');
+
+  try {
+    const seed = Math.floor(Math.random()*99999);
+    const full = prompt + ', photorealistic 8k, NO text NO letters NO words, cinematic lighting';
+    const bg = await loadImgWithFallback(full, seed);
+    lastBgImg = bg;
+
+    showOvl(true, 'テキストを合成中...');
+
+    // メイン画像
+    const cv = document.getElementById('POST_CVS');
+    cv.width = 1080; cv.height = 1080;
+    drawPost(cv, bg, title, sub, imgType);
+
+    // img-areaに表示
+    const area = document.getElementById('IMG_AREA');
+    const ip = area.querySelector('.ip');
+    if (ip) ip.style.display='none';
+    cv.style.display = 'block';
+
+    // サムネイル生成
+    buildThumbs(bg, title, sub, imgType);
+
+    showOvl(false);
+    setBtn('IMG_BTN', false);
+    showRes('RES_img');
+    toast('画像＋サムネイルが完成しました ✓');
+  } catch(e) {
+    showOvl(false);
+    let msg = e.message || '不明なエラー';
+    // ユーザー向けの日本語エラーメッセージ
+    if (msg.includes('timeout') || msg.includes('Timeout')) {
+      msg = '⏱ 画像生成がタイムアウトしました。
+Pollinations.ai が混雑しています。30秒待ってから「再生成」を押してください。';
+    } else if (msg.includes('Failed to fetch') || msg.includes('NetworkError') || msg.includes('load_error')) {
+      msg = '🌐 ネットワークエラー。
+インターネット接続を確認して「再生成」を押してください。';
+    } else if (msg.includes('tainted') || msg.includes('CORS')) {
+      msg = '🔒 CORS エラー。別のブラウザ（Chrome推奨）でお試しください。';
+    }
+    err.innerHTML = msg.replace(/
+/g, '<br>');
+    err.classList.add('on');
+    setBtn('IMG_BTN', false);
+  }
+}
+
+function showOvl(on, msg='', pct=-1) {
+  const ov = document.getElementById('IMG_OVL');
+  ov.classList.toggle('on', on);
+  if (msg) document.getElementById('IMG_OVL_MSG').textContent = msg;
+}
+
+// モデルの優先順位（失敗時に次を試す）
+const IMG_MODELS = ['flux', 'flux-pro', 'turbo'];
+
+async function loadImgWithFallback(prompt, seed) {
+  const base = `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}`;
+  const params = `width=1080&height=1080&nologo=true&seed=${seed}`;
+
+  for (let mi = 0; mi < IMG_MODELS.length; mi++) {
+    const model = IMG_MODELS[mi];
+    const url = `${base}?${params}&model=${model}`;
+    showOvl(true, `AI背景を生成中... (${model}) ${mi > 0 ? '再試行中' : ''}`, mi*33);
+    try {
+      const img = await loadImgWithTimeout(url, 55000);
+      return img;
+    } catch(e) {
+      if (mi === IMG_MODELS.length - 1) {
+        throw new Error(`画像生成に失敗しました。しばらく待ってから再度お試しください。
+（Pollinations.ai が混雑している可能性があります）`);
+      }
+      // 次のモデルを試す
+      console.warn(`Model ${model} failed, trying next...`, e.message);
+    }
+  }
+}
+
+function loadImgWithTimeout(url, timeoutMs) {
+  return new Promise((res, rej) => {
+    const timer = setTimeout(() => {
+      img.src = ''; // キャンセル
+      rej(new Error('timeout'));
+    }, timeoutMs);
+
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.onload = () => { clearTimeout(timer); res(img); };
+    img.onerror = (e) => { clearTimeout(timer); rej(new Error('load_error')); };
+    img.src = url;
+  });
+}
+
+// 旧関数（互換性のため残す）
+function loadImg(url) {
+  return loadImgWithTimeout(url, 55000);
+}
+
+function buildAutoPrompt(title, type) {
+  const t = title;
+  if (/遺伝子|DNA/i.test(t)) return 'luminous DNA double helix strand, athletic japanese person silhouette, genetics fitness science, dark navy background, 8k cinematic';
+  if (/姿勢|背骨|猫背/i.test(t)) return 'japanese person with perfect posture in gym, spine alignment visualization, dramatic blue studio lighting, professional photography';
+  if (/睡眠|回復|休養/i.test(t)) return 'peaceful japanese woman sleeping in moonlight, health recovery concept, soft blue atmosphere, cinematic';
+  if (/代謝|ダイエット|体重|脂肪/i.test(t)) return 'athletic japanese woman running on treadmill, gym interior, dynamic motion blur, dramatic lighting, high energy';
+  if (/筋肉|筋トレ|ウェイト/i.test(t)) return 'japanese man doing dumbbell training, modern gym, dark dramatic lighting, muscle definition';
+  if (/InBody|体組成/i.test(t)) return 'medical body composition analysis display, blue digital health data, professional clinical setting, photorealistic';
+  if (/ウォーキング|ランニング|outdoor/i.test(t)) return 'japanese group walking in sunny park, community fitness event, golden hour, candid warm photography';
+  if (/食事|栄養|タンパク/i.test(t)) return 'healthy japanese meal preparation, nutritious colorful food, clean kitchen, professional food photography';
+  const d = {
+    know: 'japanese fitness trainer in premium gym, dark navy dramatic lighting, science concept visualization',
+    voice: 'happy smiling japanese woman 40s in gym, success transformation, bright professional setting',
+    event: 'group community fitness activity outdoors, sunny energetic, healthy lifestyle japanese',
+    thumb: 'luxury fitness studio dark navy elegant, professional health brand, aspirational minimal',
+  };
+  return d[type] || d.know;
+}
+
+// ── DRAW POST IMAGE ──
+function drawPost(cv, bg, title, sub, type) {
+  const cx = cv.getContext('2d');
+  const W = cv.width, H = cv.height;
+
+  cx.drawImage(bg, 0, 0, W, H);
+
+  // オーバーレイ（中央が薄い）
+  const g = cx.createLinearGradient(0, 0, 0, H);
+  g.addColorStop(0,    'rgba(6,14,40,0.90)');
+  g.addColorStop(0.16, 'rgba(6,14,40,0.38)');
+  g.addColorStop(0.32, 'rgba(6,14,40,0.05)');
+  g.addColorStop(0.60, 'rgba(6,14,40,0.04)');
+  g.addColorStop(0.78, 'rgba(6,14,40,0.48)');
+  g.addColorStop(1,    'rgba(6,14,40,0.94)');
+  cx.fillStyle = g; cx.fillRect(0, 0, W, H);
+
+  // 左縦ライン
+  const sg = cx.createLinearGradient(0,0,0,H);
+  sg.addColorStop(0,'rgba(60,120,220,0)');
+  sg.addColorStop(0.25,'rgba(60,120,220,0.85)');
+  sg.addColorStop(0.75,'rgba(60,120,220,0.85)');
+  sg.addColorStop(1,'rgba(60,120,220,0)');
+  cx.fillStyle=sg; cx.fillRect(0,0,5,H);
+
+  // ── 上部 ──
+  cx.fillStyle='rgba(255,255,255,0.92)';
+  cx.font='bold 26px sans-serif'; cx.textBaseline='top';
+  cx.fillText('CARENESS KITAJIMA', 32, 30);
+
+  cx.fillStyle='rgba(160,200,255,0.75)';
+  cx.font='15px sans-serif';
+  cx.fillText('ケアネス北島  ／  遺伝子解析 × InBody × 姿勢カルテ', 32, 64);
+
+  cx.fillStyle='rgba(60,120,220,0.5)';
+  cx.fillRect(32, 93, W-64, 1);
+
+  // タイプバッジ
+  const tnm = {know:'豆 知 識',voice:'会員の声',event:'イベント',thumb:'CARENESS'};
+  cx.fillStyle='rgba(15,36,68,0.80)';
+  rr(cx,32,108,156,36,18); cx.fill();
+  cx.strokeStyle='rgba(60,120,220,0.65)'; cx.lineWidth=1.5;
+  rr(cx,32,108,156,36,18); cx.stroke();
+  cx.fillStyle='#fff'; cx.font='bold 15px sans-serif'; cx.textBaseline='middle';
+  cx.fillText(tnm[type]||'投稿', 50, 127);
+
+  // ── メインタイトル ──
+  const fsize = title.length > 14 ? 52 : title.length > 9 ? 60 : 70;
+  cx.font=`bold ${fsize}px sans-serif`; cx.textBaseline='top';
+  const lines = wrapTxt(cx, title, W-64, `bold ${fsize}px sans-serif`);
+  let ty = 165;
+  cx.fillStyle='rgba(255,255,255,0.96)';
+  lines.forEach(l => { cx.fillText(l, 32, ty); ty += fsize+10; });
+
+  // アクセントライン
+  ty += 6;
+  cx.fillStyle='rgba(60,120,220,1)'; cx.fillRect(32,ty,64,4);
+  cx.fillStyle='rgba(60,120,220,0.3)'; cx.fillRect(104,ty,160,4);
+
+  // サブタイトル
+  if (sub) {
+    cx.fillStyle='rgba(180,215,255,0.85)';
+    cx.font='25px sans-serif';
+    const sl = wrapTxt(cx, sub, W-64, '25px sans-serif');
+    ty += 22;
+    sl.forEach(l => { cx.fillText(l, 32, ty); ty += 35; });
+  }
+
+  // ── フッター ──
+  cx.fillStyle='rgba(6,14,40,0.88)'; cx.fillRect(0, 928, W, 152);
+  cx.fillStyle='rgba(60,120,220,0.45)'; cx.fillRect(0, 928, W, 1.5);
+
+  cx.fillStyle='rgba(255,255,255,0.90)';
+  cx.font='bold 22px sans-serif'; cx.textBaseline='middle';
+  cx.fillText('LINEから無料体験予約 → プロフィールリンクへ', 32, 970);
+
+  cx.fillStyle='rgba(130,175,240,0.72)';
+  cx.font='15px sans-serif';
+  cx.fillText('#ケアネス北島  #北島町  #遺伝子検査  #徳島フィットネス', 32, 1010);
+}
+
+// ── BUILD THUMBNAILS ──
+function buildThumbs(bg, title, sub, type) {
+  const c1 = document.getElementById('TH1');
+  c1.width=640; c1.height=360;
+  drawThumb(c1, bg, title, sub, type, '16:9');
+
+  const c2 = document.getElementById('TH2');
+  c2.width=360; c2.height=640;
+  drawThumb(c2, bg, title, sub, type, '9:16');
+}
+
+function drawThumb(cv, bg, title, sub, type, ratio) {
+  const cx = cv.getContext('2d');
+  const W = cv.width, H = cv.height;
+
+  // Crop bg
+  const bA=1, cA=W/H;
+  let sx=0,sy=0,sw=1080,sh=1080;
+  if(cA>bA){sh=1080/cA;sy=(1080-sh)/2}else{sw=1080*cA;sx=(1080-sw)/2}
+  cx.drawImage(bg,sx,sy,sw,sh,0,0,W,H);
+
+  const og=cx.createLinearGradient(0,0,0,H);
+  og.addColorStop(0,'rgba(6,14,40,0.78)');
+  og.addColorStop(0.45,'rgba(6,14,40,0.18)');
+  og.addColorStop(1,'rgba(6,14,40,0.88)');
+  cx.fillStyle=og; cx.fillRect(0,0,W,H);
+
+  cx.fillStyle='rgba(60,120,220,0.88)'; cx.fillRect(0,0,4,H);
+
+  // Brand
+  const bf=Math.floor(W*0.027);
+  cx.fillStyle='rgba(255,255,255,0.88)';
+  cx.font=`bold ${bf}px sans-serif`; cx.textBaseline='top';
+  cx.fillText('CARENESS KITAJIMA', W*0.04, H*0.05);
+
+  // Title
+  const tf=Math.floor(W*0.052);
+  cx.font=`bold ${tf}px sans-serif`;
+  const lines=wrapTxt(cx,title,W*0.88,`bold ${tf}px sans-serif`);
+  let ty=ratio==='9:16'?H*0.26:H*0.33;
+  cx.fillStyle='rgba(255,255,255,0.96)';
+  lines.forEach(l=>{cx.fillText(l,W*0.04,ty);ty+=tf+6;});
+
+  const ff=Math.floor(W*0.024);
+  cx.fillStyle='rgba(130,175,240,0.82)';
+  cx.font=`bold ${ff}px sans-serif`; cx.textBaseline='bottom';
+  cx.fillText('LINE → 無料体験予約',W*0.04,H-H*0.04);
+}
+
+function dlPost() {
+  const cv=document.getElementById('POST_CVS');
+  if(!cv.width){toast('先に画像を生成してください');return;}
+  dl(cv,'careness_post_'+Date.now()+'.png');
+}
+function dlThumb(n) {
+  const cv=document.getElementById(n===1?'TH1':'TH2');
+  if(!cv.width){toast('先に画像を生成してください');return;}
+  dl(cv,`careness_thumb_${n===1?'16x9':'9x16'}_${Date.now()}.png`);
+}
+function dl(cv,name){const a=document.createElement('a');a.href=cv.toDataURL('image/png');a.download=name;a.click();toast('ダウンロードしました');}
+
+// ════════════════════════════════════════
+// 動画編集
+// ════════════════════════════════════════
+function addClips(e) {
+  const files = Array.from(e.target.files);
+  if (!files.length) return;
+  files.forEach(f => {
+    const url = URL.createObjectURL(f);
+    clips.push({file:f, name:f.name, url, duration:0});
+    const idx = clips.length-1;
+    const tmpVid = document.createElement('video');
+    tmpVid.src = url;
+    tmpVid.onloadedmetadata = () => {
+      clips[idx].duration = tmpVid.duration;
+      renderClipList();
+      if (idx===0) loadClip(0);
+    };
+  });
+  document.getElementById('VID_EDIT').style.display='block';
+  e.target.value='';
+}
+
+function renderClipList() {
+  document.getElementById('CLIPS_LIST').innerHTML = clips.map((c,i) => `
+    <div class="clip-item">
+      <div class="clip-order">${i+1}</div>
+      <div class="clip-info">
+        <div class="clip-name" title="${c.name}">${c.name}</div>
+        <div class="clip-dur">${c.duration?fmtT(c.duration):'読込中...'}</div>
+      </div>
+      <button class="clip-del" onclick="delClip(${i})">✕</button>
+    </div>`).join('');
+}
+
+function delClip(i) {
+  URL.revokeObjectURL(clips[i].url);
+  clips.splice(i,1);
+  renderClipList();
+  if (clips.length > 0) loadClip(0);
+  else { document.getElementById('VID_EDIT').style.display='none'; }
+}
+
+function loadClip(idx) {
+  if (!clips[idx]) return;
+  activeClipIdx = idx;
+  const player = document.getElementById('VID_PLAYER');
+  player.src = clips[idx].url;
+  player.onloadedmetadata = () => {
+    vidDuration = player.duration;
+    trimIn=0; trimOut=vidDuration;
+    updateTLDisp(); buildWaveform();
+    initTL(); updateThumbSeek();
+  };
+}
+
+function buildWaveform() {
+  const wf=document.getElementById('TL_WAVES');
+  if(!wf)return;
+  wf.innerHTML='';
+  for(let i=0;i<64;i++){
+    const b=document.createElement('div');
+    b.className='tl-wave-bar';
+    b.style.height=(8+Math.random()*24)+'px';
+    b.style.opacity=0.2+Math.random()*0.5;
+    wf.appendChild(b);
+  }
+}
+
+function initTL() {
+  const tl=document.getElementById('TL');
+  const inH=document.getElementById('TL_IN');
+  const outH=document.getElementById('TL_OUT');
+  const range=document.getElementById('TL_RANGE');
+  const head=document.getElementById('TL_HEAD');
+
+  let drag=null;
+
+  function getP(e){
+    const r=tl.getBoundingClientRect();
+    const x=(e.touches?e.touches[0].clientX:e.clientX)-r.left;
+    return Math.max(0,Math.min(1,x/r.width));
+  }
+
+  function update(){
+    const ip=(vidDuration>0?trimIn/vidDuration:0)*100;
+    const op=(vidDuration>0?trimOut/vidDuration:1)*100;
+    inH.style.left=ip+'%';
+    outH.style.right=(100-op)+'%';
+    range.style.left=ip+'%';
+    range.style.width=(op-ip)+'%';
+    updateTLDisp();
+  }
+
+  function onMove(e){
+    if(!drag)return; e.preventDefault();
+    const p=getP(e);
+    if(drag==='in'){trimIn=Math.max(0,Math.min(p*vidDuration,trimOut-0.5));}
+    else{trimOut=Math.max(trimIn+0.5,Math.min(p*vidDuration,vidDuration));}
+    update();
+  }
+
+  // update playhead
+  const player=document.getElementById('VID_PLAYER');
+  player.ontimeupdate=()=>{
+    if(vidDuration>0) head.style.left=(player.currentTime/vidDuration*100)+'%';
+  };
+
+  inH.onmousedown=()=>drag='in'; outH.onmousedown=()=>drag='out';
+  inH.ontouchstart=()=>drag='in'; outH.ontouchstart=()=>drag='out';
+  document.addEventListener('mousemove',onMove);
+  document.addEventListener('touchmove',onMove,{passive:false});
+  document.addEventListener('mouseup',()=>drag=null);
+  document.addEventListener('touchend',()=>drag=null);
+
+  update();
+}
+
+function updateTLDisp(){
+  document.getElementById('TL_IN_T').textContent=fmtT(trimIn);
+  document.getElementById('TL_OUT_T').textContent=fmtT(trimOut);
+  document.getElementById('TL_DUR_T').textContent=fmtT(trimOut-trimIn);
+}
+
+function fmtT(s){const m=Math.floor(s/60);return m+':'+String(Math.floor(s%60)).padStart(2,'0');}
+
+function previewTrim(){
+  const p=document.getElementById('VID_PLAYER');
+  p.currentTime=trimIn; p.play();
+  p.ontimeupdate=()=>{if(p.currentTime>=trimOut){p.pause();}};
+  toast('トリム確認再生中');
+}
+
+function addSub(){
+  const tStr=document.getElementById('SUB_T').value.trim();
+  const txt=document.getElementById('SUB_TXT').value.trim();
+  if(!txt){toast('字幕テキストを入力してください');return;}
+  const [m,s]=(tStr||'0:00').split(':').map(Number);
+  const sec=(m||0)*60+(s||0);
+  subtitles.push({start:sec,end:sec+4,text:txt});
+  subtitles.sort((a,b)=>a.start-b.start);
+  renderSubList();
+  document.getElementById('SUB_TXT').value='';
+  document.getElementById('SUB_T').value='';
+  toast('字幕を追加しました');
+}
+
+function renderSubList(){
+  document.getElementById('SUB_LIST').innerHTML=subtitles.map((s,i)=>`
+    <div class="sub-item">
+      <div class="sub-time">${fmtT(s.start)}</div>
+      <div class="sub-text">${s.text}</div>
+      <button class="sub-del" onclick="delSub(${i})">✕</button>
+    </div>`).join('');
+}
+
+function delSub(i){subtitles.splice(i,1);renderSubList();}
+
+function updateThumbSeek(){
+  const p=document.getElementById('VID_PLAYER');
+  if(p.duration) document.getElementById('THUMB_SEEK').max=100;
+}
+
+function seekThumb(pct){
+  const p=document.getElementById('VID_PLAYER');
+  if(!p.duration)return;
+  const t=(pct/100)*p.duration;
+  document.getElementById('THUMB_TIME').textContent=fmtT(t);
+  p.currentTime=t;
+  p.onseeked=()=>captureFrameTo(p,'VID_THUMB');
+}
+
+function captureFrameTo(vid,canvasId){
+  const cv=document.getElementById(canvasId);
+  const cx=cv.getContext('2d');
+  cx.drawImage(vid,0,0,cv.width,cv.height);
+}
+
+function captureVidThumb(){
+  const cv=document.getElementById('VID_THUMB');
+  const c1=document.getElementById('VTH1');
+  const c2=document.getElementById('VTH2');
+  c1.width=640;c1.height=360;
+  c1.getContext('2d').drawImage(cv,0,0,640,360);
+  c2.width=360;c2.height=640;
+  const cx2=c2.getContext('2d');
+  // crop center for 9:16
+  const sw=cv.height*(360/640),sx=(cv.width-sw)/2;
+  cx2.drawImage(cv,sx,0,sw,cv.height,0,0,360,640);
+  document.getElementById('VID_THUMB_PAIR').style.display='grid';
+  document.getElementById('VID_THUMB_DL').style.display='block';
+  toast('サムネイルをキャプチャしました');
+}
+
+function genThumbFromVid(){
+  const theme=document.getElementById('IM_TITLE').value||
+    document.getElementById('K_theme')?.value||'フィットネス';
+  document.getElementById('IM_TITLE').value=theme;
+  showTab('img');
+  genImage();
+}
+
+function dlVidThumb(n){
+  const cv=document.getElementById(n===1?'VTH1':'VTH2');
+  dl(cv,`careness_vidthumb_${n===1?'16x9':'9x16'}_${Date.now()}.png`);
+}
+
+async function exportVid(){
+  if(!clips.length){toast('動画をアップロードしてください');return;}
+  const player=document.getElementById('VID_PLAYER');
+  const err=document.getElementById('VID_ERR');
+  err.classList.remove('on');
+  setBtn('VID_EXP_BTN',true);
+
+  const fmt=document.getElementById('VID_FMT').value;
+  const subStyle=document.getElementById('SUB_STYLE').value;
+  const dims={reel:{w:720,h:1280},feed:{w:1080,h:1080},story:{w:720,h:1280}};
+  const {w,h}=dims[fmt]||dims.feed;
+
+  const cv=document.createElement('canvas');
+  cv.width=w;cv.height=h;
+  const cx=cv.getContext('2d');
+
+  try{
+    let vidStream;
+    try{vidStream=player.captureStream(30);}
+    catch(e){vidStream=player.mozCaptureStream(30);}
+
+    const audioTracks=vidStream.getAudioTracks();
+    const canvasStream=cv.captureStream(30);
+    const combined=new MediaStream([...canvasStream.getVideoTracks(),...audioTracks]);
+    const mime=MediaRecorder.isTypeSupported('video/webm;codecs=vp9')?'video/webm;codecs=vp9':'video/webm';
+    const rec=new MediaRecorder(combined,{mimeType:mime,videoBitsPerSecond:3000000});
+    const chunks=[];
+
+    rec.ondataavailable=e=>{if(e.data.size>0)chunks.push(e.data);};
+    rec.onstop=()=>{
+      const blob=new Blob(chunks,{type:'video/webm'});
+      const a=document.createElement('a');
+      a.href=URL.createObjectURL(blob);
+      a.download='careness_video_'+Date.now()+'.webm';
+      a.click();
+      hld();setBtn('VID_EXP_BTN',false);
+      toast('動画の書き出しが完了しました ✓');
+    };
+
+    player.currentTime=trimIn;
+    await new Promise(r=>player.onseeked=r);
+    ld('動画を書き出し中...',`${fmtT(trimOut-trimIn)}の動画を処理中`,(trimOut-trimIn)*1000);
+    player.play();rec.start(100);
+
+    function frame(){
+      if(player.currentTime>=trimOut){player.pause();rec.stop();return;}
+      // draw scaled frame
+      const vr=player.videoWidth/player.videoHeight;
+      const cr=w/h;
+      let sx=0,sy=0,sw=player.videoWidth,sh=player.videoHeight;
+      if(vr>cr){sw=sh*cr;sx=(player.videoWidth-sw)/2;}
+      else{sh=sw/cr;sy=(player.videoHeight-sh)/2;}
+      cx.drawImage(player,sx,sy,sw,sh,0,0,w,h);
+      // subtitles
+      const cur=subtitles.find(s=>player.currentTime>=s.start&&player.currentTime<=s.end);
+      if(cur) drawSub(cx,cur.text,w,h,subStyle);
+      requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+
+  }catch(e){
+    hld();setBtn('VID_EXP_BTN',false);
+    err.textContent='エラー: '+e.message+'\n\nChromeブラウザでの使用を推奨します';
+    err.classList.add('on');
+  }
+}
+
+function drawSub(cx,text,w,h,style){
+  if(style==='bottom'){
+    cx.save();
+    cx.shadowColor='rgba(0,0,0,0.85)';cx.shadowBlur=10;
+    cx.fillStyle='#fff';cx.font=`bold ${Math.floor(w*0.046)}px sans-serif`;
+    cx.textAlign='center';cx.textBaseline='bottom';
+    cx.fillText(text,w/2,h-h*0.06);cx.restore();
+  }else if(style==='insta'){
+    cx.save();
+    const fs=Math.floor(w*0.042);
+    cx.font=`bold ${fs}px sans-serif`;
+    cx.textAlign='center';cx.textBaseline='middle';
+    const tw=cx.measureText(text).width;
+    const pd=14;
+    cx.fillStyle='rgba(15,36,68,0.82)';
+    rr(cx,w/2-tw/2-pd,h*0.82-fs/2-pd/2,tw+pd*2,fs+pd,8);cx.fill();
+    cx.fillStyle='#fff';cx.fillText(text,w/2,h*0.82);cx.restore();
+  }else{
+    cx.save();
+    const fs=Math.floor(w*0.058);
+    cx.font=`bold ${fs}px sans-serif`;
+    cx.textAlign='center';cx.textBaseline='middle';
+    cx.fillStyle='rgba(0,0,0,0.45)';
+    const tw=cx.measureText(text).width;
+    cx.fillRect(w/2-tw/2-16,h/2-fs/2-10,tw+32,fs+20);
+    cx.fillStyle='#fff';cx.fillText(text,w/2,h/2);cx.restore();
+  }
+}
+
+// ════════════════════════════════════════
+// TPPO 全面刷新
+// ════════════════════════════════════════
+let tppoType = 'know';   // 選択中の投稿タイプ
+let tppoPatterns = [];
+let currentTppoIdx = -1;
+let lastTppoTxt = '';    // TPPO化に使ったベーステキスト
+
+// ── TYPE DEFINITIONS ──
+const TPPO_TYPES = {
+  know:     {label:'豆知識（水曜）',     ico:'知', format:'フィード投稿',  cvr:'PASONA'},
+  voice:    {label:'会員の声（木曜）',   ico:'声', format:'フィード投稿',  cvr:'BFAB'},
+  event:    {label:'イベント報告（土曜）',ico:'報', format:'フィード投稿',  cvr:'ストーリー'},
+  announce: {label:'告知・キャンペーン', ico:'告', format:'フィード投稿',  cvr:'緊急性'},
+  reel:     {label:'リール（縦動画）',   ico:'▶', format:'リール',        cvr:'フック重視'},
+  carousel: {label:'カルーセル（複数枚）',ico:'⧉', format:'カルーセル',   cvr:'保存率重視'},
+};
+
+// ── MODE SWITCH ──
+function switchTPPOMode(mode) {
+  document.getElementById('TPPO_PURPOSE').style.display = mode==='purpose' ? 'block' : 'none';
+  document.getElementById('TPPO_MONITOR').style.display = mode==='monitor' ? 'block' : 'none';
+  document.getElementById('TM_PURPOSE').classList.toggle('on', mode==='purpose');
+  document.getElementById('TM_MONITOR').classList.toggle('on', mode==='monitor');
+}
+
+// ── TYPE SELECT ──
+function selTPPOType(el, t) {
+  el.closest('#TPPO_PURPOSE').querySelectorAll('.tppo-type').forEach(b => b.classList.remove('on'));
+  el.classList.add('on');
+  tppoType = t;
+  const info = TPPO_TYPES[t];
+  if (info) {
+    const btn = document.getElementById('TP_BTN');
+    btn.querySelector('.btxt').textContent = `✦ 「${info.label}」のバズパターンを調査する`;
+  }
+}
+
+// ── PURPOSE TPPO ──
+async function runTPPO() {
+  const err = document.getElementById('TP_ERR');
+  err.classList.remove('on');
+  const genre = document.getElementById('TP_GENRE').value;
+  const target = document.getElementById('TP_TARGET').value;
+  const req = document.getElementById('TP_REQ').value;
+  const typeInfo = TPPO_TYPES[tppoType];
+
+  setBtn('TP_BTN', true);
+  ld('Instagramトレンドを調査中...', `「${typeInfo.label}」のバズパターンを検索中`, 20000);
+
+  // タイプ別のプロンプト設計
+  const typeGuides = {
+    know: `投稿タイプ：豆知識フィード投稿
+・保存される価値ある情報の構成
+・冒頭フックで「え、知らなかった」を引き出す
+・箇条書き・数字・比較で見やすくする構成
+・最後のCTAでLINE登録を促すパターン`,
+    voice: `投稿タイプ：会員の声・ビフォーアフター
+・具体的な数字（体重・期間・数値）を使った信頼構築
+・悩み→入会→成果の感情的ストーリー構成
+・コメント欄を活性化させる共感ポイント
+・「私も試したい」という行動意欲を生む終わり方`,
+    event: `投稿タイプ：イベント・活動報告
+・コミュニティの温かさ・一体感を伝える構成
+・参加したくなる雰囲気を写真説明で作る
+・次回開催への期待感とLINE誘導を両立する構成
+・ハッシュタグで地域コミュニティに露出する方法`,
+    announce: `投稿タイプ：告知・キャンペーン
+・希少性・緊急性を高めるコピーパターン
+・「先着○名」「期間限定」の効果的な使い方
+・無料体験・特典の見せ方でCVRを上げる構成
+・DM・LINEへの導線を自然に入れる位置`,
+    reel: `投稿タイプ：リール（縦動画）
+・最初の1.5秒でスクロールを止めるフック動画の構成
+・テキストオーバーレイの効果的な配置パターン
+・BGM選択と字幕のトレンド（85%無音視聴対策）
+・30秒以内で完結するCVR動線の作り方`,
+    carousel: `投稿タイプ：カルーセル（複数枚投稿）
+・1枚目で保存させる表紙デザインのパターン
+・「続きが気になる」次のページへ引っ張る構成
+・10枚以内で価値を完結させる情報設計
+・最終ページのCTAでLINE登録に繋げる方法`,
+  };
+
+  const sys = `あなたはInstagramマーケティングの専門家。ケアネス北島（遺伝子解析×InBody×姿勢カルテ・徳島県北島町・会員約200名）のCVR最大化のためのTPPO分析をします。
+
+TPPO = 徹底的にパクってパクってオリジナル化する
+
+対象：${typeInfo.label}
+ジャンル：${genre}
+${target?'ターゲット：'+target:''}
+形式の特徴：
+${typeGuides[tppoType]}
+
+最新のInstagramトレンドをウェブ検索で調査し、以下の形式で出力してください：
+
+===SUMMARY===
+（このタイプ×ジャンルの2025年最新トレンドを3〜4文でまとめる）
+
+===PATTERN_1===
+BADGE: HOT
+TITLE: （パターン名）
+DESC: （バズっている理由と具体的な構成 2〜3文）
+HOOK: （そのまま使えるフック文）
+STRUCTURE: （構成の流れを箇条書き3〜5行）
+TPPO: （ケアネス北島版に変換した投稿文の冒頭3〜4行）
+
+===PATTERN_2===
+BADGE: RISE
+（同形式）
+
+===PATTERN_3===
+BADGE: NEW
+（同形式）`;
+
+  try {
+    const txt = await callAPI({
+      model: 'claude-haiku-4-5-20251001', max_tokens: 2200,
+      tools: [{"type":"web_search_20250305","name":"web_search"}],
+      system: sys,
+      messages: [{role:'user', content:
+        `「${typeInfo.label}」×「${genre}」でバズっているInstagram投稿のTPPO分析をしてください。${req?'追加条件：'+req:''}`}]
+    });
+
+    // バナー表示
+    const banner = document.getElementById('TP_TYPE_BANNER');
+    banner.style.display = 'flex';
+    document.getElementById('TP_TYPE_ICO').textContent = typeInfo.ico;
+    document.getElementById('TP_TYPE_LBL').textContent = `${typeInfo.label}  ×  ${genre}`;
+    document.getElementById('TP_UPDATED').textContent = '調査日：' + new Date().toLocaleDateString('ja-JP');
+
+    parseTPPOResult(txt, typeInfo);
+    showRes('RES_tppo');
+    toast('トレンド調査が完了しました ✓');
+  } catch(e) {
+    err.textContent = 'エラー: ' + e.message;
+    err.classList.add('on');
+  } finally {
+    hld(); setBtn('TP_BTN', false);
+  }
+}
+
+function parseTPPOResult(txt, typeInfo) {
+  const sm = txt.match(/===SUMMARY===\s*([\s\S]*?)(?:===PATTERN|$)/);
+  const sumEl = document.getElementById('TP_SUMMARY');
+  if (sm) {
+    sumEl.innerHTML = '<strong>📊 トレンドサマリー</strong><br>' + sm[1].trim();
+    sumEl.style.display = 'block';
+  }
+
+  const cards = document.getElementById('TP_CARDS');
+  cards.innerHTML = '';
+  tppoPatterns = [];
+
+  const pats = [...txt.matchAll(/===PATTERN_\d+===\s*([\s\S]*?)(?===PATTERN|\s*$)/g)];
+  pats.forEach((m, i) => {
+    const blk = m[1];
+    const badge = (blk.match(/BADGE:\s*(\w+)/)?.[1] || 'NEW').toUpperCase();
+    const title = blk.match(/TITLE:\s*([^
+]+)/)?.[1]?.trim() || '';
+    const desc = blk.match(/DESC:\s*([\s\S]*?)(?:HOOK:|STRUCTURE:|TPPO:|===|$)/)?.[1]?.trim() || '';
+    const hook = blk.match(/HOOK:\s*([^
+]+)/)?.[1]?.trim() || '';
+    const structure = blk.match(/STRUCTURE:\s*([\s\S]*?)(?:TPPO:|===|$)/)?.[1]?.trim() || '';
+    const tppo = blk.match(/TPPO:\s*([\s\S]*?)(?:
+===|$)/)?.[1]?.trim() || '';
+    tppoPatterns.push({badge, title, desc, hook, structure, tppo, typeInfo});
+
+    const bmap = {HOT:'tb-hot', RISE:'tb-rise', NEW:'tb-new'};
+    const d = document.createElement('div');
+    d.className = 'trend-card';
+
+    const structLines = structure ? structure.split('
+')
+      .filter(l => l.trim())
+      .map(l => `<div style="font-size:11px;color:var(--mt);padding:2px 0;
+        display:flex;gap:6px;align-items:flex-start">
+        <span style="color:var(--nv2);font-weight:700;flex-shrink:0">▸</span>
+        <span>${l.replace(/^[・\-\*\d\.]+\s*/,'')}</span>
+      </div>`).join('') : '';
+
+    d.innerHTML = `
+      <div class="trend-badge ${bmap[badge]||'tb-new'}">${badge}</div>
+      <div class="trend-ttl">${title}</div>
+      <div class="trend-desc">${desc}</div>
+      ${hook ? `<div style="background:rgba(26,52,96,.06);border-radius:6px;
+        padding:8px 10px;margin-top:7px;margin-bottom:4px">
+        <div style="font-size:9px;font-weight:700;color:var(--nv4);margin-bottom:3px">💡 フック文例</div>
+        <div style="font-size:12px;font-weight:700;color:var(--tx)">${hook}</div>
+      </div>` : ''}
+      ${structLines ? `<div style="margin-top:8px;margin-bottom:4px">
+        <div style="font-size:9px;font-weight:700;color:var(--nv4);margin-bottom:4px">📋 構成の流れ</div>
+        ${structLines}
+      </div>` : ''}
+      <div style="display:flex;gap:7px;margin-top:10px;flex-wrap:wrap">
+        <button class="sbtn" onclick="tppoize(${i})">このパターンでTPPO化 →</button>
+      </div>`;
+    cards.appendChild(d);
+  });
+}
+
+async function tppoize(idx) {
+  if (!tppoPatterns[idx]) { toast('パターン情報がありません'); return; }
+  currentTppoIdx = idx;
+  const {title, hook, structure, tppo, typeInfo} = tppoPatterns[idx];
+  lastTppoTxt = tppo;
+
+  const box = document.getElementById('TP_ORIG');
+  const txtEl = document.getElementById('TP_ORIG_TXT');
+  const regenBtn = document.getElementById('TP_REGEN_BTN');
+  const metaEl = document.getElementById('TP_ORIG_META');
+
+  box.style.display = 'block';
+  txtEl.textContent = 'AIがTPPO化中...';
+  regenBtn.disabled = true;
+
+  // メタタグ表示
+  const t = tppoPatterns[idx];
+  metaEl.innerHTML = `
+    <span class="tppo-meta-tag">${t.typeInfo?.label || tppoType}</span>
+    <span class="tppo-meta-tag">バズパターン: ${title}</span>
+  `;
+
+  ld('TPPO化中...', title, 8000);
+
+  const typeSpecific = {
+    know: `・豆知識フィード投稿として作成
+・冒頭：「え、知らなかった」系の数字か疑問形
+・本文：問題提起→豆知識→ケアネスの強み→CTA
+・保存したくなる価値ある情報を入れる`,
+    voice: `・会員の声・ビフォーアフター投稿として作成
+・具体的な数字（体重・期間・スコア）を必ず入れる
+・感情の変化（悩み→不安→成果→喜び）を表現
+・「私も変われる」と思わせる締め`,
+    event: `・イベント報告投稿として作成
+・参加者の反応・雰囲気を具体的に表現
+・次回参加したくなる一文を含める
+・コミュニティ感・温かさを演出`,
+    announce: `・告知・キャンペーン投稿として作成
+・希少性（先着○名、期間限定）を明確に
+・無料体験の具体的なメリットを列挙
+・申込方法（LINE）をわかりやすく`,
+    reel: `・リール（縦動画）の台本・テキストオーバーレイとして作成
+・最初の1.5秒のフック画面テキストを【】で記載
+・全体を30秒以内で完結する構成
+・字幕テキストを短く・インパクトある言葉で`,
+    carousel: `・カルーセル（複数枚）の各ページ内容として作成
+・1枚目：保存させる表紙テキスト
+・2〜8枚目：価値ある情報を1ページ1テーマで
+・最終枚：LINE誘導CTA
+・各ページの内容を「【枚目N】」で区切って書く`,
+  };
+
+  try {
+    const genre = document.getElementById('TP_GENRE').value;
+    const target = document.getElementById('TP_TARGET').value;
+
+    const txt = await callAPI({
+      model: 'claude-haiku-4-5-20251001', max_tokens: 1200,
+      messages: [{role:'user', content:
+        `以下のInstagramバズパターンをTPPO化してケアネス北島の完全な投稿文を作成してください。
+
+バズパターン：${title}
+フック例：${hook}
+構成の流れ：${structure}
+ベース：${tppo}
+ジャンル：${genre}
+${target?'ターゲット：'+target:''}
+
+【ケアネス北島の強み】
+・遺伝子解析で個人に最適なトレーニングを設計
+・InBodyで体組成を可視化
+・姿勢カルテで根本原因を特定
+・徳島県北島町、スタッフ4〜6名の密なサポート
+・会員約200名、継続率が高い
+
+【投稿タイプ別指示】
+${typeSpecific[tppoType] || typeSpecific.know}
+
+【共通必須要素】
+・冒頭1行：スクロールが止まる一文（数字・疑問形・意外性）
+・改行多め・読みやすい
+・最後：「プロフのLINEから無料体験予約できます」でCTA
+・絵文字3〜5個
+・投稿文の後にハッシュタグ15〜20個（#ケアネス北島 #北島町 必須）
+
+完全な投稿文＋ハッシュタグを出力してください。`}]
+    });
+
+    txtEl.textContent = txt;
+    box.scrollIntoView({behavior:'smooth', block:'start'});
+    toast('TPPO化が完了しました ✓');
+  } catch(e) {
+    txtEl.textContent = 'エラー: ' + e.message;
+  } finally {
+    hld(); regenBtn.disabled = false;
+    regenBtn.onclick = () => tppoize(currentTppoIdx);
+  }
+}
+
+// TPPO結果を他タブに送る
+function sendTPPOtoCap() {
+  const txt = document.getElementById('TP_ORIG_TXT').textContent;
+  if (!txt || txt.includes('生成中')) { toast('先にTPPO化を実行してください'); return; }
+  // 豆知識タブに内容を反映
+  selCapType(
+    document.querySelector('#P_cap .typrow .tyb'),
+    tppoType==='voice'?'voice':tppoType==='event'?'event':tppoType==='announce'?'announce':'know'
+  );
+  const themeEl = document.getElementById('K_theme');
+  if (themeEl) themeEl.value = document.getElementById('TP_GENRE').value;
+  showTab('cap');
+  toast('投稿文タブに切り替えました。テーマを確認して生成してください');
+}
+function sendTPPOtoImg() {
+  const genre = document.getElementById('TP_GENRE').value;
+  document.getElementById('IM_TITLE').value = genre;
+  showTab('img');
+  toast('画像タブに切り替えました');
+}
+
+// ── TREND MONITOR ──
+async function runMonitor() {
+  const err = document.getElementById('MON_ERR');
+  err.classList.remove('on');
+  const period = document.getElementById('MON_PERIOD').value;
+  const region = document.getElementById('MON_REGION').value;
+
+  setBtn('MON_BTN', true);
+  ld('全タイプのトレンドを調査中...', 'フィットネス×全投稿形式を一括検索しています', 25000);
+
+  const sys = `あなたはInstagramトレンド分析の専門家。ケアネス北島（フィットネスジム・徳島・遺伝子解析）のInstagram運用のために、今バズっている投稿の全体トレンドを分析してください。
+
+ウェブ検索で最新情報を調査し、以下の形式で出力してください：
+
+===SCORES===
+豆知識フィード:スコア(0-100):上昇/横ばい/低下:コメント一文
+会員の声:スコア:トレンド:コメント
+イベント報告:スコア:トレンド:コメント
+リール:スコア:トレンド:コメント
+カルーセル:スコア:トレンド:コメント
+告知:スコア:トレンド:コメント
+
+===TREND_1===
+TITLE: （最もバズっているトレンド名）
+TYPE: （対応する投稿タイプ）
+WHY: （バズっている理由 2文）
+ACTION: （ケアネス北島がすぐ実践できる具体的アクション1文）
+
+===TREND_2===
+（同形式 2番目）
+
+===TREND_3===
+（同形式 3番目）
+
+===KEYWORDS===
+（急上昇キーワードをカンマ区切りで10個、各キーワードの前に HOT: または RISE: または NEW: を付ける）`;
+
+  try {
+    const txt = await callAPI({
+      model: 'claude-haiku-4-5-20251001', max_tokens: 2000,
+      tools: [{"type":"web_search_20250305","name":"web_search"}],
+      system: sys,
+      messages: [{role:'user', content:
+        `${period==='week'?'直近7日間':'直近30日間'}のInstagram${region==='local'?'地方・地域密着アカウントの':''}フィットネス・健康ジャンルの投稿トレンドをウェブ検索で調査・分析してください`}]
+    });
+
+    parseMonitorResult(txt);
+    showRes('RES_monitor');
+    toast('トレンド一括調査が完了しました ✓');
+  } catch(e) {
+    err.textContent = 'エラー: ' + e.message;
+    err.classList.add('on');
+  } finally {
+    hld(); setBtn('MON_BTN', false);
+  }
+}
+
+function parseMonitorResult(txt) {
+  // スコアボード
+  const sm = txt.match(/===SCORES===\s*([\s\S]*?)(?:===TREND|$)/);
+  if (sm) {
+    const scoreEl = document.getElementById('MON_SCORES');
+    const dateEl = document.getElementById('MON_DATE');
+    dateEl.textContent = '調査日：' + new Date().toLocaleDateString('ja-JP');
+    scoreEl.innerHTML = '';
+
+    const lines = sm[1].trim().split('
+').filter(l => l.trim());
+    lines.forEach(line => {
+      const parts = line.split(':');
+      if (parts.length < 3) return;
+      const label = parts[0].trim();
+      const score = parseInt(parts[1]) || 0;
+      const trend = parts[2].trim();
+      const comment = parts.slice(3).join(':').trim();
+
+      const trendColors = {'上昇':'var(--gn)','横ばい':'var(--yw)','低下':'var(--mt)'};
+      const barColors = {
+        'リール': 'linear-gradient(90deg,#5020a0,#8040c0)',
+        'カルーセル': 'linear-gradient(90deg,#0a6060,#10a0a0)',
+        '豆知識フィード': 'linear-gradient(90deg,#0f2444,#2e5ea0)',
+        '会員の声': 'linear-gradient(90deg,#0d3a18,#1e7a38)',
+        'イベント報告': 'linear-gradient(90deg,#3a2800,#7a5800)',
+        '告知': 'linear-gradient(90deg,#3a0808,#8a1515)',
+      };
+      const color = barColors[label] || 'linear-gradient(90deg,var(--nv2),var(--nv3))';
+
+      const row = document.createElement('div');
+      row.className = 'score-row';
+      row.innerHTML = `
+        <div class="score-label">${label}</div>
+        <div class="score-bar-bg">
+          <div class="score-bar-fill" style="width:${score}%;background:${color}"></div>
+        </div>
+        <div class="score-val">${score}</div>
+        <span class="score-badge" style="color:${trendColors[trend]||'var(--mt)'};
+          background:rgba(0,0,0,.04)">${trend}</span>
+      `;
+      if (comment) {
+        const tip = document.createElement('div');
+        tip.style.cssText='font-size:10px;color:var(--mt);padding:2px 0 6px 80px';
+        tip.textContent = comment;
+        scoreEl.appendChild(row);
+        scoreEl.appendChild(tip);
+      } else {
+        scoreEl.appendChild(row);
+      }
+    });
+    document.getElementById('MON_SCOREBOARD').style.display = 'block';
+  }
+
+  // トレンドカード
+  const cards = document.getElementById('MON_CARDS');
+  cards.innerHTML = '';
+  const trends = [...txt.matchAll(/===TREND_\d+===\s*([\s\S]*?)(?===TREND|===KEYWORDS|$)/g)];
+  trends.forEach((m, i) => {
+    const blk = m[1];
+    const title = blk.match(/TITLE:\s*([^
+]+)/)?.[1]?.trim() || '';
+    const type = blk.match(/TYPE:\s*([^
+]+)/)?.[1]?.trim() || '';
+    const why = blk.match(/WHY:\s*([\s\S]*?)(?:ACTION:|===|$)/)?.[1]?.trim() || '';
+    const action = blk.match(/ACTION:\s*([^
+]+)/)?.[1]?.trim() || '';
+
+    const d = document.createElement('div');
+    d.className = 'trend-card';
+    d.innerHTML = `
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+        <div style="background:var(--nv2);color:#fff;font-size:11px;font-weight:900;
+          width:22px;height:22px;border-radius:50%;display:grid;place-items:center">${i+1}</div>
+        <div class="trend-ttl" style="margin:0">${title}</div>
+        ${type?`<span style="font-size:9px;background:var(--bg2);border:1px solid var(--brd);
+          padding:2px 7px;border-radius:8px;color:var(--nv4);white-space:nowrap">${type}</span>`:''}
+      </div>
+      <div class="trend-desc">${why}</div>
+      ${action?`<div style="background:rgba(13,122,64,.07);border:1px solid rgba(13,122,64,.2);
+        border-radius:6px;padding:8px 10px;margin-top:8px">
+        <div style="font-size:9px;font-weight:700;color:var(--gn);margin-bottom:2px">✦ ケアネス北島の実践アクション</div>
+        <div style="font-size:12px;font-weight:700;color:var(--tx)">${action}</div>
+      </div>`:''}
+      <div style="margin-top:10px">
+        <button class="sbtn" onclick="jumpToTPPO('${type}')">このトレンドでTPPO化 →</button>
+      </div>`;
+    cards.appendChild(d);
+  });
+
+  // キーワード
+  const km = txt.match(/===KEYWORDS===\s*([\s\S]*)$/);
+  if (km) {
+    const kwList = document.getElementById('MON_KW_LIST');
+    kwList.innerHTML = '';
+    const kws = km[1].trim().split(',').map(k => k.trim()).filter(k => k);
+    kws.forEach(kw => {
+      const isHot = /^HOT:/i.test(kw);
+      const isRise = /^RISE:/i.test(kw);
+      const label = kw.replace(/^(HOT|RISE|NEW):\s*/i, '');
+      const chip = document.createElement('button');
+      chip.className = 'kw-chip' + (isHot?' hot':isRise?' rise':'');
+      chip.textContent = (isHot?'🔥 ':isRise?'📈 ':'') + label;
+      chip.onclick = () => jumpToTPPO('', label);
+      kwList.appendChild(chip);
+    });
+    document.getElementById('MON_KEYWORDS').style.display = 'block';
+  }
+}
+
+// モニターから目的別TPPOに飛ぶ
+function jumpToTPPO(type, keyword) {
+  switchTPPOMode('purpose');
+  if (keyword) {
+    document.getElementById('TP_REQ').value = keyword;
+  }
+  // タイプ判定
+  const typeMap = {
+    'リール': 'reel', 'カルーセル': 'carousel',
+    '豆知識': 'know', '会員の声': 'voice',
+    'イベント': 'event', '告知': 'announce'
+  };
+  let mapped = 'know';
+  for (const [k, v] of Object.entries(typeMap)) {
+    if (type.includes(k)) { mapped = v; break; }
+  }
+  const btn = document.querySelector(`#TPPO_PURPOSE .tppo-type[onclick*="${mapped}"]`);
+  if (btn) selTPPOType(btn, mapped);
+  toast('目的別TPPOに切り替えました。調査を実行してください');
+}
+
+// ════════════════════════════════════════
+// 使い方ガイド
+// ════════════════════════════════════════
+function showG(id,btn){
+  document.querySelectorAll('.gsec').forEach(e=>e.classList.remove('on'));
+  document.querySelectorAll('.gnbtn').forEach(e=>e.classList.remove('on'));
+  document.getElementById('G_'+id)?.classList.add('on');
+  btn?.classList.add('on');
+}
+
+function copyWorkerCode(){
+  navigator.clipboard.writeText(document.getElementById('WORKER_CODE').textContent)
+    .then(()=>toast('コードをコピーしました'));
+}
+
+// ════════════════════════════════════════
+// CANVAS UTILITIES
+// ════════════════════════════════════════
+function rr(cx,x,y,w,h,r){
+  cx.beginPath();
+  cx.moveTo(x+r,y);cx.lineTo(x+w-r,y);cx.arcTo(x+w,y,x+w,y+r,r);
+  cx.lineTo(x+w,y+h-r);cx.arcTo(x+w,y+h,x+w-r,y+h,r);
+  cx.lineTo(x+r,y+h);cx.arcTo(x,y+h,x,y+h-r,r);
+  cx.lineTo(x,y+r);cx.arcTo(x,y,x+r,y,r);
+  cx.closePath();
+}
+
+function wrapTxt(cx,txt,maxW,font){
+  cx.font=font;
+  const lines=[];let line='';
+  for(const c of txt){
+    const t=line+c;
+    if(cx.measureText(t).width>maxW&&line){lines.push(line);line=c;}
+    else line=t;
+  }
+  if(line)lines.push(line);
+  return lines;
+}
+
+// ── グローバル公開（onclick から呼び出せるように）──
+window.showTab = showTab;
+window.openAPI = openAPI;
+window.closeAPI = closeAPI;
+window.saveAPI = saveAPI;
+window.selCapType = selCapType;
+window.genCaption = genCaption;
+window.sendToImg = sendToImg;
+window.selImgType = selImgType;
+window.genImage = genImage;
+window.dlPost = dlPost;
+window.dlThumb = dlThumb;
+window.addClips = addClips;
+window.delClip = delClip;
+window.previewTrim = previewTrim;
+window.addSub = addSub;
+window.delSub = delSub;
+window.seekThumb = seekThumb;
+window.captureVidThumb = captureVidThumb;
+window.genThumbFromVid = genThumbFromVid;
+window.dlVidThumb = dlVidThumb;
+window.exportVid = exportVid;
+window.switchTPPOMode = switchTPPOMode;
+window.selTPPOType = selTPPOType;
+window.runTPPO = runTPPO;
+window.tppoize = tppoize;
+window.sendTPPOtoCap = sendTPPOtoCap;
+window.sendTPPOtoImg = sendTPPOtoImg;
+window.runMonitor = runMonitor;
+window.jumpToTPPO = jumpToTPPO;
+window.showG = showG;
+window.copyWorkerCode = copyWorkerCode;
+window.doCopy = doCopy;
+
+</script>
+</body>
+</html>
