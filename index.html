@@ -1589,30 +1589,125 @@ function showOvl(on, msg='', pct=-1) {
 }
 
 // モデルの優先順位（失敗時に次を試す）
-const IMG_MODELS = ['flux', 'flux-pro', 'turbo'];
+// ── 画像生成（Cloudflare Workers AI → Pollinations → Canvas フォールバック）──
 
 async function loadImgWithFallback(prompt, seed) {
-  const base = `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}`;
-  const params = `width=1080&height=1080&nologo=true&seed=${seed}`;
 
-  for (let mi = 0; mi < IMG_MODELS.length; mi++) {
-    const model = IMG_MODELS[mi];
-    const url = `${base}?${params}&model=${model}`;
-    showOvl(true, `AI背景を生成中... (${model}) ${mi > 0 ? '再試行中' : ''}`, mi*33);
+  // ① Cloudflare Workers AI (FLUX.1-schnell) ─ 最優先
+  if (workerUrl) {
     try {
-      const img = await loadImgWithTimeout(url, 55000);
-      return img;
-    } catch(e) {
-      if (mi === IMG_MODELS.length - 1) {
-        throw new Error(`画像生成に失敗しました。しばらく待ってから再度お試しください。
-（Pollinations.ai が混雑している可能性があります）`);
+      showOvl(true, 'FLUX.1で高品質画像を生成中... (5〜15秒)');
+      const cfUrl = workerUrl.replace(/\/$/, '') + '/image';
+      const res = await Promise.race([
+        fetch(cfUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ prompt })
+        }),
+        new Promise((_, rej) => setTimeout(() => rej(new Error('timeout')), 30000))
+      ]);
+      if (res.ok) {
+        const json = await res.json();
+        if (json.image) {
+          const img = new Image();
+          await new Promise((res2, rej2) => {
+            img.onload = res2;
+            img.onerror = rej2;
+            img.src = 'data:image/png;base64,' + json.image;
+          });
+          return img;
+        }
       }
-      // 次のモデルを試す
-      console.warn(`Model ${model} failed, trying next...`, e.message);
+    } catch(e) {
+      console.warn('Workers AI failed:', e.message);
     }
   }
+
+  // ② Pollinations.ai フォールバック
+  const models = ['flux', 'turbo'];
+  const base = `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}`;
+  const params = `width=1080&height=1080&nologo=true&seed=${seed}`;
+  for (let mi = 0; mi < models.length; mi++) {
+    showOvl(true, `画像生成中... (${mi + 1}/${models.length} 試行)`);
+    try {
+      const img = await loadImgWithTimeout(
+        `${base}?${params}&model=${models[mi]}`, 30000
+      );
+      return img;
+    } catch(e) {
+      console.warn('Pollinations failed:', e.message);
+    }
+  }
+
+  // ③ Canvasグラデーション背景（必ず成功）
+  showOvl(true, 'デザイン背景を生成中...');
+  return generateGradientBg(prompt, seed);
 }
 
+// Canvasグラデーション背景（フォールバック）
+function generateGradientBg(prompt, seed) {
+  const cv = document.createElement('canvas');
+  cv.width = 1080; cv.height = 1080;
+  const ctx = cv.getContext('2d');
+
+  const palettes = [
+    ['#06111f','#0f2444','#1a3460'],
+    ['#061a0f','#0d3a1a','#155a2a'],
+    ['#110620','#28094a','#3d1278'],
+    ['#1a0606','#3a0f0f','#6a1a1a'],
+    ['#061220','#0a2540','#0f3d6a'],
+    ['#080820','#101048','#181870'],
+  ];
+  const pal = palettes[seed % palettes.length];
+
+  const grd = ctx.createRadialGradient(540, 380, 0, 540, 540, 820);
+  grd.addColorStop(0, pal[2]);
+  grd.addColorStop(0.55, pal[1]);
+  grd.addColorStop(1, pal[0]);
+  ctx.fillStyle = grd;
+  ctx.fillRect(0, 0, 1080, 1080);
+
+  const g2 = ctx.createRadialGradient(860, 180, 0, 860, 180, 420);
+  g2.addColorStop(0, 'rgba(255,255,255,0.13)');
+  g2.addColorStop(1, 'rgba(255,255,255,0)');
+  ctx.fillStyle = g2;
+  ctx.fillRect(0, 0, 1080, 1080);
+
+  const g3 = ctx.createRadialGradient(180, 900, 0, 180, 900, 360);
+  g3.addColorStop(0, 'rgba(80,140,255,0.11)');
+  g3.addColorStop(1, 'rgba(80,140,255,0)');
+  ctx.fillStyle = g3;
+  ctx.fillRect(0, 0, 1080, 1080);
+
+  ctx.save();
+  ctx.globalAlpha = 0.07;
+  ctx.strokeStyle = 'rgba(255,255,255,0.8)';
+  ctx.lineWidth = 1;
+  [220, 360, 500, 640].forEach(r => {
+    ctx.beginPath();
+    ctx.arc(540, 540, r, 0, Math.PI * 2);
+    ctx.stroke();
+  });
+  ctx.restore();
+
+  ctx.save();
+  ctx.globalAlpha = 0.05;
+  ctx.strokeStyle = 'rgba(255,255,255,0.9)';
+  ctx.lineWidth = 1;
+  for (let i = -5; i < 15; i++) {
+    ctx.beginPath();
+    ctx.moveTo(i * 120 - 200, 0);
+    ctx.lineTo(i * 120 + 400, 1080);
+    ctx.stroke();
+  }
+  ctx.restore();
+
+  return new Promise(res => {
+    const img = new Image();
+    img.onload = () => res(img);
+    img.src = cv.toDataURL('image/png');
+  });
+}
 function loadImgWithTimeout(url, timeoutMs) {
   return new Promise((res, rej) => {
     const timer = setTimeout(() => {
