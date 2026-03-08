@@ -1526,10 +1526,24 @@ async function genImage() {
         event: 'group outdoor fitness activity japanese community',
         thumb: 'premium professional fitness studio, aspirational health brand',
       };
+      const targetVal = document.getElementById('K_target')?.value || '幅広く';
+      const personaMap = {
+        '幅広く':    'general healthy japanese person, welcoming gym atmosphere',
+        '30〜40代男性': 'japanese businessman 35yo, suit to gym lifestyle, professional transformation',
+        '運動初心者': 'friendly beginner japanese woman, soft warm light, first step fitness journey, approachable and hopeful',
+        '高齢者':    'active senior japanese person, gentle exercise, warm natural light, community warmth',
+        '女性':      'japanese woman wellness lifestyle, natural light, soft elegant fitness aesthetic',
+      };
+      const persona = personaMap[targetVal] || personaMap['幅広く'];
+      const toneMap = {
+        '運動初心者': 'warm soft pastel tones, bright natural light, welcoming and encouraging atmosphere',
+        '高齢者':    'warm golden tones, gentle natural light, peaceful community setting',
+      };
+      const tone = toneMap[targetVal] || 'cinematic dark navy blue tones, premium studio lighting';
       prompt = await callAPI({
-        model: 'claude-haiku-4-5-20251001', max_tokens: 100,
+        model: 'claude-haiku-4-5-20251001', max_tokens: 120,
         messages: [{role:'user', content:
-          `Create Pollinations AI image prompt for Instagram background.\nTheme: ${title}. Style: ${hints[imgType]}.\nRules: photorealistic, cinematic, dark navy tones, specific subject matching theme, NO text NO words. One sentence.`}]
+          `Create image prompt for Instagram fitness post background.\nTheme: ${title}.\nPersona: ${persona}.\nStyle: ${hints[imgType]}, ${tone}.\nRules: photorealistic, specific subject person matching theme, NO text NO words NO letters. One sentence only.`}]
       });
     } catch(e) { prompt = ''; }
   }
@@ -1887,7 +1901,31 @@ function dlThumb(n) {
   if(!cv.width){toast('先に画像を生成してください');return;}
   dl(cv,`careness_thumb_${n===1?'16x9':'9x16'}_${Date.now()}.png`);
 }
-function dl(cv,name){const a=document.createElement('a');a.href=cv.toDataURL('image/png');a.download=name;a.click();toast('ダウンロードしました');}
+function dl(cv, name) {
+  const dataUrl = cv.toDataURL('image/png');
+  // iOSはshare sheet経由でカメラロールに保存できる
+  if (navigator.share && /iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+    // Base64→Blob→File
+    const arr = dataUrl.split(',');
+    const bstr = atob(arr[1]);
+    const u8 = new Uint8Array(bstr.length);
+    for (let i = 0; i < bstr.length; i++) u8[i] = bstr.charCodeAt(i);
+    const blob = new Blob([u8], {type: 'image/png'});
+    const file = new File([blob], name, {type: 'image/png'});
+    navigator.share({ files: [file], title: 'ケアネス北島' })
+      .then(() => toast('📸 カメラロールに保存できます'))
+      .catch(() => {
+        // フォールバック：<a>タグでダウンロード
+        const a = document.createElement('a');
+        a.href = dataUrl; a.download = name; a.click();
+        toast('ダウンロードしました');
+      });
+  } else {
+    const a = document.createElement('a');
+    a.href = dataUrl; a.download = name; a.click();
+    toast('ダウンロードしました');
+  }
+}
 
 // ════════════════════════════════════════
 // 動画編集
