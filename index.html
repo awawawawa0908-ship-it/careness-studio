@@ -1419,25 +1419,34 @@ async function genCaption() {
   setBtn('CAP_BTN', true);
   ld('AIが投稿文を生成中...', 'CVR最適化された構成で作成しています', 6000);
 
-  const sys = `あなたはケアネス北島（徳島県北島町・遺伝子解析×InBody×姿勢カルテのジム、会員約200名）のCVR特化SNSコピーライターです。
+  const sys = `あなたはケアネス北島（徳島県北島町）のSNSコピーライターです。
 
-目的：Instagram投稿を見た人がLINEを送り、体験予約につながること（バズ・フォロワー増加は副次的）
+【施設の本質・絶対に守ること】
+ケアネス北島は「メディカルフィットネス」「予防医療特化のジム」です。
+・筋トレ・ダイエット・マッチョを目指す場所ではない
+・PT（理学療法士）・OT（作業療法士）・管理栄養士が在籍する医療隣接施設
+・遺伝子解析（IDENSIL）×InBody×姿勢カルテで「その人だけのプログラム」を設計
+・ターゲットは「病院に行くほどでもないが、このままではまずいと感じている人」
+・キーワード：予防医療、健康寿命、体の不調改善、科学的根拠、専門家サポート
 
 投稿タイプ：${capType==='know'?'豆知識':capType==='voice'?'会員の声':capType==='event'?'イベント報告':'告知'}
 ${capType==='know'?'CVRフレーム：'+frame+'\nターゲット：'+target:''}
 
 必須要素：
-1. 冒頭1行：「え、自分のことだ」と思わせる一文（数字・疑問形・意外性のいずれか）
-2. 本文：共感→問題→解決策（ケアネスの強み）→証拠の流れ
-3. 最後：「プロフのLINEから無料体験予約できます」または類似のCTA
-4. 絵文字：3〜5個
-5. 8〜14行、改行多め、読みやすく
+1. 冒頭1行：「え、自分のことだ」と感じる不調・悩みの共感文（数字・疑問形・意外性のいずれか）
+2. 本文：不調への共感→原因（科学的視点）→ケアネスの専門家サポートで解決→実績・証拠
+3. トーン：親しみやすく・温かく・希望がある。怖がらせない、追い詰めない
+4. 最後：「プロフのLINEから無料体験予約できます」または類似のCTA
+5. 絵文字：3〜5個（医療・健康・自然系を優先）
+6. 8〜14行、改行多め、読みやすく
+
+NG表現：「マッチョ」「筋肉を鍛える」「ダイエット」単体での使用、過度な体型変化訴求
 
 出力形式（このままコピペできる形で）：
 ===CAPTION===
 （投稿文本文のみ）
 ===HASHTAGS===
-（#ケアネス北島 #北島町 #板野郡 #徳島 含む15〜20個）
+（#ケアネス北島 #北島町 #板野郡 #徳島 #予防医療 #メディカルフィットネス 含む15〜20個）
 ===CVR_CHECK===
 数字入り:YES/NO
 悩み共感:YES/NO
@@ -1521,29 +1530,30 @@ async function genImage() {
   if (apiKey && workerUrl) {
     try {
       const hints = {
-        know: 'health science concept, educational fitness visualization',
-        voice: 'japanese person fitness success transformation, gym lifestyle',
-        event: 'group outdoor fitness activity japanese community',
-        thumb: 'premium professional fitness studio, aspirational health brand',
+        know: 'preventive healthcare education, warm clinical wellness concept, gentle light',
+        voice: 'japanese person health improvement journey, warm natural light, hopeful expression',
+        event: 'welcoming community health event, bright airy space, diverse japanese participants',
+        thumb: 'clean bright medical fitness studio, professional yet warm, health and science aesthetic',
       };
       const targetVal = document.getElementById('K_target')?.value || '幅広く';
       const personaMap = {
-        '幅広く':    'general healthy japanese person, welcoming gym atmosphere',
-        '30〜40代男性': 'japanese businessman 35yo, suit to gym lifestyle, professional transformation',
-        '運動初心者': 'friendly beginner japanese woman, soft warm light, first step fitness journey, approachable and hopeful',
-        '高齢者':    'active senior japanese person, gentle exercise, warm natural light, community warmth',
-        '女性':      'japanese woman wellness lifestyle, natural light, soft elegant fitness aesthetic',
+        '幅広く':    'friendly japanese person 40s, bright clinical wellness environment, warm and approachable',
+        '30〜40代男性': 'japanese professional man 38yo, health checkup result discussion, calm medical consultation atmosphere',
+        '運動初心者': 'gentle japanese woman 45yo beginning wellness journey, soft natural light, warm encouraging atmosphere, hopeful smile',
+        '高齢者':    'active healthy japanese senior, gentle supervised exercise, warm community clinic setting, natural golden light',
+        '女性':      'japanese woman wellness and preventive health lifestyle, natural soft light, clean clinical warmth, calm and confident',
       };
       const persona = personaMap[targetVal] || personaMap['幅広く'];
       const toneMap = {
-        '運動初心者': 'warm soft pastel tones, bright natural light, welcoming and encouraging atmosphere',
-        '高齢者':    'warm golden tones, gentle natural light, peaceful community setting',
+        '運動初心者': 'soft pastel warm tones, bright welcoming natural light, no intimidation, gentle and safe',
+        '高齢者':    'warm golden hour light, gentle calm medical setting, community warmth, trustworthy',
+        '30〜40代男性': 'clean professional light, modern preventive health clinic, scientific and trustworthy',
       };
-      const tone = toneMap[targetVal] || 'cinematic dark navy blue tones, premium studio lighting';
+      const tone = toneMap[targetVal] || 'bright clean clinical warmth, soft natural light, hopeful and professional';
       prompt = await callAPI({
         model: 'claude-haiku-4-5-20251001', max_tokens: 120,
         messages: [{role:'user', content:
-          `Create image prompt for Instagram fitness post background.\nTheme: ${title}.\nPersona: ${persona}.\nStyle: ${hints[imgType]}, ${tone}.\nRules: photorealistic, specific subject person matching theme, NO text NO words NO letters. One sentence only.`}]
+          `Create image prompt for Instagram medical fitness preventive healthcare post.\nTheme: ${title}.\nSubject: ${persona}.\nTone: ${hints[imgType]}, ${tone}.\nStyle: photorealistic, bright and warm, NO muscles NO dark dramatic lighting NO gym equipment focus, NO text NO words. One sentence only.`}]
       });
     } catch(e) { prompt = ''; }
   }
@@ -1555,7 +1565,7 @@ async function genImage() {
 
   try {
     const seed = Math.floor(Math.random()*99999);
-    const full = prompt + ', photorealistic 8k, NO text NO letters NO words, cinematic lighting';
+    const full = prompt + ', photorealistic 8k, bright warm natural light, NO text NO letters NO words, NO dark dramatic lighting, NO bodybuilder NO muscular, clinical wellness warmth';
     const bg = await loadImgWithFallback(full, seed);
     lastBgImg = bg;
 
@@ -1744,19 +1754,32 @@ function loadImg(url) {
 
 function buildAutoPrompt(title, type) {
   const t = title;
-  if (/遺伝子|DNA/i.test(t)) return 'luminous DNA double helix strand, athletic japanese person silhouette, genetics fitness science, dark navy background, 8k cinematic';
-  if (/姿勢|背骨|猫背/i.test(t)) return 'japanese person with perfect posture in gym, spine alignment visualization, dramatic blue studio lighting, professional photography';
-  if (/睡眠|回復|休養/i.test(t)) return 'peaceful japanese woman sleeping in moonlight, health recovery concept, soft blue atmosphere, cinematic';
-  if (/代謝|ダイエット|体重|脂肪/i.test(t)) return 'athletic japanese woman running on treadmill, gym interior, dynamic motion blur, dramatic lighting, high energy';
-  if (/筋肉|筋トレ|ウェイト/i.test(t)) return 'japanese man doing dumbbell training, modern gym, dark dramatic lighting, muscle definition';
-  if (/InBody|体組成/i.test(t)) return 'medical body composition analysis display, blue digital health data, professional clinical setting, photorealistic';
-  if (/ウォーキング|ランニング|outdoor/i.test(t)) return 'japanese group walking in sunny park, community fitness event, golden hour, candid warm photography';
-  if (/食事|栄養|タンパク/i.test(t)) return 'healthy japanese meal preparation, nutritious colorful food, clean kitchen, professional food photography';
+  // テーマ別・予防医療トーンのプロンプト
+  if (/遺伝子|DNA|IDENSIL/i.test(t))
+    return 'soft glowing DNA helix with warm clinical light, japanese person consultation with doctor, modern bright medical office, hopeful and scientific, photorealistic';
+  if (/姿勢|背骨|猫背|腰痛/i.test(t))
+    return 'physical therapist gently assessing japanese patient posture, bright clinical studio, warm professional consultation, natural light, photorealistic';
+  if (/睡眠|回復|休養|疲れ/i.test(t))
+    return 'peaceful japanese woman 40s resting in bright airy room, morning natural light, calm health recovery, warm and gentle, photorealistic';
+  if (/代謝|体重|体脂肪|体組成|InBody/i.test(t))
+    return 'friendly japanese dietitian consulting with patient, clean bright medical nutrition office, colorful healthy meal on table, warm natural light, photorealistic';
+  if (/筋力|筋肉|運動/i.test(t))
+    return 'physical therapist guiding gentle exercise with japanese person 50s, bright rehabilitation room, warm and encouraging, no gym equipment, photorealistic';
+  if (/ウォーキング|ランニング|有酸素/i.test(t))
+    return 'diverse group of japanese people gentle walking in sunny park, warm community wellness event, golden hour, joyful and healthy, photorealistic';
+  if (/食事|栄養|タンパク|野菜/i.test(t))
+    return 'japanese registered dietitian with colorful fresh vegetables and nutrition chart, bright clean consultation room, warm professional, photorealistic';
+  if (/血圧|血糖|コレステロール|検査/i.test(t))
+    return 'friendly japanese doctor showing health data on tablet to patient, bright modern clinic, reassuring and professional, warm clinical light, photorealistic';
+  if (/ストレス|メンタル|心/i.test(t))
+    return 'calm japanese person meditating in bright airy wellness space, soft natural light, plants, peaceful and restorative, photorealistic';
+  if (/膝|関節|腰|肩/i.test(t))
+    return 'caring physical therapist treating japanese patient, bright rehabilitation clinic, warm professional setting, gentle and trustworthy, photorealistic';
   const d = {
-    know: 'japanese fitness trainer in premium gym, dark navy dramatic lighting, science concept visualization',
-    voice: 'happy smiling japanese woman 40s in gym, success transformation, bright professional setting',
-    event: 'group community fitness activity outdoors, sunny energetic, healthy lifestyle japanese',
-    thumb: 'luxury fitness studio dark navy elegant, professional health brand, aspirational minimal',
+    know: 'japanese preventive healthcare specialist explaining health concept, bright modern medical wellness clinic, warm natural light, professional and approachable',
+    voice: 'happy smiling japanese woman 50s in bright wellness clinic, health improvement success, warm natural light, genuine and warm expression',
+    event: 'welcoming health workshop with diverse japanese community, bright airy hall, health education, warm and inclusive, photorealistic',
+    thumb: 'clean bright modern medical fitness studio, white and warm tones, professional health brand, welcoming and trustworthy',
   };
   return d[type] || d.know;
 }
@@ -2551,7 +2574,7 @@ async function runMonitor() {
   setBtn('MON_BTN', true);
   ld('全タイプのトレンドを調査中...', 'フィットネス×全投稿形式を一括検索しています', 25000);
 
-  const sys = `あなたはInstagramトレンド分析の専門家。ケアネス北島（フィットネスジム・徳島・遺伝子解析）のInstagram運用のために、今バズっている投稿の全体トレンドを分析してください。
+  const sys = `あなたはInstagramトレンド分析の専門家。ケアネス北島（メディカルフィットネス・予防医療特化・徳島・PT/OT/管理栄養士在籍・遺伝子解析）のInstagram運用のために、今バズっている投稿の全体トレンドを分析してください。
 
 ウェブ検索で最新情報を調査し、以下の形式で出力してください：
 
