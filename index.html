@@ -1585,33 +1585,64 @@ async function genImage() {
   // ── Unsplash参照写真取得フロー ──
   if (unsplashKey) {
     try {
-      showOvl(true, '📸 参照写真を検索中...');
+      showOvl(true, '📸 テーマに合った写真を検索中...');
 
-      // Unsplashの検索クエリをClaudeに生成してもらう（or 直接日本語→英語変換）
-      const queryMap = {
-        '姿勢': 'woman stretching yoga natural light', '背骨': 'posture alignment wellness',
-        '疲れ': 'woman relaxing resting peaceful', '睡眠': 'peaceful sleep wellness morning',
-        '遺伝子': 'wellness consultation health science', 'DNA': 'health science consultation',
-        '食事': 'healthy meal vegetables kitchen', '栄養': 'nutritious food natural light',
-        'ウォーキング': 'woman walking park nature', 'ランニング': 'jogging park morning',
-        'ストレッチ': 'woman stretching home morning', '体操': 'gentle exercise home',
-        '筋肉': 'gentle workout natural light', '運動': 'gentle exercise wellness',
-        'ストレス': 'woman relaxing nature peaceful', 'メンタル': 'mindfulness meditation calm',
-        '代謝': 'wellness healthy lifestyle', '体重': 'wellness healthy lifestyle',
-      };
+      // ① ClaudeにUnsplash検索クエリを生成させる（APIあり）
+      // テーマ→英語検索クエリ（被写体・シーンを具体的に）
       let usQuery = '';
-      for (const [k, v] of Object.entries(queryMap)) {
-        if (title.includes(k)) { usQuery = v; break; }
+      if (apiKey && workerUrl) {
+        try {
+          const qPrompt = 'Translate this Japanese wellness theme into a specific Unsplash photo search query (English, 3-6 words, focus on the actual scene/subject/activity, not abstract). Theme: ' + title + '. Output only the search query, nothing else.';
+          usQuery = await callAPI({
+            model: 'claude-haiku-4-5-20251001', max_tokens: 20,
+            messages: [{role:'user', content: qPrompt}]
+          });
+          usQuery = usQuery.trim().replace(/['"]/g, '');
+        } catch(e) { usQuery = ''; }
       }
-      if (!usQuery) usQuery = 'japanese wellness lifestyle natural light';
 
-      // ターゲットによるクエリ補正
+      // ② フォールバック: キーワードマップ（APIなし時）
+      if (!usQuery) {
+        const queryMap = [
+          ['姿勢','woman posture stretching home window light'],
+          ['背骨','back alignment yoga mat natural light'],
+          ['疲れ','woman resting sofa tired relaxing'],
+          ['睡眠','sleeping woman morning bedroom peaceful'],
+          ['遺伝子','health consultation doctor patient clinic'],
+          ['DNA','medical science consultation wellness'],
+          ['食事','japanese healthy meal vegetables bowl'],
+          ['栄養','nutritious food cooking kitchen vegetables'],
+          ['ウォーキング','woman walking park morning sunshine'],
+          ['ランニング','woman jogging park morning'],
+          ['ストレッチ','woman stretching living room morning'],
+          ['体操','gentle exercise living room home'],
+          ['腰痛','woman back pain stretching gentle'],
+          ['肩こり','woman shoulder neck stretching office'],
+          ['膝','woman knee rehabilitation gentle exercise'],
+          ['むくみ','woman legs massage lymph drainage'],
+          ['ストレス','woman relaxing nature forest calm'],
+          ['メンタル','woman meditation mindfulness park peaceful'],
+          ['代謝','woman exercise walking metabolism healthy'],
+          ['体重','woman scale weight health lifestyle'],
+          ['呼吸','woman deep breathing outdoor fresh air'],
+          ['血流','woman circulation light exercise gentle'],
+          ['筋力','woman light strength training home dumbbell'],
+          ['バランス','woman balance yoga one leg home'],
+        ];
+        for (const [k, v] of queryMap) {
+          if (title.includes(k)) { usQuery = v; break; }
+        }
+        if (!usQuery) usQuery = title + ' wellness lifestyle woman natural light';
+      }
+
+      // ③ ターゲットによるクエリ補正
       const tv = document.getElementById('K_target')?.value || '幅広く';
-      if (tv === '高齢者') usQuery += ' senior';
-      else if (tv === '30〜40代男性') usQuery += ' man professional';
+      if (tv === '高齢者') usQuery += ' elderly senior';
+      else if (tv === '30〜40代男性') usQuery += ' man';
+      else if (tv === '女性') usQuery += ' woman';
 
       const usRes = await fetch(
-        `https://api.unsplash.com/search/photos?query=${encodeURIComponent(usQuery)}&per_page=6&orientation=squarish&content_filter=high&client_id=${unsplashKey}`
+        `https://api.unsplash.com/search/photos?query=${encodeURIComponent(usQuery)}&per_page=9&page=1&order_by=relevant&content_filter=high&client_id=${unsplashKey}`
       );
       if (usRes.ok) {
         const usData = await usRes.json();
@@ -1634,22 +1665,12 @@ async function genImage() {
             strip.appendChild(img);
           });
           document.getElementById('REF_AREA').style.display = 'block';
-          document.getElementById('REF_METHOD').textContent =
-            '✦ 実在写真の構図・光・雰囲気をAIが分析してFLUXプロンプトに変換します';
+          document.getElementById('REF_METHOD').textContent = '✦ この写真をベースにAIが新規生成します（被写体・構図・ライティングをFLUXに引き継ぎ）';
 
-          // 選択された写真（デフォルト1枚目）を取得してbase64化
-          showOvl(true, '📸 参照写真を読み込み中...');
+          // 選択された写真のURLを取得（base64化不要 → Claude VisionにURL直接渡し）
           const selImg = strip.querySelector('.ref-img.sel');
-          const refUrl = selImg?.dataset.regular || photos[0].urls.regular;
-
-          // CORS proxy経由でfetch → base64化
-          const refRes = await fetch(refUrl);
-          const blob = await refRes.blob();
-          refImgBase64 = await new Promise(res => {
-            const reader = new FileReader();
-            reader.onload = () => res(reader.result.split(',')[1]);
-            reader.readAsDataURL(blob);
-          });
+          refImgBase64 = selImg?.dataset.regular || photos[0].urls.regular;
+          // ※ refImgBase64変数を流用してURLを保持
         }
       }
     } catch(e) {
@@ -1664,11 +1685,11 @@ async function genImage() {
       showOvl(true, '🔍 写真を分析してプロンプト生成中...');
       if (refImgBase64) {
         // Claude Visionで参照写真を分析（プロンプトを変数に分離）
-        const visionTxt = 'Analyze this reference photo and create a FLUX prompt for a Japanese wellness Instagram post. Theme: ' + title + '. Extract lighting, color palette, composition, atmosphere from the photo. Output ONE sentence that recreates this photo style with the theme. Concept: gentle body alignment, natural and real. Rules: photorealistic, real japanese person, NO text NO words.';
+        const visionTxt = 'You are looking at a reference photo. Create a FLUX image generation prompt that generates a NEW photo very similar to this one. Describe: (1) the subject/person/activity in the photo, (2) the exact lighting and colors, (3) the composition and setting, (4) the mood and atmosphere. Adapt it to theme: ' + title + '. Output ONE English sentence that would produce a near-identical style photo. Japanese wellness context, natural warmth, real person. NO text NO words in image.';
         prompt = await callAPI({
           model: 'claude-haiku-4-5-20251001', max_tokens: 150,
           messages: [{role:'user', content: [
-            { type: 'image', source: { type: 'base64', media_type: 'image/jpeg', data: refImgBase64 } },
+            { type: 'image', source: { type: 'url', url: refImgBase64 } },
             { type: 'text', text: visionTxt }
           ]}]
         });
