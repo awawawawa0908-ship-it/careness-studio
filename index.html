@@ -171,10 +171,12 @@ label.fl .lb em{font-style:normal;font-size:9px;color:var(--mt);font-weight:400}
 .gen-msg{color:#fff;font-size:12px;font-weight:700}
 
 /* ── THUMBNAIL PAIR ── */
-.thumb-pair{display:grid;grid-template-columns:16fr 9fr;gap:8px;margin-bottom:12px}
+.thumb-pair{display:flex;gap:8px;margin-bottom:12px;align-items:flex-start}
 .thumb-wrap{background:var(--bg2);border:1px solid var(--brd);
-  border-radius:var(--r3);overflow:hidden}
-.thumb-wrap canvas{width:100%;display:block}
+  border-radius:var(--r3);overflow:hidden;flex:1}
+.thumb-wrap canvas{width:100%;display:block;height:auto}
+#TH1{aspect-ratio:16/9}
+#TH2{aspect-ratio:9/16}
 .thumb-lbl{font-size:9px;font-weight:700;color:var(--mt);
   text-align:center;padding:4px;background:var(--wh);border-top:1px solid var(--brd)}
 
@@ -543,11 +545,31 @@ label.fl .lb em{font-style:normal;font-size:9px;color:var(--mt);font-weight:400}
   </div>
 
   <div class="card">
-    <div class="card-hd">テーマを入力</div>
+    <div class="card-hd">テーマ・ターゲットを入力</div>
     <label class="fl"><div class="lb">投稿テーマ（日本語でOK）</div>
       <input class="fi" id="IM_TITLE" placeholder="例：遺伝子でわかるあなたの運動タイプ"></label>
     <label class="fl"><div class="lb">サブタイトル <em>任意</em></div>
       <input class="fi" id="IM_SUB" placeholder="例：速筋タイプは高強度トレーニングが最適"></label>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <label class="fl" style="flex:1;min-width:130px">
+        <div class="lb">ターゲット</div>
+        <select class="fs" id="IM_TARGET">
+          <option>幅広く</option>
+          <option>30〜40代男性</option>
+          <option>運動初心者</option>
+          <option>高齢者</option>
+          <option>女性</option>
+        </select>
+      </label>
+      <label class="fl" style="flex:1;min-width:130px">
+        <div class="lb">CVRフレーム</div>
+        <select class="fs" id="IM_FRAME">
+          <option value="PASONA">PASONA（悩み→解決）</option>
+          <option value="BFAB">BFAB（ベネフィット先出し）</option>
+          <option value="QUIZ">クイズ型</option>
+        </select>
+      </label>
+    </div>
     <div id="PROMPT_AREA" style="display:none">
       <div class="note nb" style="font-size:11px">
         <strong>AIが生成したプロンプト：</strong><br>
@@ -1530,12 +1552,12 @@ async function genImage() {
   if (apiKey && workerUrl) {
     try {
       const hints = {
-        know: 'preventive healthcare education, warm clinical wellness concept, gentle light',
-        voice: 'japanese person health improvement journey, warm natural light, hopeful expression',
-        event: 'welcoming community health event, bright airy space, diverse japanese participants',
-        thumb: 'clean bright medical fitness studio, professional yet warm, health and science aesthetic',
-      };
-      const targetVal = document.getElementById('K_target')?.value || '幅広く';
+        know:  'real japanese person in gentle everyday wellness moment, natural home or studio, soft warm morning light, not gym-hard but body-tuning',
+        voice: 'genuine smiling japanese woman 40s, warm natural light, real body wellness glow, NOT model-perfect, relatable and hopeful',
+        event: 'friendly welcoming group of japanese people gentle exercise outdoors, warm community atmosphere, casual comfortable clothing',
+        thumb: 'serene japanese wellness space, soft window light, clean calm atmosphere, real person relaxed and at ease',
+      }
+      const targetVal = document.getElementById('IM_TARGET')?.value || document.getElementById('K_target')?.value || '幅広く';
       const personaMap = {
         '幅広く':    'friendly japanese person 40s, bright clinical wellness environment, warm and approachable',
         '30〜40代男性': 'japanese professional man 38yo, health checkup result discussion, calm medical consultation atmosphere',
@@ -1553,7 +1575,11 @@ async function genImage() {
       prompt = await callAPI({
         model: 'claude-haiku-4-5-20251001', max_tokens: 120,
         messages: [{role:'user', content:
-          `Create image prompt for Instagram medical fitness preventive healthcare post.\nTheme: ${title}.\nSubject: ${persona}.\nTone: ${hints[imgType]}, ${tone}.\nStyle: photorealistic, bright and warm, NO muscles NO dark dramatic lighting NO gym equipment focus, NO text NO words. One sentence only.`}]
+          `Create an image prompt for Instagram wellness post.
+Theme: ${title}. Subject: ${persona}.
+Visual: ${hints[imgType]}, ${tone}.
+Concept: "TOTONORU" = gentle body alignment, NOT muscle training. Real, natural, warm.
+Rules: photorealistic candid style, natural imperfect skin, soft light, real everyday person, NO text NO words. One sentence.`}]
       });
     } catch(e) { prompt = ''; }
   }
@@ -1754,116 +1780,118 @@ function loadImg(url) {
 
 function buildAutoPrompt(title, type) {
   const t = title;
-  // テーマ別・予防医療トーンのプロンプト
   if (/遺伝子|DNA|IDENSIL/i.test(t))
-    return 'soft glowing DNA helix with warm clinical light, japanese person consultation with doctor, modern bright medical office, hopeful and scientific, photorealistic';
+    return 'real japanese woman 40s at wellness consultation, warm bright studio, soft natural light, learning about her body, genuine and hopeful expression, photorealistic candid';
   if (/姿勢|背骨|猫背|腰痛/i.test(t))
-    return 'physical therapist gently assessing japanese patient posture, bright clinical studio, warm professional consultation, natural light, photorealistic';
+    return 'japanese woman gently stretching at home by window, morning warm sunlight, natural everyday clothes, calm peaceful wellness moment, real not model-perfect, photorealistic';
   if (/睡眠|回復|休養|疲れ/i.test(t))
-    return 'peaceful japanese woman 40s resting in bright airy room, morning natural light, calm health recovery, warm and gentle, photorealistic';
-  if (/代謝|体重|体脂肪|体組成|InBody/i.test(t))
-    return 'friendly japanese dietitian consulting with patient, clean bright medical nutrition office, colorful healthy meal on table, warm natural light, photorealistic';
-  if (/筋力|筋肉|運動/i.test(t))
-    return 'physical therapist guiding gentle exercise with japanese person 50s, bright rehabilitation room, warm and encouraging, no gym equipment, photorealistic';
-  if (/ウォーキング|ランニング|有酸素/i.test(t))
-    return 'diverse group of japanese people gentle walking in sunny park, warm community wellness event, golden hour, joyful and healthy, photorealistic';
-  if (/食事|栄養|タンパク|野菜/i.test(t))
-    return 'japanese registered dietitian with colorful fresh vegetables and nutrition chart, bright clean consultation room, warm professional, photorealistic';
-  if (/血圧|血糖|コレステロール|検査/i.test(t))
-    return 'friendly japanese doctor showing health data on tablet to patient, bright modern clinic, reassuring and professional, warm clinical light, photorealistic';
+    return 'japanese woman peacefully resting in bright cozy room, morning natural light, soft white bedding, genuine relaxed expression, real wellness moment, photorealistic';
+  if (/食事|栄養|食べ|ダイエット/i.test(t))
+    return 'japanese woman preparing healthy meal in bright kitchen, natural light, colorful vegetables, everyday home setting, warm and inviting, photorealistic candid';
   if (/ストレス|メンタル|心/i.test(t))
-    return 'calm japanese person meditating in bright airy wellness space, soft natural light, plants, peaceful and restorative, photorealistic';
-  if (/膝|関節|腰|肩/i.test(t))
-    return 'caring physical therapist treating japanese patient, bright rehabilitation clinic, warm professional setting, gentle and trustworthy, photorealistic';
+    return 'japanese woman taking peaceful break in nature, gentle forest light, calm breathing moment, natural clothing, genuine serene expression, photorealistic';
+  if (/ウォーキング|ランニング|歩く/i.test(t))
+    return 'japanese person walking in neighborhood park, golden afternoon light, casual athletic wear, genuine smile, community warmth, photorealistic candid';
+  if (/筋肉|トレーニング|運動/i.test(t))
+    return 'japanese woman doing gentle bodyweight exercise at bright studio, natural light, real everyday body, focused and calm, wellness not bodybuilding, photorealistic';
   const d = {
-    know: 'japanese preventive healthcare specialist explaining health concept, bright modern medical wellness clinic, warm natural light, professional and approachable',
-    voice: 'happy smiling japanese woman 50s in bright wellness clinic, health improvement success, warm natural light, genuine and warm expression',
-    event: 'welcoming health workshop with diverse japanese community, bright airy hall, health education, warm and inclusive, photorealistic',
-    thumb: 'clean bright modern medical fitness studio, white and warm tones, professional health brand, welcoming and trustworthy',
+    know:  'real japanese person in gentle wellness moment, soft natural light, warm and approachable, everyday setting',
+    voice: 'genuine smiling japanese woman 40s, warm natural light, real wellness transformation, relatable and hopeful, photorealistic candid',
+    event: 'friendly group japanese people light exercise outdoors, warm golden light, casual clothes, community warmth, photorealistic',
+    thumb: 'serene bright wellness studio japan, soft window light, clean calm space, real person at ease, photorealistic',
   };
   return d[type] || d.know;
 }
 
-// ── DRAW POST IMAGE ──
 function drawPost(cv, bg, title, sub, type) {
   const cx = cv.getContext('2d');
   const W = cv.width, H = cv.height;
+  const PAD = 72; // 余白を広く（端から離す）
 
+  // ── 背景 ──
   cx.drawImage(bg, 0, 0, W, H);
 
-  // オーバーレイ（中央が薄い）
-  const g = cx.createLinearGradient(0, 0, 0, H);
-  g.addColorStop(0,    'rgba(6,14,40,0.90)');
-  g.addColorStop(0.16, 'rgba(6,14,40,0.38)');
-  g.addColorStop(0.32, 'rgba(6,14,40,0.05)');
-  g.addColorStop(0.60, 'rgba(6,14,40,0.04)');
-  g.addColorStop(0.78, 'rgba(6,14,40,0.48)');
-  g.addColorStop(1,    'rgba(6,14,40,0.94)');
-  cx.fillStyle = g; cx.fillRect(0, 0, W, H);
+  // 上部グラデーション（ヘッダー用）
+  const gt = cx.createLinearGradient(0,0,0,280);
+  gt.addColorStop(0,'rgba(4,10,28,0.88)');
+  gt.addColorStop(1,'rgba(4,10,28,0)');
+  cx.fillStyle=gt; cx.fillRect(0,0,W,280);
 
-  // 左縦ライン
-  const sg = cx.createLinearGradient(0,0,0,H);
-  sg.addColorStop(0,'rgba(60,120,220,0)');
-  sg.addColorStop(0.25,'rgba(60,120,220,0.85)');
-  sg.addColorStop(0.75,'rgba(60,120,220,0.85)');
-  sg.addColorStop(1,'rgba(60,120,220,0)');
-  cx.fillStyle=sg; cx.fillRect(0,0,5,H);
+  // 下部グラデーション（フッター用）
+  const gb2 = cx.createLinearGradient(0,820,0,H);
+  gb2.addColorStop(0,'rgba(4,10,28,0)');
+  gb2.addColorStop(1,'rgba(4,10,28,0.96)');
+  cx.fillStyle=gb2; cx.fillRect(0,820,W,H-820);
 
-  // ── 上部 ──
-  cx.fillStyle='rgba(255,255,255,0.92)';
-  cx.font='bold 26px sans-serif'; cx.textBaseline='top';
-  cx.fillText('CARENESS KITAJIMA', 32, 30);
+  // ── ヘッダー（左上） ──
+  cx.fillStyle='rgba(255,255,255,0.90)';
+  cx.font='bold 24px sans-serif'; cx.textBaseline='top';
+  cx.fillText('CARENESS KITAJIMA', PAD, 38);
 
-  cx.fillStyle='rgba(160,200,255,0.75)';
-  cx.font='15px sans-serif';
-  cx.fillText('ケアネス北島  ／  遺伝子解析 × InBody × 姿勢カルテ', 32, 64);
+  cx.fillStyle='rgba(160,200,255,0.65)';
+  cx.font='13px sans-serif';
+  cx.fillText('ケアネス北島  ／  遺伝子解析 × InBody × 姿勢カルテ', PAD, 72);
 
-  cx.fillStyle='rgba(60,120,220,0.5)';
-  cx.fillRect(32, 93, W-64, 1);
+  // ── タイプバッジ（Pill型）──
+  const tnm = {know:'豆 知 識', voice:'会員の声', event:'イベント', thumb:'CARENESS'};
+  const badge = tnm[type] || '投稿';
+  cx.fillStyle='rgba(60,120,220,0.85)';
+  rr(cx, PAD, 108, badge.length * 14 + 36, 34, 17);
+  cx.fill();
+  cx.fillStyle='#fff'; cx.font='bold 14px sans-serif'; cx.textBaseline='middle';
+  cx.fillText(badge, PAD + 18, 125);
 
-  // タイプバッジ
-  const tnm = {know:'豆 知 識',voice:'会員の声',event:'イベント',thumb:'CARENESS'};
-  cx.fillStyle='rgba(15,36,68,0.80)';
-  rr(cx,32,108,156,36,18); cx.fill();
-  cx.strokeStyle='rgba(60,120,220,0.65)'; cx.lineWidth=1.5;
-  rr(cx,32,108,156,36,18); cx.stroke();
-  cx.fillStyle='#fff'; cx.font='bold 15px sans-serif'; cx.textBaseline='middle';
-  cx.fillText(tnm[type]||'投稿', 50, 127);
+  // ── メインタイトル（中央下寄せ、余白たっぷり）──
+  const maxW = W - PAD * 2;
+  const fsize = title.length > 16 ? 52 : title.length > 10 ? 62 : 74;
+  cx.font = `bold ${fsize}px sans-serif`;
+  const lines = wrapTxt(cx, title, maxW, `bold ${fsize}px sans-serif`);
 
-  // ── メインタイトル ──
-  const fsize = title.length > 14 ? 52 : title.length > 9 ? 60 : 70;
-  cx.font=`bold ${fsize}px sans-serif`; cx.textBaseline='top';
-  const lines = wrapTxt(cx, title, W-64, `bold ${fsize}px sans-serif`);
-  let ty = 165;
-  cx.fillStyle='rgba(255,255,255,0.96)';
-  lines.forEach(l => { cx.fillText(l, 32, ty); ty += fsize+10; });
+  // タイトルエリアの高さ計算→中下部に配置
+  const lineH = fsize + 14;
+  const totalH = lines.length * lineH;
+  let ty = H - 260 - totalH; // フッターから260px上
+  if (ty < 180) ty = 180;
 
-  // アクセントライン
-  ty += 6;
-  cx.fillStyle='rgba(60,120,220,1)'; cx.fillRect(32,ty,64,4);
-  cx.fillStyle='rgba(60,120,220,0.3)'; cx.fillRect(104,ty,160,4);
+  // テキストシャドウ効果
+  cx.shadowColor = 'rgba(0,0,0,0.6)';
+  cx.shadowBlur = 18;
+  cx.fillStyle = '#ffffff';
+  cx.textBaseline = 'top';
+  lines.forEach(l => {
+    cx.fillText(l, PAD, ty);
+    ty += lineH;
+  });
+  cx.shadowBlur = 0;
 
-  // サブタイトル
+  // アクセントライン（タイトル直下）
+  ty += 8;
+  const acW = 56;
+  cx.fillStyle='rgba(80,150,255,1)'; cx.fillRect(PAD, ty, acW, 4);
+  cx.fillStyle='rgba(80,150,255,0.25)'; cx.fillRect(PAD + acW + 8, ty, 140, 4);
+
+  // ── サブタイトル ──
   if (sub) {
-    cx.fillStyle='rgba(180,215,255,0.85)';
-    cx.font='25px sans-serif';
-    const sl = wrapTxt(cx, sub, W-64, '25px sans-serif');
     ty += 22;
-    sl.forEach(l => { cx.fillText(l, 32, ty); ty += 35; });
+    cx.fillStyle='rgba(200,225,255,0.88)';
+    cx.shadowColor='rgba(0,0,0,0.5)'; cx.shadowBlur=10;
+    cx.font='22px sans-serif';
+    const sl = wrapTxt(cx, sub, maxW, '22px sans-serif');
+    sl.forEach(l => { cx.fillText(l, PAD, ty); ty += 34; });
+    cx.shadowBlur = 0;
   }
 
-  // ── フッター ──
-  cx.fillStyle='rgba(6,14,40,0.88)'; cx.fillRect(0, 928, W, 152);
-  cx.fillStyle='rgba(60,120,220,0.45)'; cx.fillRect(0, 928, W, 1.5);
+  // ── フッター（CTA）──
+  const footY = 920;
+  cx.fillStyle='rgba(255,255,255,0.92)';
+  cx.font='bold 21px sans-serif'; cx.textBaseline='middle';
+  cx.fillText('LINEから無料体験予約  →  プロフィールリンクへ', PAD, footY + 22);
 
-  cx.fillStyle='rgba(255,255,255,0.90)';
-  cx.font='bold 22px sans-serif'; cx.textBaseline='middle';
-  cx.fillText('LINEから無料体験予約 → プロフィールリンクへ', 32, 970);
-
-  cx.fillStyle='rgba(130,175,240,0.72)';
-  cx.font='15px sans-serif';
-  cx.fillText('#ケアネス北島  #北島町  #遺伝子検査  #徳島フィットネス', 32, 1010);
+  cx.fillStyle='rgba(120,170,240,0.68)';
+  cx.font='13px sans-serif';
+  cx.fillText('#ケアネス北島  #北島町  #遺伝子検査  #徳島フィットネス', PAD, footY + 56);
 }
+
 
 // ── BUILD THUMBNAILS ──
 function buildThumbs(bg, title, sub, type) {
@@ -1879,40 +1907,53 @@ function buildThumbs(bg, title, sub, type) {
 function drawThumb(cv, bg, title, sub, type, ratio) {
   const cx = cv.getContext('2d');
   const W = cv.width, H = cv.height;
+  const PAD = W * 0.07; // 余白7%
 
-  // Crop bg
-  const bA=1, cA=W/H;
+  // 背景クロップ
+  const cA = W/H;
   let sx=0,sy=0,sw=1080,sh=1080;
-  if(cA>bA){sh=1080/cA;sy=(1080-sh)/2}else{sw=1080*cA;sx=(1080-sw)/2}
+  if(cA>1){sh=1080/cA;sy=(1080-sh)/2}else{sw=1080*cA;sx=(1080-sw)/2}
   cx.drawImage(bg,sx,sy,sw,sh,0,0,W,H);
 
-  const og=cx.createLinearGradient(0,0,0,H);
-  og.addColorStop(0,'rgba(6,14,40,0.78)');
-  og.addColorStop(0.45,'rgba(6,14,40,0.18)');
-  og.addColorStop(1,'rgba(6,14,40,0.88)');
-  cx.fillStyle=og; cx.fillRect(0,0,W,H);
+  // グラデーション
+  const gt = cx.createLinearGradient(0,0,0,H*0.4);
+  gt.addColorStop(0,'rgba(4,10,28,0.85)'); gt.addColorStop(1,'rgba(4,10,28,0)');
+  cx.fillStyle=gt; cx.fillRect(0,0,W,H*0.4);
+  const gb = cx.createLinearGradient(0,H*0.65,0,H);
+  gb.addColorStop(0,'rgba(4,10,28,0)'); gb.addColorStop(1,'rgba(4,10,28,0.90)');
+  cx.fillStyle=gb; cx.fillRect(0,H*0.65,W,H*0.35);
 
-  cx.fillStyle='rgba(60,120,220,0.88)'; cx.fillRect(0,0,4,H);
-
-  // Brand
-  const bf=Math.floor(W*0.027);
+  // ブランド名
+  const bf = Math.floor(W*0.032);
   cx.fillStyle='rgba(255,255,255,0.88)';
   cx.font=`bold ${bf}px sans-serif`; cx.textBaseline='top';
-  cx.fillText('CARENESS KITAJIMA', W*0.04, H*0.05);
+  cx.fillText('CARENESS KITAJIMA', PAD, H*0.055);
 
-  // Title
-  const tf=Math.floor(W*0.052);
+  // タイトル（下部中央寄り）
+  const tf = Math.floor(W * (ratio==='9:16' ? 0.068 : 0.058));
   cx.font=`bold ${tf}px sans-serif`;
-  const lines=wrapTxt(cx,title,W*0.88,`bold ${tf}px sans-serif`);
-  let ty=ratio==='9:16'?H*0.26:H*0.33;
-  cx.fillStyle='rgba(255,255,255,0.96)';
-  lines.forEach(l=>{cx.fillText(l,W*0.04,ty);ty+=tf+6;});
+  const lines = wrapTxt(cx, title, W - PAD*2, `bold ${tf}px sans-serif`);
+  const lineH = tf + tf*0.18;
+  const totalH = lines.length * lineH;
+  let ty = H - H*0.22 - totalH;
+  if (ty < H*0.3) ty = H*0.3;
 
-  const ff=Math.floor(W*0.024);
-  cx.fillStyle='rgba(130,175,240,0.82)';
+  cx.shadowColor='rgba(0,0,0,0.7)'; cx.shadowBlur=14;
+  cx.fillStyle='rgba(255,255,255,0.97)';
+  lines.forEach(l => { cx.fillText(l, PAD, ty); ty += lineH; });
+  cx.shadowBlur=0;
+
+  // アクセントライン
+  ty += 6;
+  cx.fillStyle='rgba(80,150,255,1)'; cx.fillRect(PAD, ty, Math.floor(W*0.06), 3);
+
+  // CTA
+  const ff = Math.floor(W*0.028);
+  cx.fillStyle='rgba(170,210,255,0.85)';
   cx.font=`bold ${ff}px sans-serif`; cx.textBaseline='bottom';
-  cx.fillText('LINE → 無料体験予約',W*0.04,H-H*0.04);
+  cx.fillText('LINE → 無料体験予約', PAD, H - H*0.04);
 }
+
 
 function dlPost() {
   const cv=document.getElementById('POST_CVS');
