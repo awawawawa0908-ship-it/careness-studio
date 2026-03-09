@@ -170,13 +170,28 @@ label.fl .lb em{font-style:normal;font-size:9px;color:var(--mt);font-weight:400}
   border-top-color:#fff;border-radius:50%;animation:spin 1s linear infinite}
 .gen-msg{color:#fff;font-size:12px;font-weight:700}
 
+
+/* ── REFERENCE PHOTOS ── */
+.ref-strip{display:flex;gap:6px;margin-bottom:10px;overflow-x:auto;padding-bottom:4px}
+.ref-strip::-webkit-scrollbar{height:3px}
+.ref-strip::-webkit-scrollbar-thumb{background:var(--brd2);border-radius:2px}
+.ref-img{width:80px;height:80px;object-fit:cover;border-radius:6px;cursor:pointer;
+  border:2px solid transparent;flex-shrink:0;transition:all .2s;opacity:.75}
+.ref-img.sel{border-color:var(--ac);opacity:1;box-shadow:0 0 0 2px rgba(46,127,255,.3)}
+.ref-img:hover{opacity:1}
+.ref-label{font-size:10px;color:var(--mt);margin-bottom:4px;font-weight:600}
+.ref-method{font-size:10px;background:var(--bg2);border-radius:5px;
+  padding:4px 8px;margin-bottom:8px;color:var(--mt);line-height:1.5}
+
 /* ── THUMBNAIL PAIR ── */
-.thumb-pair{display:flex;gap:8px;margin-bottom:12px;align-items:flex-start}
-.thumb-wrap{background:var(--bg2);border:1px solid var(--brd);
-  border-radius:var(--r3);overflow:hidden;flex:1}
-.thumb-wrap canvas{width:100%;display:block;height:auto}
-#TH1{aspect-ratio:16/9}
-#TH2{aspect-ratio:9/16}
+.thumb-pair{display:flex;gap:10px;margin-bottom:12px;align-items:flex-start}
+.thumb-wrap-169{background:var(--bg2);border:1px solid var(--brd);
+  border-radius:var(--r3);overflow:hidden;flex:16}
+.thumb-wrap-916{background:var(--bg2);border:1px solid var(--brd);
+  border-radius:var(--r3);overflow:hidden;flex:9}
+.thumb-wrap-169 canvas,.thumb-wrap-916 canvas{width:100%;display:block}
+.thumb-wrap-169 canvas{aspect-ratio:16/9}
+.thumb-wrap-916 canvas{aspect-ratio:9/16}
 .thumb-lbl{font-size:9px;font-weight:700;color:var(--mt);
   text-align:center;padding:4px;background:var(--wh);border-top:1px solid var(--brd)}
 
@@ -386,6 +401,10 @@ label.fl .lb em{font-style:normal;font-size:9px;color:var(--mt);font-weight:400}
       <div class="lb">Anthropic APIキー</div>
       <input class="fi" type="password" id="AP_KEY" placeholder="sk-ant-api03-...">
     </label>
+    <label class="fl">
+      <div class="lb">Unsplash APIキー <span style="font-size:10px;color:var(--gn);font-weight:400">（画像品質向上・無料）</span></div>
+      <input class="fi" id="AP_UNSPLASH" placeholder="アクセスキーを貼り付け">
+    </label>
     <button class="gbtn" onclick="saveAPI()"><span class="btxt">保存する</span></button>
     <div class="err" id="API_ERR"></div>
   </div>
@@ -570,9 +589,14 @@ label.fl .lb em{font-style:normal;font-size:9px;color:var(--mt);font-weight:400}
         </select>
       </label>
     </div>
+    <div id="REF_AREA" style="display:none;margin-bottom:4px">
+      <div class="ref-label">📸 参照写真（実在写真をAIがトレース）</div>
+      <div class="ref-strip" id="REF_STRIP"></div>
+      <div class="ref-method" id="REF_METHOD"></div>
+    </div>
     <div id="PROMPT_AREA" style="display:none">
       <div class="note nb" style="font-size:11px">
-        <strong>AIが生成したプロンプト：</strong><br>
+        <strong>生成プロンプト：</strong><br>
         <span id="PROMPT_TXT" style="color:var(--nv2)"></span>
       </div>
     </div>
@@ -605,11 +629,11 @@ label.fl .lb em{font-style:normal;font-size:9px;color:var(--mt);font-weight:400}
     <div class="card">
       <div class="card-hd">サムネイル（自動生成）</div>
       <div class="thumb-pair">
-        <div class="thumb-wrap">
+        <div class="thumb-wrap-169">
           <canvas id="TH1"></canvas>
           <div class="thumb-lbl">横型 16:9</div>
         </div>
-        <div class="thumb-wrap">
+        <div class="thumb-wrap-916">
           <canvas id="TH2"></canvas>
           <div class="thumb-lbl">縦型 9:16</div>
         </div>
@@ -1256,6 +1280,7 @@ label.fl .lb em{font-style:normal;font-size:9px;color:var(--mt);font-weight:400}
 // ════════════════════════════════════════
 let apiKey = localStorage.getItem('cn_key') || '';
 let workerUrl = localStorage.getItem('cn_worker') || '';
+let unsplashKey = localStorage.getItem('cn_unsplash') || '';
 let capType = 'know';
 let imgType = 'know';
 let lastTheme = '';
@@ -1342,7 +1367,12 @@ function setBtn(id, loading) {
 // ════════════════════════════════════════
 // API 設定
 // ════════════════════════════════════════
-function openAPI() { document.getElementById('API_OL').classList.add('on'); }
+function openAPI() {
+  document.getElementById('API_OL').classList.add('on');
+  if (workerUrl) document.getElementById('AP_WORKER').value = workerUrl;
+  if (apiKey)    document.getElementById('AP_KEY').value = apiKey;
+  if (unsplashKey) document.getElementById('AP_UNSPLASH').value = unsplashKey;
+}
 function closeAPI() { document.getElementById('API_OL').classList.remove('on'); }
 function setAPIStatus(ok) {
   const b = document.getElementById('APIBTN');
@@ -1356,8 +1386,11 @@ function saveAPI() {
   if (!w) { err.textContent = 'Worker URLを入力してください'; err.classList.add('on'); return; }
   if (!k.startsWith('sk-ant-')) { err.textContent = 'APIキーが正しくありません（sk-ant-...で始まる文字列）'; err.classList.add('on'); return; }
   err.classList.remove('on');
-  workerUrl = w; apiKey = k;
-  localStorage.setItem('cn_worker', w); localStorage.setItem('cn_key', k);
+  const u = document.getElementById('AP_UNSPLASH').value.trim();
+  workerUrl = w; apiKey = k; unsplashKey = u;
+  localStorage.setItem('cn_worker', w);
+  localStorage.setItem('cn_key', k);
+  if (u) localStorage.setItem('cn_unsplash', u);
   setAPIStatus(true); closeAPI(); toast('API設定を保存しました');
 }
 
@@ -1547,51 +1580,124 @@ async function genImage() {
   showOvl(true, 'AIプロンプトを生成中...');
 
   let prompt = '';
+  let refImgBase64 = null;
 
-  // AIプロンプト生成（APIあり）
+  // ── Unsplash参照写真取得フロー ──
+  if (unsplashKey) {
+    try {
+      showOvl(true, '📸 参照写真を検索中...');
+
+      // Unsplashの検索クエリをClaudeに生成してもらう（or 直接日本語→英語変換）
+      const queryMap = {
+        '姿勢': 'woman stretching yoga natural light', '背骨': 'posture alignment wellness',
+        '疲れ': 'woman relaxing resting peaceful', '睡眠': 'peaceful sleep wellness morning',
+        '遺伝子': 'wellness consultation health science', 'DNA': 'health science consultation',
+        '食事': 'healthy meal vegetables kitchen', '栄養': 'nutritious food natural light',
+        'ウォーキング': 'woman walking park nature', 'ランニング': 'jogging park morning',
+        'ストレッチ': 'woman stretching home morning', '体操': 'gentle exercise home',
+        '筋肉': 'gentle workout natural light', '運動': 'gentle exercise wellness',
+        'ストレス': 'woman relaxing nature peaceful', 'メンタル': 'mindfulness meditation calm',
+        '代謝': 'wellness healthy lifestyle', '体重': 'wellness healthy lifestyle',
+      };
+      let usQuery = '';
+      for (const [k, v] of Object.entries(queryMap)) {
+        if (title.includes(k)) { usQuery = v; break; }
+      }
+      if (!usQuery) usQuery = 'japanese wellness lifestyle natural light';
+
+      // ターゲットによるクエリ補正
+      const tv = document.getElementById('K_target')?.value || '幅広く';
+      if (tv === '高齢者') usQuery += ' senior';
+      else if (tv === '30〜40代男性') usQuery += ' man professional';
+
+      const usRes = await fetch(
+        `https://api.unsplash.com/search/photos?query=${encodeURIComponent(usQuery)}&per_page=6&orientation=squarish&content_filter=high&client_id=${unsplashKey}`
+      );
+      if (usRes.ok) {
+        const usData = await usRes.json();
+        const photos = usData.results || [];
+
+        if (photos.length > 0) {
+          // 参照写真UI表示
+          const strip = document.getElementById('REF_STRIP');
+          strip.innerHTML = '';
+          photos.forEach((p, i) => {
+            const img = document.createElement('img');
+            img.src = p.urls.small;
+            img.className = 'ref-img' + (i === 0 ? ' sel' : '');
+            img.dataset.regular = p.urls.regular;
+            img.dataset.idx = i;
+            img.onclick = () => {
+              strip.querySelectorAll('.ref-img').forEach(x => x.classList.remove('sel'));
+              img.classList.add('sel');
+            };
+            strip.appendChild(img);
+          });
+          document.getElementById('REF_AREA').style.display = 'block';
+          document.getElementById('REF_METHOD').textContent =
+            '✦ 実在写真の構図・光・雰囲気をAIが分析してFLUXプロンプトに変換します';
+
+          // 選択された写真（デフォルト1枚目）を取得してbase64化
+          showOvl(true, '📸 参照写真を読み込み中...');
+          const selImg = strip.querySelector('.ref-img.sel');
+          const refUrl = selImg?.dataset.regular || photos[0].urls.regular;
+
+          // CORS proxy経由でfetch → base64化
+          const refRes = await fetch(refUrl);
+          const blob = await refRes.blob();
+          refImgBase64 = await new Promise(res => {
+            const reader = new FileReader();
+            reader.onload = () => res(reader.result.split(',')[1]);
+            reader.readAsDataURL(blob);
+          });
+        }
+      }
+    } catch(e) {
+      console.warn('Unsplash failed:', e.message);
+      refImgBase64 = null;
+    }
+  }
+
+  // ── プロンプト生成（参照写真あり → Claude Vision で分析、なし → テキストのみ） ──
   if (apiKey && workerUrl) {
     try {
-      const hints = {
-        know:  'real japanese person in gentle everyday wellness moment, natural home or studio, soft warm morning light, not gym-hard but body-tuning',
-        voice: 'genuine smiling japanese woman 40s, warm natural light, real body wellness glow, NOT model-perfect, relatable and hopeful',
-        event: 'friendly welcoming group of japanese people gentle exercise outdoors, warm community atmosphere, casual comfortable clothing',
-        thumb: 'serene japanese wellness space, soft window light, clean calm atmosphere, real person relaxed and at ease',
+      showOvl(true, '🔍 写真を分析してプロンプト生成中...');
+      if (refImgBase64) {
+        // Claude Visionで参照写真を分析
+        prompt = await callAPI({
+          model: 'claude-haiku-4-5-20251001', max_tokens: 150,
+          messages: [{role:'user', content: [
+            { type: 'image', source: { type: 'base64', media_type: 'image/jpeg', data: refImgBase64 } },
+            { type: 'text', text:
+              `You are an AI image generation expert. Analyze this reference photo and create a FLUX image generation prompt.
+Theme to add: "${title}"
+Extract from photo: lighting style, color palette, composition, atmosphere, subject pose/expression.
+Output ONE sentence prompt that recreates this photo's feel with the theme, for a Japanese wellness gym Instagram post.
+Concept: "整える" (gentle body alignment), natural and real, NOT dramatic or gym-hard.
+Rules: photorealistic, real japanese person, NO text NO words.` }
+          ]}
+        });
+      } else {
+        // テキストのみプロンプト生成（従来通り）
+        prompt = await callAPI({
+          model: 'claude-haiku-4-5-20251001', max_tokens: 100,
+          messages: [{role:'user', content:
+            `Create FLUX image prompt for Japanese wellness Instagram post. Theme: "${title}".
+Style: natural real candid, soft warm light, gentle wellness "整える" concept, NOT muscle training.
+ONE sentence, photorealistic, real japanese person, NO text.`}]
+        });
       }
-      const targetVal = document.getElementById('IM_TARGET')?.value || document.getElementById('K_target')?.value || '幅広く';
-      const personaMap = {
-        '幅広く':    'friendly japanese person 40s, bright clinical wellness environment, warm and approachable',
-        '30〜40代男性': 'japanese professional man 38yo, health checkup result discussion, calm medical consultation atmosphere',
-        '運動初心者': 'gentle japanese woman 45yo beginning wellness journey, soft natural light, warm encouraging atmosphere, hopeful smile',
-        '高齢者':    'active healthy japanese senior, gentle supervised exercise, warm community clinic setting, natural golden light',
-        '女性':      'japanese woman wellness and preventive health lifestyle, natural soft light, clean clinical warmth, calm and confident',
-      };
-      const persona = personaMap[targetVal] || personaMap['幅広く'];
-      const toneMap = {
-        '運動初心者': 'soft pastel warm tones, bright welcoming natural light, no intimidation, gentle and safe',
-        '高齢者':    'warm golden hour light, gentle calm medical setting, community warmth, trustworthy',
-        '30〜40代男性': 'clean professional light, modern preventive health clinic, scientific and trustworthy',
-      };
-      const tone = toneMap[targetVal] || 'bright clean clinical warmth, soft natural light, hopeful and professional';
-      prompt = await callAPI({
-        model: 'claude-haiku-4-5-20251001', max_tokens: 120,
-        messages: [{role:'user', content:
-          `Create an image prompt for Instagram wellness post.
-Theme: ${title}. Subject: ${persona}.
-Visual: ${hints[imgType]}, ${tone}.
-Concept: "TOTONORU" = gentle body alignment, NOT muscle training. Real, natural, warm.
-Rules: photorealistic candid style, natural imperfect skin, soft light, real everyday person, NO text NO words. One sentence.`}]
-      });
     } catch(e) { prompt = ''; }
   }
   if (!prompt) prompt = buildAutoPrompt(title, imgType);
 
   document.getElementById('PROMPT_TXT').textContent = prompt;
   document.getElementById('PROMPT_AREA').style.display = 'block';
-  showOvl(true, 'AI背景を生成中... (20〜30秒)');
+  showOvl(true, 'FLUX.1で画像生成中...');
 
   try {
     const seed = Math.floor(Math.random()*99999);
-    const full = prompt + ', photorealistic 8k, bright warm natural light, NO text NO letters NO words, NO dark dramatic lighting, NO bodybuilder NO muscular, clinical wellness warmth';
+    const full = prompt + ', photorealistic, natural warm light, real japanese person, NO text NO letters NO words, wellness not bodybuilding';
     const bg = await loadImgWithFallback(full, seed);
     lastBgImg = bg;
 
@@ -1896,64 +2002,67 @@ function drawPost(cv, bg, title, sub, type) {
 // ── BUILD THUMBNAILS ──
 function buildThumbs(bg, title, sub, type) {
   const c1 = document.getElementById('TH1');
-  c1.width=640; c1.height=360;
+  c1.width=1280; c1.height=720;
   drawThumb(c1, bg, title, sub, type, '16:9');
 
   const c2 = document.getElementById('TH2');
-  c2.width=360; c2.height=640;
+  c2.width=720; c2.height=1280;
   drawThumb(c2, bg, title, sub, type, '9:16');
 }
 
 function drawThumb(cv, bg, title, sub, type, ratio) {
   const cx = cv.getContext('2d');
   const W = cv.width, H = cv.height;
-  const PAD = W * 0.07; // 余白7%
+  const PAD = W * 0.06;
 
-  // 背景クロップ
-  const cA = W/H;
-  let sx=0,sy=0,sw=1080,sh=1080;
-  if(cA>1){sh=1080/cA;sy=(1080-sh)/2}else{sw=1080*cA;sx=(1080-sw)/2}
-  cx.drawImage(bg,sx,sy,sw,sh,0,0,W,H);
+  // ── 背景をcanvas全体にcover crop（グレー余白なし）──
+  const srcW = bg.naturalWidth  || bg.width  || 1080;
+  const srcH = bg.naturalHeight || bg.height || 1080;
+  const srcR = srcW / srcH;
+  const dstR = W / H;
+  let sx, sy, sw, sh;
+  if (srcR > dstR) {
+    sh = srcH; sw = srcH * dstR;
+    sx = (srcW - sw) / 2; sy = 0;
+  } else {
+    sw = srcW; sh = srcW / dstR;
+    sx = 0; sy = (srcH - sh) / 2;
+  }
+  cx.drawImage(bg, sx, sy, sw, sh, 0, 0, W, H);
 
-  // グラデーション
-  const gt = cx.createLinearGradient(0,0,0,H*0.4);
-  gt.addColorStop(0,'rgba(4,10,28,0.85)'); gt.addColorStop(1,'rgba(4,10,28,0)');
-  cx.fillStyle=gt; cx.fillRect(0,0,W,H*0.4);
-  const gb = cx.createLinearGradient(0,H*0.65,0,H);
-  gb.addColorStop(0,'rgba(4,10,28,0)'); gb.addColorStop(1,'rgba(4,10,28,0.90)');
-  cx.fillStyle=gb; cx.fillRect(0,H*0.65,W,H*0.35);
+  // オーバーレイグラデーション
+  const og = cx.createLinearGradient(0, 0, 0, H);
+  og.addColorStop(0,   'rgba(6,14,40,0.72)');
+  og.addColorStop(0.4, 'rgba(6,14,40,0.15)');
+  og.addColorStop(1,   'rgba(6,14,40,0.85)');
+  cx.fillStyle = og; cx.fillRect(0, 0, W, H);
+
+  // 左アクセントライン
+  cx.fillStyle = 'rgba(60,120,220,0.9)';
+  cx.fillRect(0, 0, 4, H);
 
   // ブランド名
-  const bf = Math.floor(W*0.032);
-  cx.fillStyle='rgba(255,255,255,0.88)';
-  cx.font=`bold ${bf}px sans-serif`; cx.textBaseline='top';
-  cx.fillText('CARENESS KITAJIMA', PAD, H*0.055);
+  const bf = Math.floor(W * 0.026);
+  cx.fillStyle = 'rgba(255,255,255,0.9)';
+  cx.font = `bold ${bf}px sans-serif`;
+  cx.textBaseline = 'top';
+  cx.fillText('CARENESS KITAJIMA', PAD, H * 0.05);
 
-  // タイトル（下部中央寄り）
-  const tf = Math.floor(W * (ratio==='9:16' ? 0.068 : 0.058));
-  cx.font=`bold ${tf}px sans-serif`;
-  const lines = wrapTxt(cx, title, W - PAD*2, `bold ${tf}px sans-serif`);
-  const lineH = tf + tf*0.18;
-  const totalH = lines.length * lineH;
-  let ty = H - H*0.22 - totalH;
-  if (ty < H*0.3) ty = H*0.3;
+  // タイトル
+  const tf = Math.floor(W * 0.055);
+  cx.font = `bold ${tf}px sans-serif`;
+  const lines = wrapTxt(cx, title, W - PAD * 2, `bold ${tf}px sans-serif`);
+  let ty = ratio === '9:16' ? H * 0.25 : H * 0.32;
+  cx.fillStyle = 'rgba(255,255,255,0.97)';
+  lines.forEach(l => { cx.fillText(l, PAD, ty); ty += tf * 1.2; });
 
-  cx.shadowColor='rgba(0,0,0,0.7)'; cx.shadowBlur=14;
-  cx.fillStyle='rgba(255,255,255,0.97)';
-  lines.forEach(l => { cx.fillText(l, PAD, ty); ty += lineH; });
-  cx.shadowBlur=0;
-
-  // アクセントライン
-  ty += 6;
-  cx.fillStyle='rgba(80,150,255,1)'; cx.fillRect(PAD, ty, Math.floor(W*0.06), 3);
-
-  // CTA
-  const ff = Math.floor(W*0.028);
-  cx.fillStyle='rgba(170,210,255,0.85)';
-  cx.font=`bold ${ff}px sans-serif`; cx.textBaseline='bottom';
-  cx.fillText('LINE → 無料体験予約', PAD, H - H*0.04);
+  // 下部CTA
+  const ff = Math.floor(W * 0.023);
+  cx.fillStyle = 'rgba(130,175,240,0.85)';
+  cx.font = `bold ${ff}px sans-serif`;
+  cx.textBaseline = 'bottom';
+  cx.fillText('LINE → 無料体験予約', PAD, H - H * 0.04);
 }
-
 
 function dlPost() {
   const cv=document.getElementById('POST_CVS');
