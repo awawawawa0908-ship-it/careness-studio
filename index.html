@@ -1663,28 +1663,21 @@ async function genImage() {
     try {
       showOvl(true, '🔍 写真を分析してプロンプト生成中...');
       if (refImgBase64) {
-        // Claude Visionで参照写真を分析
+        // Claude Visionで参照写真を分析（プロンプトを変数に分離）
+        const visionTxt = 'Analyze this reference photo and create a FLUX prompt for a Japanese wellness Instagram post. Theme: ' + title + '. Extract lighting, color palette, composition, atmosphere from the photo. Output ONE sentence that recreates this photo style with the theme. Concept: gentle body alignment, natural and real. Rules: photorealistic, real japanese person, NO text NO words.';
         prompt = await callAPI({
           model: 'claude-haiku-4-5-20251001', max_tokens: 150,
           messages: [{role:'user', content: [
             { type: 'image', source: { type: 'base64', media_type: 'image/jpeg', data: refImgBase64 } },
-            { type: 'text', text:
-              `You are an AI image generation expert. Analyze this reference photo and create a FLUX image generation prompt.
-Theme to add: "${title}"
-Extract from photo: lighting style, color palette, composition, atmosphere, subject pose/expression.
-Output ONE sentence prompt that recreates this photo's feel with the theme, for a Japanese wellness gym Instagram post.
-Concept: "整える" (gentle body alignment), natural and real, NOT dramatic or gym-hard.
-Rules: photorealistic, real japanese person, NO text NO words.` }
-          ]}
+            { type: 'text', text: visionTxt }
+          ]}]
         });
       } else {
-        // テキストのみプロンプト生成（従来通り）
+        // テキストのみプロンプト生成
+        const textPrompt = 'Create a FLUX image prompt for a Japanese wellness Instagram post. Theme: ' + title + '. Style: natural real candid, soft warm light, gentle wellness concept. ONE sentence, photorealistic, real japanese person, NO text.';
         prompt = await callAPI({
           model: 'claude-haiku-4-5-20251001', max_tokens: 100,
-          messages: [{role:'user', content:
-            `Create FLUX image prompt for Japanese wellness Instagram post. Theme: "${title}".
-Style: natural real candid, soft warm light, gentle wellness "整える" concept, NOT muscle training.
-ONE sentence, photorealistic, real japanese person, NO text.`}]
+          messages: [{role:'user', content: textPrompt}]
         });
       }
     } catch(e) { prompt = ''; }
