@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
@@ -24,30 +25,30 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--tx);
   min-height:100vh;overflow-x:hidden;padding-bottom:72px;font-size:14px}
 
 /* ── HEADER ── */
-.hdr{height:52px;background:var(--nv);display:flex;align-items:center;
-  padding:0 14px;gap:10px;position:sticky;top:0;z-index:200;
-  box-shadow:0 2px 16px rgba(0,0,0,.30)}
+.hdr{height:52px;background:var(–nv);display:flex;align-items:center;
+padding:0 14px;gap:10px;position:sticky;top:0;z-index:200;
+box-shadow:0 2px 16px rgba(0,0,0,.30)}
 .hlogo{font-size:13px;font-weight:900;letter-spacing:1.5px;color:#fff;
-  padding:5px 10px;border:1px solid rgba(255,255,255,.25);border-radius:6px;
-  background:rgba(255,255,255,.08)}
+padding:5px 10px;border:1px solid rgba(255,255,255,.25);border-radius:6px;
+background:rgba(255,255,255,.08)}
 .hapi-btn{margin-left:auto;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);
-  color:rgba(255,255,255,.85);font-size:11px;font-weight:700;padding:5px 12px;
-  border-radius:20px;cursor:pointer;font-family:inherit;transition:all .2s;white-space:nowrap}
+color:rgba(255,255,255,.85);font-size:11px;font-weight:700;padding:5px 12px;
+border-radius:20px;cursor:pointer;font-family:inherit;transition:all .2s;white-space:nowrap}
 .hapi-btn:hover,.hapi-btn.ok{background:rgba(255,255,255,.18);color:#fff}
 
 /* ── TABS ── */
 .tabbar{position:fixed;bottom:0;left:0;right:0;z-index:200;
-  background:var(--wh);border-top:1px solid var(--brd2);
-  display:flex;height:64px;box-shadow:0 -4px 20px rgba(15,36,68,.10)}
+background:var(–wh);border-top:1px solid var(–brd2);
+display:flex;height:64px;box-shadow:0 -4px 20px rgba(15,36,68,.10)}
 .tab{flex:1;display:flex;flex-direction:column;align-items:center;
-  justify-content:center;gap:2px;cursor:pointer;border:none;background:none;
-  font-size:9px;font-weight:700;letter-spacing:.2px;color:var(--mt);
-  transition:all .2s;font-family:inherit;position:relative;padding:0}
+justify-content:center;gap:2px;cursor:pointer;border:none;background:none;
+font-size:9px;font-weight:700;letter-spacing:.2px;color:var(–mt);
+transition:all .2s;font-family:inherit;position:relative;padding:0}
 .tab .ticon{font-size:19px;line-height:1;transition:transform .2s}
-.tab.on{color:var(--nv2)}
+.tab.on{color:var(–nv2)}
 .tab.on .ticon{transform:translateY(-2px)}
-.tab.on::after{content:'';position:absolute;bottom:0;left:20%;right:20%;
-  height:3px;background:var(--nv2);border-radius:2px 2px 0 0}
+.tab.on::after{content:’’;position:absolute;bottom:0;left:20%;right:20%;
+height:3px;background:var(–nv2);border-radius:2px 2px 0 0}
 
 /* ── PANE ── */
 .pane{display:none;padding:14px 14px 8px;max-width:640px;margin:0 auto}
@@ -57,326 +58,326 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--tx);
 /* ── PAGE HEADER ── */
 .phdr{margin-bottom:14px}
 .phdr-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
-.phdr-badge{font-size:9px;font-weight:700;letter-spacing:2px;color:var(--nv4);
-  background:var(--bg2);padding:3px 10px;border-radius:10px;border:1px solid var(--brd2);
-  white-space:nowrap;margin-top:4px}
-.phdr h2{font-size:19px;font-weight:900;color:var(--nv);line-height:1.3;margin-top:4px}
-.phdr p{font-size:11px;color:var(--mt);margin-top:4px;line-height:1.65}
+.phdr-badge{font-size:9px;font-weight:700;letter-spacing:2px;color:var(–nv4);
+background:var(–bg2);padding:3px 10px;border-radius:10px;border:1px solid var(–brd2);
+white-space:nowrap;margin-top:4px}
+.phdr h2{font-size:19px;font-weight:900;color:var(–nv);line-height:1.3;margin-top:4px}
+.phdr p{font-size:11px;color:var(–mt);margin-top:4px;line-height:1.65}
 
 /* ── CARD ── */
-.card{background:var(--wh);border:1px solid var(--brd);border-radius:var(--r);
-  padding:14px;margin-bottom:12px;box-shadow:var(--sh)}
-.card-hd{font-size:10px;font-weight:700;letter-spacing:.5px;color:var(--mt);
-  text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:7px}
-.card-hd::before{content:'';flex-shrink:0;width:3px;height:14px;
-  background:var(--nv2);border-radius:2px}
-.card-hd .step-n{margin-left:auto;background:var(--nv2);color:#fff;
-  font-size:9px;font-weight:900;padding:2px 7px;border-radius:10px}
+.card{background:var(–wh);border:1px solid var(–brd);border-radius:var(–r);
+padding:14px;margin-bottom:12px;box-shadow:var(–sh)}
+.card-hd{font-size:10px;font-weight:700;letter-spacing:.5px;color:var(–mt);
+text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:7px}
+.card-hd::before{content:’’;flex-shrink:0;width:3px;height:14px;
+background:var(–nv2);border-radius:2px}
+.card-hd .step-n{margin-left:auto;background:var(–nv2);color:#fff;
+font-size:9px;font-weight:900;padding:2px 7px;border-radius:10px}
 
 /* ── FORM ── */
 label.fl{display:block;margin-bottom:10px}
 label.fl .lb{display:flex;align-items:center;gap:5px;
-  font-size:10px;font-weight:700;color:var(--nv);margin-bottom:4px}
-label.fl .lb em{font-style:normal;font-size:9px;color:var(--mt);font-weight:400}
-.fi,.fs,.ft{width:100%;background:var(--bg);border:1.5px solid var(--brd);
-  border-radius:var(--r3);color:var(--tx);font-family:inherit;font-size:13px;
-  outline:none;transition:border .2s,box-shadow .2s;padding:9px 11px}
+font-size:10px;font-weight:700;color:var(–nv);margin-bottom:4px}
+label.fl .lb em{font-style:normal;font-size:9px;color:var(–mt);font-weight:400}
+.fi,.fs,.ft{width:100%;background:var(–bg);border:1.5px solid var(–brd);
+border-radius:var(–r3);color:var(–tx);font-family:inherit;font-size:13px;
+outline:none;transition:border .2s,box-shadow .2s;padding:9px 11px}
 .ft{resize:vertical;min-height:64px;line-height:1.7}
-.fi:focus,.fs:focus,.ft:focus{border-color:var(--nv2);
-  box-shadow:0 0 0 3px rgba(26,52,96,.07)}
+.fi:focus,.fs:focus,.ft:focus{border-color:var(–nv2);
+box-shadow:0 0 0 3px rgba(26,52,96,.07)}
 .g2{display:grid;grid-template-columns:1fr 1fr;gap:9px}
 @media(max-width:380px){.g2{grid-template-columns:1fr}}
 
 /* ── TYPE SELECTOR ── */
 .typrow{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:12px}
 @media(max-width:360px){.typrow{grid-template-columns:repeat(2,1fr)}}
-.tyb{background:var(--bg2);border:1.5px solid var(--brd);border-radius:var(--r2);
-  padding:9px 4px;cursor:pointer;text-align:center;transition:all .2s;
-  display:flex;flex-direction:column;align-items:center;gap:4px}
-.tyb:hover{border-color:var(--nv3)}
-.tyb.on{border-color:var(--nv2);background:rgba(26,52,96,.06);
-  box-shadow:0 0 0 1px var(--nv2)}
+.tyb{background:var(–bg2);border:1.5px solid var(–brd);border-radius:var(–r2);
+padding:9px 4px;cursor:pointer;text-align:center;transition:all .2s;
+display:flex;flex-direction:column;align-items:center;gap:4px}
+.tyb:hover{border-color:var(–nv3)}
+.tyb.on{border-color:var(–nv2);background:rgba(26,52,96,.06);
+box-shadow:0 0 0 1px var(–nv2)}
 .tyb .tic{width:30px;height:30px;border-radius:8px;display:grid;
-  place-items:center;font-size:14px;font-weight:900;color:#fff}
-.tyb .tnm{font-size:11px;font-weight:700;color:var(--tx)}
-.tyb .tdy{font-size:9px;color:var(--mt)}
+place-items:center;font-size:14px;font-weight:900;color:#fff}
+.tyb .tnm{font-size:11px;font-weight:700;color:var(–tx)}
+.tyb .tdy{font-size:9px;color:var(–mt)}
 
 /* ── BUTTONS ── */
 .gbtn{width:100%;padding:13px;border:none;cursor:pointer;
-  background:var(--nv2);color:#fff;font-family:inherit;
-  font-size:13px;font-weight:700;border-radius:var(--r2);
-  display:flex;align-items:center;justify-content:center;gap:8px;
-  transition:all .2s;box-shadow:var(--sh)}
-.gbtn:hover:not(:disabled){background:var(--nv3);transform:translateY(-1px);box-shadow:var(--sh2)}
-.gbtn:disabled{background:var(--bg3);color:var(--mt);cursor:not-allowed;box-shadow:none}
+background:var(–nv2);color:#fff;font-family:inherit;
+font-size:13px;font-weight:700;border-radius:var(–r2);
+display:flex;align-items:center;justify-content:center;gap:8px;
+transition:all .2s;box-shadow:var(–sh)}
+.gbtn:hover:not(:disabled){background:var(–nv3);transform:translateY(-1px);box-shadow:var(–sh2)}
+.gbtn:disabled{background:var(–bg3);color:var(–mt);cursor:not-allowed;box-shadow:none}
 .gbtn .ld-spin{width:15px;height:15px;border:2px solid rgba(255,255,255,.3);
-  border-top-color:#fff;border-radius:50%;animation:spin .65s linear infinite;display:none}
+border-top-color:#fff;border-radius:50%;animation:spin .65s linear infinite;display:none}
 .gbtn.loading .ld-spin{display:block}.gbtn.loading .btxt{display:none}
-.sbtn{padding:8px 14px;background:var(--bg2);border:1.5px solid var(--brd);
-  color:var(--nv2);font-size:11px;font-weight:700;border-radius:var(--r3);
-  cursor:pointer;transition:all .2s;font-family:inherit;white-space:nowrap}
-.sbtn:hover{background:var(--nv2);color:#fff;border-color:var(--nv2)}
-.ibtn{padding:7px 13px;background:transparent;border:1.5px solid var(--brd);
-  color:var(--mt);font-size:11px;font-weight:700;border-radius:var(--r3);
-  cursor:pointer;transition:all .2s;font-family:inherit}
-.ibtn:hover{border-color:var(--nv2);color:var(--nv2)}
+.sbtn{padding:8px 14px;background:var(–bg2);border:1.5px solid var(–brd);
+color:var(–nv2);font-size:11px;font-weight:700;border-radius:var(–r3);
+cursor:pointer;transition:all .2s;font-family:inherit;white-space:nowrap}
+.sbtn:hover{background:var(–nv2);color:#fff;border-color:var(–nv2)}
+.ibtn{padding:7px 13px;background:transparent;border:1.5px solid var(–brd);
+color:var(–mt);font-size:11px;font-weight:700;border-radius:var(–r3);
+cursor:pointer;transition:all .2s;font-family:inherit}
+.ibtn:hover{border-color:var(–nv2);color:var(–nv2)}
 @keyframes spin{to{transform:rotate(360deg)}}
 
 /* ── RESULTS ── */
 .res{display:none}.res.on{display:block;animation:fup .3s ease}
-.rcard{background:var(--wh);border:1.5px solid var(--nv2);border-radius:var(--r2);
-  padding:14px;margin-bottom:10px;position:relative}
+.rcard{background:var(–wh);border:1.5px solid var(–nv2);border-radius:var(–r2);
+padding:14px;margin-bottom:10px;position:relative}
 .rlbl{font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;
-  color:var(--nv4);margin-bottom:8px}
-.rtxt{font-size:13px;line-height:1.9;color:var(--tx);white-space:pre-wrap;word-break:break-word}
-.cpbtn{position:absolute;top:12px;right:12px;background:var(--bg);
-  border:1px solid var(--brd);color:var(--nv2);font-size:10px;font-weight:700;
-  padding:4px 10px;border-radius:6px;cursor:pointer;transition:all .2s;font-family:inherit}
-.cpbtn:hover,.cpbtn.done{background:var(--nv2);color:#fff}
+color:var(–nv4);margin-bottom:8px}
+.rtxt{font-size:13px;line-height:1.9;color:var(–tx);white-space:pre-wrap;word-break:break-word}
+.cpbtn{position:absolute;top:12px;right:12px;background:var(–bg);
+border:1px solid var(–brd);color:var(–nv2);font-size:10px;font-weight:700;
+padding:4px 10px;border-radius:6px;cursor:pointer;transition:all .2s;font-family:inherit}
+.cpbtn:hover,.cpbtn.done{background:var(–nv2);color:#fff}
 
 /* ── NOTES ── */
-.note{border-radius:var(--r3);padding:9px 12px;font-size:11px;line-height:1.7;margin-bottom:10px}
-.nb{background:rgba(26,52,96,.05);border:1px solid var(--brd2);color:var(--tx)}
-.ng{background:var(--gn2);border:1px solid rgba(13,122,64,.2);color:var(--gn)}
-.ny{background:var(--yw2);border:1px solid rgba(138,98,0,.2);color:var(--yw)}
-.nr{background:var(--rd2);border:1px solid rgba(176,24,24,.2);color:var(--rd)}
+.note{border-radius:var(–r3);padding:9px 12px;font-size:11px;line-height:1.7;margin-bottom:10px}
+.nb{background:rgba(26,52,96,.05);border:1px solid var(–brd2);color:var(–tx)}
+.ng{background:var(–gn2);border:1px solid rgba(13,122,64,.2);color:var(–gn)}
+.ny{background:var(–yw2);border:1px solid rgba(138,98,0,.2);color:var(–yw)}
+.nr{background:var(–rd2);border:1px solid rgba(176,24,24,.2);color:var(–rd)}
 .note strong{font-weight:700}
 
 /* ── CVR SCORE ── */
-.cvr-box{background:var(--bg);border:1.5px solid var(--brd2);border-radius:var(--r2);
-  padding:12px;margin-top:10px}
+.cvr-box{background:var(–bg);border:1.5px solid var(–brd2);border-radius:var(–r2);
+padding:12px;margin-top:10px}
 .cvr-hd{display:flex;align-items:center;justify-content:space-between;
-  font-size:10px;font-weight:700;color:var(--nv);margin-bottom:9px}
-.cvr-pct{font-size:16px;font-weight:900;color:var(--nv2)}
+font-size:10px;font-weight:700;color:var(–nv);margin-bottom:9px}
+.cvr-pct{font-size:16px;font-weight:900;color:var(–nv2)}
 .cvr-row{display:flex;align-items:center;gap:7px;font-size:11px;margin-bottom:5px}
 .cvr-ck{width:16px;height:16px;border-radius:50%;flex-shrink:0;
-  display:grid;place-items:center;font-size:9px;font-weight:900}
-.cvr-ck.ok{background:var(--gn);color:#fff}
-.cvr-ck.no{background:var(--bg3);color:var(--mt);border:1.5px solid var(--brd)}
+display:grid;place-items:center;font-size:9px;font-weight:900}
+.cvr-ck.ok{background:var(–gn);color:#fff}
+.cvr-ck.no{background:var(–bg3);color:var(–mt);border:1.5px solid var(–brd)}
 
 /* ── IMAGE AREA ── */
-.img-wrap{width:100%;aspect-ratio:1;border-radius:var(--r2);overflow:hidden;
-  background:var(--bg2);position:relative;margin-bottom:12px;
-  display:flex;align-items:center;justify-content:center}
+.img-wrap{width:100%;aspect-ratio:1;border-radius:var(–r2);overflow:hidden;
+background:var(–bg2);position:relative;margin-bottom:12px;
+display:flex;align-items:center;justify-content:center}
 .img-wrap canvas,.img-wrap img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-.ip{text-align:center;color:var(--mt);z-index:1}
+.ip{text-align:center;color:var(–mt);z-index:1}
 .ip-ico{font-size:36px;opacity:.2;margin-bottom:8px}
 .ip-txt{font-size:12px}
 .gen-overlay{position:absolute;inset:0;background:rgba(15,36,68,.72);
-  display:none;flex-direction:column;align-items:center;justify-content:center;
-  gap:10px;z-index:10}
+display:none;flex-direction:column;align-items:center;justify-content:center;
+gap:10px;z-index:10}
 .gen-overlay.on{display:flex}
 .gen-ring{width:40px;height:40px;border:3px solid rgba(255,255,255,.2);
-  border-top-color:#fff;border-radius:50%;animation:spin 1s linear infinite}
+border-top-color:#fff;border-radius:50%;animation:spin 1s linear infinite}
 .gen-msg{color:#fff;font-size:12px;font-weight:700}
-
 
 /* ── REFERENCE PHOTOS ── */
 .ref-strip{display:flex;gap:6px;margin-bottom:10px;overflow-x:auto;padding-bottom:4px}
 .ref-strip::-webkit-scrollbar{height:3px}
-.ref-strip::-webkit-scrollbar-thumb{background:var(--brd2);border-radius:2px}
+.ref-strip::-webkit-scrollbar-thumb{background:var(–brd2);border-radius:2px}
 .ref-img{width:80px;height:80px;object-fit:cover;border-radius:6px;cursor:pointer;
-  border:2px solid transparent;flex-shrink:0;transition:all .2s;opacity:.75}
-.ref-img.sel{border-color:var(--ac);opacity:1;box-shadow:0 0 0 2px rgba(46,127,255,.3)}
+border:2px solid transparent;flex-shrink:0;transition:all .2s;opacity:.75}
+.ref-img.sel{border-color:var(–ac);opacity:1;box-shadow:0 0 0 2px rgba(46,127,255,.3)}
 .ref-img:hover{opacity:1}
-.ref-label{font-size:10px;color:var(--mt);margin-bottom:4px;font-weight:600}
-.ref-method{font-size:10px;background:var(--bg2);border-radius:5px;
-  padding:4px 8px;margin-bottom:8px;color:var(--mt);line-height:1.5}
+.ref-label{font-size:10px;color:var(–mt);margin-bottom:4px;font-weight:600}
+.ref-method{font-size:10px;background:var(–bg2);border-radius:5px;
+padding:4px 8px;margin-bottom:8px;color:var(–mt);line-height:1.5}
 
 /* ── THUMBNAIL PAIR ── */
 .thumb-pair{display:flex;gap:10px;margin-bottom:12px;align-items:flex-start}
-.thumb-wrap-169{background:var(--bg2);border:1px solid var(--brd);
-  border-radius:var(--r3);overflow:hidden;flex:16}
-.thumb-wrap-916{background:var(--bg2);border:1px solid var(--brd);
-  border-radius:var(--r3);overflow:hidden;flex:9}
+.thumb-wrap-169{background:var(–bg2);border:1px solid var(–brd);
+border-radius:var(–r3);overflow:hidden;flex:16}
+.thumb-wrap-916{background:var(–bg2);border:1px solid var(–brd);
+border-radius:var(–r3);overflow:hidden;flex:9}
 .thumb-wrap-169 canvas,.thumb-wrap-916 canvas{width:100%;display:block}
 .thumb-wrap-169 canvas{aspect-ratio:16/9}
 .thumb-wrap-916 canvas{aspect-ratio:9/16}
-.thumb-lbl{font-size:9px;font-weight:700;color:var(--mt);
-  text-align:center;padding:4px;background:var(--wh);border-top:1px solid var(--brd)}
+.thumb-lbl{font-size:9px;font-weight:700;color:var(–mt);
+text-align:center;padding:4px;background:var(–wh);border-top:1px solid var(–brd)}
 
 /* ── VIDEO ── */
-.vid-upload{border:2px dashed var(--brd2);border-radius:var(--r);
-  padding:24px;text-align:center;cursor:pointer;transition:all .2s;
-  background:var(--bg2);position:relative}
-.vid-upload:hover{border-color:var(--nv2);background:rgba(26,52,96,.04)}
+.vid-upload{border:2px dashed var(–brd2);border-radius:var(–r);
+padding:24px;text-align:center;cursor:pointer;transition:all .2s;
+background:var(–bg2);position:relative}
+.vid-upload:hover{border-color:var(–nv2);background:rgba(26,52,96,.04)}
 .vid-upload input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
-.vid-preview{width:100%;border-radius:var(--r2);overflow:hidden;
-  background:#000;margin-bottom:10px}
+.vid-preview{width:100%;border-radius:var(–r2);overflow:hidden;
+background:#000;margin-bottom:10px}
 .vid-preview video{width:100%;max-height:200px;display:block}
 
 /* ── TIMELINE ── */
-.timeline{background:var(--nv);border-radius:var(--r3);height:52px;
-  position:relative;overflow:hidden;user-select:none;cursor:pointer;margin:8px 0}
+.timeline{background:var(–nv);border-radius:var(–r3);height:52px;
+position:relative;overflow:hidden;user-select:none;cursor:pointer;margin:8px 0}
 .tl-waves{position:absolute;inset:0;display:flex;align-items:center;padding:4px 6px;gap:1px}
 .tl-wave-bar{flex:1;border-radius:1px;background:rgba(255,255,255,.18)}
 .tl-range{position:absolute;top:0;bottom:0;background:rgba(100,180,255,.25);
-  border-top:2px solid rgba(100,180,255,.8);border-bottom:2px solid rgba(100,180,255,.8)}
+border-top:2px solid rgba(100,180,255,.8);border-bottom:2px solid rgba(100,180,255,.8)}
 .tl-handle{position:absolute;top:0;bottom:0;width:6px;cursor:ew-resize;
-  background:rgba(255,255,255,.9);border-radius:3px;
-  box-shadow:0 0 0 2px rgba(100,180,255,.7)}
+background:rgba(255,255,255,.9);border-radius:3px;
+box-shadow:0 0 0 2px rgba(100,180,255,.7)}
 .tl-playhead{position:absolute;top:0;bottom:0;width:2px;background:#ff6b35;
-  pointer-events:none;transition:left .1s linear}
-.tl-info{display:flex;justify-content:space-between;font-size:10px;color:var(--mt);
-  font-family:'DM Mono',monospace;margin-top:3px}
+pointer-events:none;transition:left .1s linear}
+.tl-info{display:flex;justify-content:space-between;font-size:10px;color:var(–mt);
+font-family:‘DM Mono’,monospace;margin-top:3px}
 
 /* ── CLIP LIST ── */
 .clips-list{display:flex;flex-direction:column;gap:6px;margin-bottom:10px}
-.clip-item{background:var(--bg2);border:1px solid var(--brd);border-radius:var(--r3);
-  padding:9px 12px;display:flex;align-items:center;gap:8px}
-.clip-order{width:22px;height:22px;border-radius:50%;background:var(--nv2);
-  color:#fff;font-size:10px;font-weight:900;display:grid;place-items:center;flex-shrink:0}
+.clip-item{background:var(–bg2);border:1px solid var(–brd);border-radius:var(–r3);
+padding:9px 12px;display:flex;align-items:center;gap:8px}
+.clip-order{width:22px;height:22px;border-radius:50%;background:var(–nv2);
+color:#fff;font-size:10px;font-weight:900;display:grid;place-items:center;flex-shrink:0}
 .clip-info{flex:1;min-width:0}
-.clip-name{font-size:11px;font-weight:700;color:var(--tx);truncate;overflow:hidden;
-  text-overflow:ellipsis;white-space:nowrap}
-.clip-dur{font-size:10px;color:var(--mt);font-family:'DM Mono',monospace}
-.clip-del{background:none;border:none;color:var(--mt);cursor:pointer;
-  font-size:13px;padding:3px 6px;border-radius:4px;transition:all .2s}
-.clip-del:hover{color:var(--rd);background:var(--rd2)}
+.clip-name{font-size:11px;font-weight:700;color:var(–tx);truncate;overflow:hidden;
+text-overflow:ellipsis;white-space:nowrap}
+.clip-dur{font-size:10px;color:var(–mt);font-family:‘DM Mono’,monospace}
+.clip-del{background:none;border:none;color:var(–mt);cursor:pointer;
+font-size:13px;padding:3px 6px;border-radius:4px;transition:all .2s}
+.clip-del:hover{color:var(–rd);background:var(–rd2)}
 
 /* ── SUBTITLES ── */
 .sub-list{display:flex;flex-direction:column;gap:5px;margin-bottom:10px}
-.sub-item{background:var(--bg2);border:1px solid var(--brd);border-radius:var(--r3);
-  padding:8px 10px;display:flex;align-items:center;gap:7px}
-.sub-time{font-size:10px;font-weight:700;color:var(--nv2);white-space:nowrap;
-  min-width:70px;font-family:'DM Mono',monospace}
-.sub-text{flex:1;font-size:12px;color:var(--tx)}
-.sub-del{background:none;border:none;color:var(--mt);cursor:pointer;
-  font-size:12px;padding:2px 5px;border-radius:4px;transition:all .2s}
-.sub-del:hover{color:var(--rd);background:var(--rd2)}
+.sub-item{background:var(–bg2);border:1px solid var(–brd);border-radius:var(–r3);
+padding:8px 10px;display:flex;align-items:center;gap:7px}
+.sub-time{font-size:10px;font-weight:700;color:var(–nv2);white-space:nowrap;
+min-width:70px;font-family:‘DM Mono’,monospace}
+.sub-text{flex:1;font-size:12px;color:var(–tx)}
+.sub-del{background:none;border:none;color:var(–mt);cursor:pointer;
+font-size:12px;padding:2px 5px;border-radius:4px;transition:all .2s}
+.sub-del:hover{color:var(–rd);background:var(–rd2)}
 
 /* ── TPPO ── */
-.trend-card{background:var(--wh);border:1px solid var(--brd);
-  border-radius:var(--r2);padding:13px;margin-bottom:8px}
+.trend-card{background:var(–wh);border:1px solid var(–brd);
+border-radius:var(–r2);padding:13px;margin-bottom:8px}
 .trend-badge{display:inline-block;font-size:9px;font-weight:700;
-  padding:2px 8px;border-radius:10px;margin-bottom:6px;letter-spacing:.5px}
-.tb-hot{background:rgba(176,24,24,.1);color:var(--rd)}
-.tb-rise{background:var(--gn2);color:var(--gn)}
-.tb-new{background:var(--bg2);color:var(--nv4)}
-.trend-ttl{font-size:13px;font-weight:700;margin-bottom:4px;color:var(--tx)}
-.trend-desc{font-size:11px;color:var(--mt);line-height:1.65}
-.trend-hook{font-size:11px;color:var(--nv2);font-weight:700;margin-top:5px}
+padding:2px 8px;border-radius:10px;margin-bottom:6px;letter-spacing:.5px}
+.tb-hot{background:rgba(176,24,24,.1);color:var(–rd)}
+.tb-rise{background:var(–gn2);color:var(–gn)}
+.tb-new{background:var(–bg2);color:var(–nv4)}
+.trend-ttl{font-size:13px;font-weight:700;margin-bottom:4px;color:var(–tx)}
+.trend-desc{font-size:11px;color:var(–mt);line-height:1.65}
+.trend-hook{font-size:11px;color:var(–nv2);font-weight:700;margin-top:5px}
 
 /* ── GUIDE ── */
 .gnav{display:flex;gap:6px;overflow-x:auto;margin-bottom:14px;padding-bottom:4px;scrollbar-width:none}
 .gnav::-webkit-scrollbar{display:none}
-.gnbtn{padding:6px 14px;background:var(--bg2);border:1.5px solid var(--brd);
-  color:var(--mt);font-size:11px;font-weight:700;border-radius:20px;
-  cursor:pointer;transition:all .2s;font-family:inherit;white-space:nowrap}
-.gnbtn.on{background:var(--nv2);color:#fff;border-color:var(--nv2)}
+.gnbtn{padding:6px 14px;background:var(–bg2);border:1.5px solid var(–brd);
+color:var(–mt);font-size:11px;font-weight:700;border-radius:20px;
+cursor:pointer;transition:all .2s;font-family:inherit;white-space:nowrap}
+.gnbtn.on{background:var(–nv2);color:#fff;border-color:var(–nv2)}
 .gsec{display:none}.gsec.on{display:block}
 
 .g-step{display:flex;gap:12px;margin-bottom:14px}
-.g-num{width:28px;height:28px;border-radius:50%;background:var(--nv2);
-  color:#fff;font-size:11px;font-weight:900;display:grid;place-items:center;flex-shrink:0;margin-top:1px}
+.g-num{width:28px;height:28px;border-radius:50%;background:var(–nv2);
+color:#fff;font-size:11px;font-weight:900;display:grid;place-items:center;flex-shrink:0;margin-top:1px}
 .g-body .gt{font-size:13px;font-weight:700;margin-bottom:3px}
-.g-body .gd{font-size:12px;color:var(--mt);line-height:1.7}
-.g-tag{display:inline-block;background:rgba(26,52,96,.07);color:var(--nv2);
-  font-size:10px;font-weight:700;padding:2px 8px;border-radius:5px;
-  margin:3px 3px 0 0}
-.gdiv{height:1px;background:var(--brd);margin:2px 0 14px 40px}
+.g-body .gd{font-size:12px;color:var(–mt);line-height:1.7}
+.g-tag{display:inline-block;background:rgba(26,52,96,.07);color:var(–nv2);
+font-size:10px;font-weight:700;padding:2px 8px;border-radius:5px;
+margin:3px 3px 0 0}
+.gdiv{height:1px;background:var(–brd);margin:2px 0 14px 40px}
 
-.theory{background:linear-gradient(135deg,var(--nv) 0%,var(--nv3) 100%);
-  border-radius:var(--r);padding:16px;color:#fff;margin-bottom:12px}
+.theory{background:linear-gradient(135deg,var(–nv) 0%,var(–nv3) 100%);
+border-radius:var(–r);padding:16px;color:#fff;margin-bottom:12px}
 .theory h3{font-size:14px;font-weight:900;margin-bottom:7px}
 .theory p{font-size:11px;line-height:1.7;color:rgba(255,255,255,.8)}
 .flow{display:flex;align-items:center;flex-wrap:wrap;gap:4px;margin-top:10px}
 .fstep{background:rgba(255,255,255,.12);padding:4px 10px;border-radius:5px;
-  font-size:11px;font-weight:700;color:#fff;white-space:nowrap}
+font-size:11px;font-weight:700;color:#fff;white-space:nowrap}
 .farrow{color:rgba(255,255,255,.45);font-size:11px}
 
 /* ── SCREEN OVERLAY ── */
 .overlay{position:fixed;inset:0;z-index:500;background:rgba(15,36,68,.55);
-  backdrop-filter:blur(8px);display:none;align-items:flex-end;justify-content:center}
+backdrop-filter:blur(8px);display:none;align-items:flex-end;justify-content:center}
 .overlay.on{display:flex}
-.sheet{background:var(--wh);border-radius:20px 20px 0 0;padding:22px 16px 30px;
-  width:100%;max-width:500px;animation:sheetup .28s ease;position:relative}
+.sheet{background:var(–wh);border-radius:20px 20px 0 0;padding:22px 16px 30px;
+width:100%;max-width:500px;animation:sheetup .28s ease;position:relative}
 @keyframes sheetup{from{transform:translateY(100%)}to{transform:none}}
-.sheet-ttl{font-size:16px;font-weight:900;color:var(--nv);margin-bottom:3px}
-.sheet-sub{font-size:11px;color:var(--mt);margin-bottom:16px;line-height:1.6}
+.sheet-ttl{font-size:16px;font-weight:900;color:var(–nv);margin-bottom:3px}
+.sheet-sub{font-size:11px;color:var(–mt);margin-bottom:16px;line-height:1.6}
 .sheet-close{position:absolute;top:16px;right:16px;width:30px;height:30px;
-  border-radius:50%;background:var(--bg2);border:none;color:var(--mt);
-  font-size:16px;cursor:pointer;display:grid;place-items:center}
+border-radius:50%;background:var(–bg2);border:none;color:var(–mt);
+font-size:16px;cursor:pointer;display:grid;place-items:center}
 
 /* ── LOADING ── */
 .ldov{position:fixed;inset:0;z-index:600;background:rgba(240,244,251,.92);
-  backdrop-filter:blur(10px);display:none;
-  flex-direction:column;align-items:center;justify-content:center;gap:12px}
+backdrop-filter:blur(10px);display:none;
+flex-direction:column;align-items:center;justify-content:center;gap:12px}
 .ldov.on{display:flex}
-.ld-ring{width:46px;height:46px;border:3px solid var(--brd2);
-  border-top-color:var(--nv2);border-radius:50%;animation:spin .9s linear infinite}
-.ld-msg{font-size:14px;font-weight:700;color:var(--nv)}
-.ld-sub{font-size:11px;color:var(--mt)}
-.ld-bg{width:180px;height:3px;background:var(--bg3);border-radius:2px;overflow:hidden}
-.ld-fill{height:100%;background:var(--nv2);border-radius:2px;
-  width:0%;transition:width .4s}
+.ld-ring{width:46px;height:46px;border:3px solid var(–brd2);
+border-top-color:var(–nv2);border-radius:50%;animation:spin .9s linear infinite}
+.ld-msg{font-size:14px;font-weight:700;color:var(–nv)}
+.ld-sub{font-size:11px;color:var(–mt)}
+.ld-bg{width:180px;height:3px;background:var(–bg3);border-radius:2px;overflow:hidden}
+.ld-fill{height:100%;background:var(–nv2);border-radius:2px;
+width:0%;transition:width .4s}
 
 /* ── TOAST ── */
 .toast{position:fixed;bottom:76px;left:50%;transform:translateX(-50%) translateY(10px);
-  background:var(--nv);color:#fff;font-size:12px;font-weight:700;
-  padding:8px 18px;border-radius:8px;opacity:0;transition:all .22s;
-  z-index:700;pointer-events:none;white-space:nowrap;max-width:90vw;
-  text-align:center}
+background:var(–nv);color:#fff;font-size:12px;font-weight:700;
+padding:8px 18px;border-radius:8px;opacity:0;transition:all .22s;
+z-index:700;pointer-events:none;white-space:nowrap;max-width:90vw;
+text-align:center}
 .toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
 
 /* ── ERROR ── */
-.err{background:var(--rd2);border:1px solid rgba(176,24,24,.25);
-  border-radius:var(--r3);padding:10px 12px;font-size:11px;color:var(--rd);
-  line-height:1.65;display:none;margin-top:8px}
+.err{background:var(–rd2);border:1px solid rgba(176,24,24,.25);
+border-radius:var(–r3);padding:10px 12px;font-size:11px;color:var(–rd);
+line-height:1.65;display:none;margin-top:8px}
 .err.on{display:block}
 
-
 /* ── TPPO MODE SWITCH ── */
-.tppo-mode{background:var(--wh);border:1.5px solid var(--brd);border-radius:var(--r2);
-  padding:12px 8px;cursor:pointer;text-align:center;transition:all .2s;
-  display:flex;flex-direction:column;align-items:center;gap:3px;font-family:inherit}
-.tppo-mode:hover{border-color:var(--nv2)}
-.tppo-mode.on{border-color:var(--nv2);background:rgba(26,52,96,.06);
-  box-shadow:0 0 0 1px var(--nv2)}
-.tppo-mode .mt{color:var(--mt);font-size:10px}
+.tppo-mode{background:var(–wh);border:1.5px solid var(–brd);border-radius:var(–r2);
+padding:12px 8px;cursor:pointer;text-align:center;transition:all .2s;
+display:flex;flex-direction:column;align-items:center;gap:3px;font-family:inherit}
+.tppo-mode:hover{border-color:var(–nv2)}
+.tppo-mode.on{border-color:var(–nv2);background:rgba(26,52,96,.06);
+box-shadow:0 0 0 1px var(–nv2)}
+.tppo-mode .mt{color:var(–mt);font-size:10px}
 
 /* ── TPPO TYPE GRID ── */
-.tppo-type{background:var(--bg2);border:1.5px solid var(--brd);border-radius:var(--r2);
-  padding:10px 4px;cursor:pointer;text-align:center;transition:all .2s;
-  display:flex;flex-direction:column;align-items:center;gap:3px;
-  font-size:11px;font-weight:700;color:var(--tx);font-family:inherit}
-.tppo-type:hover{border-color:var(--nv2)}
-.tppo-type.on{border-color:var(--nv2);background:rgba(26,52,96,.07);
-  box-shadow:0 0 0 1px var(--nv2)}
+.tppo-type{background:var(–bg2);border:1.5px solid var(–brd);border-radius:var(–r2);
+padding:10px 4px;cursor:pointer;text-align:center;transition:all .2s;
+display:flex;flex-direction:column;align-items:center;gap:3px;
+font-size:11px;font-weight:700;color:var(–tx);font-family:inherit}
+.tppo-type:hover{border-color:var(–nv2)}
+.tppo-type.on{border-color:var(–nv2);background:rgba(26,52,96,.07);
+box-shadow:0 0 0 1px var(–nv2)}
 .tppo-type-ico{width:32px;height:32px;border-radius:8px;display:grid;
-  place-items:center;font-size:14px;font-weight:900;color:#fff}
-.tppo-type-day{font-size:9px;color:var(--mt);font-weight:400}
+place-items:center;font-size:14px;font-weight:900;color:#fff}
+.tppo-type-day{font-size:9px;color:var(–mt);font-weight:400}
 
 /* ── TPPO META TAGS ── */
 .tppo-meta-tag{display:inline-block;font-size:10px;font-weight:700;
-  padding:3px 9px;border-radius:10px;background:var(--bg2);
-  border:1px solid var(--brd2);color:var(--nv2)}
+padding:3px 9px;border-radius:10px;background:var(–bg2);
+border:1px solid var(–brd2);color:var(–nv2)}
 
 /* ── MONITOR SCORE BAR ── */
 .score-row{display:flex;align-items:center;gap:8px}
-.score-label{font-size:11px;font-weight:700;color:var(--tx);min-width:72px}
-.score-bar-bg{flex:1;height:10px;background:var(--bg3);border-radius:5px;overflow:hidden}
+.score-label{font-size:11px;font-weight:700;color:var(–tx);min-width:72px}
+.score-bar-bg{flex:1;height:10px;background:var(–bg3);border-radius:5px;overflow:hidden}
 .score-bar-fill{height:100%;border-radius:5px;transition:width .6s ease}
-.score-val{font-size:11px;font-weight:700;color:var(--nv2);min-width:32px;text-align:right}
+.score-val{font-size:11px;font-weight:700;color:var(–nv2);min-width:32px;text-align:right}
 .score-badge{font-size:9px;font-weight:700;padding:2px 6px;border-radius:8px;
-  white-space:nowrap}
+white-space:nowrap}
 
 /* ── KW CHIP ── */
-.kw-chip{padding:5px 12px;background:var(--bg2);border:1.5px solid var(--brd);
-  border-radius:20px;font-size:11px;font-weight:700;color:var(--nv2);
-  cursor:pointer;transition:all .2s;white-space:nowrap}
-.kw-chip:hover{background:var(--nv2);color:#fff;border-color:var(--nv2)}
-.kw-chip.hot{border-color:rgba(176,24,24,.4);color:var(--rd)}
-.kw-chip.rise{border-color:rgba(13,122,64,.4);color:var(--gn)}
+.kw-chip{padding:5px 12px;background:var(–bg2);border:1.5px solid var(–brd);
+border-radius:20px;font-size:11px;font-weight:700;color:var(–nv2);
+cursor:pointer;transition:all .2s;white-space:nowrap}
+.kw-chip:hover{background:var(–nv2);color:#fff;border-color:var(–nv2)}
+.kw-chip.hot{border-color:rgba(176,24,24,.4);color:var(–rd)}
+.kw-chip.rise{border-color:rgba(13,122,64,.4);color:var(–gn)}
 /* ── SCROLLBAR ── */
 ::-webkit-scrollbar{width:4px;height:4px}
 ::-webkit-scrollbar-track{background:transparent}
-::-webkit-scrollbar-thumb{background:var(--bg3);border-radius:2px}
+::-webkit-scrollbar-thumb{background:var(–bg3);border-radius:2px}
 </style>
+
 </head>
 <body>
 
 <!-- ローディング -->
+
 <div class="ldov" id="LDO">
   <div class="ld-ring"></div>
   <div class="ld-msg" id="LD_MSG">処理中...</div>
@@ -385,9 +386,11 @@ label.fl .lb em{font-style:normal;font-size:9px;color:var(--mt);font-weight:400}
 </div>
 
 <!-- トースト -->
+
 <div class="toast" id="TOAST"></div>
 
 <!-- API設定シート -->
+
 <div class="overlay" id="API_OL" onclick="if(event.target===this)closeAPI()">
   <div class="sheet">
     <button class="sheet-close" onclick="closeAPI()">✕</button>
@@ -411,12 +414,14 @@ label.fl .lb em{font-style:normal;font-size:9px;color:var(--mt);font-weight:400}
 </div>
 
 <!-- ── HEADER ── -->
+
 <header class="hdr">
   <div class="hlogo">CARENESS STUDIO</div>
   <button class="hapi-btn" id="APIBTN" onclick="openAPI()">⚙️ API設定</button>
 </header>
 
 <!-- ════════ PANE: 投稿文 ════════ -->
+
 <div class="pane on" id="P_cap">
   <div class="phdr">
     <div class="phdr-top">
@@ -451,64 +456,67 @@ label.fl .lb em{font-style:normal;font-size:9px;color:var(--mt);font-weight:400}
   <div class="card">
     <div class="card-hd">STEP 2　内容を入力 <span class="step-n">必須</span></div>
 
-    <div id="CF_know">
-      <label class="fl"><div class="lb">テーマ・キーワード</div>
-        <input class="fi" id="K_theme" placeholder="例：遺伝子と運動効率、姿勢と疲れ、睡眠と代謝"></label>
-      <div class="g2">
-        <label class="fl"><div class="lb">ターゲット</div>
-          <select class="fs" id="K_target">
-            <option>幅広く</option><option>40〜50代女性</option>
-            <option>30〜40代男性</option><option>運動初心者</option>
-            <option>腰痛・肩こりあり</option>
-          </select></label>
-        <label class="fl"><div class="lb">CVRフレーム <em>構成</em></div>
-          <select class="fs" id="K_frame">
-            <option value="PASONA">PASONA（悩み→解決）</option>
-            <option value="BFAB">BFAB（証拠→メリット）</option>
-            <option value="QUIZ">クイズ形式（参加型）</option>
-          </select></label>
-      </div>
-    </div>
+```
+<div id="CF_know">
+  <label class="fl"><div class="lb">テーマ・キーワード</div>
+    <input class="fi" id="K_theme" placeholder="例：遺伝子と運動効率、姿勢と疲れ、睡眠と代謝"></label>
+  <div class="g2">
+    <label class="fl"><div class="lb">ターゲット</div>
+      <select class="fs" id="K_target">
+        <option>幅広く</option><option>40〜50代女性</option>
+        <option>30〜40代男性</option><option>運動初心者</option>
+        <option>腰痛・肩こりあり</option>
+      </select></label>
+    <label class="fl"><div class="lb">CVRフレーム <em>構成</em></div>
+      <select class="fs" id="K_frame">
+        <option value="PASONA">PASONA（悩み→解決）</option>
+        <option value="BFAB">BFAB（証拠→メリット）</option>
+        <option value="QUIZ">クイズ形式（参加型）</option>
+      </select></label>
+  </div>
+</div>
 
-    <div id="CF_voice" style="display:none">
-      <div class="g2">
-        <label class="fl"><div class="lb">年代</div>
-          <select class="fs" id="V_age"><option>40代</option><option>30代</option>
-            <option>50代</option><option>60代</option></select></label>
-        <label class="fl"><div class="lb">入会前の悩み</div>
-          <input class="fi" id="V_prob" placeholder="腰痛・体重増加"></label>
-      </div>
-      <label class="fl"><div class="lb">成果 <em>数字があると効果的</em></div>
-        <input class="fi" id="V_result" placeholder="3ヶ月で-5kg・腰痛がなくなった"></label>
-    </div>
+<div id="CF_voice" style="display:none">
+  <div class="g2">
+    <label class="fl"><div class="lb">年代</div>
+      <select class="fs" id="V_age"><option>40代</option><option>30代</option>
+        <option>50代</option><option>60代</option></select></label>
+    <label class="fl"><div class="lb">入会前の悩み</div>
+      <input class="fi" id="V_prob" placeholder="腰痛・体重増加"></label>
+  </div>
+  <label class="fl"><div class="lb">成果 <em>数字があると効果的</em></div>
+    <input class="fi" id="V_result" placeholder="3ヶ月で-5kg・腰痛がなくなった"></label>
+</div>
 
-    <div id="CF_event" style="display:none">
-      <div class="g2">
-        <label class="fl"><div class="lb">イベント名</div>
-          <input class="fi" id="E_name" placeholder="3月ウォーキング会"></label>
-        <label class="fl"><div class="lb">参加人数</div>
-          <input class="fi" id="E_count" placeholder="12名"></label>
-      </div>
-      <label class="fl"><div class="lb">コメント <em>任意</em></div>
-        <input class="fi" id="E_comment" placeholder="笑顔があふれた時間でした"></label>
-    </div>
+<div id="CF_event" style="display:none">
+  <div class="g2">
+    <label class="fl"><div class="lb">イベント名</div>
+      <input class="fi" id="E_name" placeholder="3月ウォーキング会"></label>
+    <label class="fl"><div class="lb">参加人数</div>
+      <input class="fi" id="E_count" placeholder="12名"></label>
+  </div>
+  <label class="fl"><div class="lb">コメント <em>任意</em></div>
+    <input class="fi" id="E_comment" placeholder="笑顔があふれた時間でした"></label>
+</div>
 
-    <div id="CF_announce" style="display:none">
-      <div class="g2">
-        <label class="fl"><div class="lb">イベント名</div>
-          <input class="fi" id="A_name" placeholder="無料体質チェック体験会"></label>
-        <label class="fl"><div class="lb">日時</div>
-          <input class="fi" id="A_date" placeholder="4月5日（土）14:00〜"></label>
-      </div>
-      <label class="fl"><div class="lb">定員・条件</div>
-        <input class="fi" id="A_cond" placeholder="先着10名・完全無料"></label>
-    </div>
+<div id="CF_announce" style="display:none">
+  <div class="g2">
+    <label class="fl"><div class="lb">イベント名</div>
+      <input class="fi" id="A_name" placeholder="無料体質チェック体験会"></label>
+    <label class="fl"><div class="lb">日時</div>
+      <input class="fi" id="A_date" placeholder="4月5日（土）14:00〜"></label>
+  </div>
+  <label class="fl"><div class="lb">定員・条件</div>
+    <input class="fi" id="A_cond" placeholder="先着10名・完全無料"></label>
+</div>
 
-    <button class="gbtn" id="CAP_BTN" onclick="genCaption()">
-      <div class="ld-spin"></div>
-      <span class="btxt">✦ AIで投稿文を生成する</span>
-    </button>
-    <div class="err" id="CAP_ERR"></div>
+<button class="gbtn" id="CAP_BTN" onclick="genCaption()">
+  <div class="ld-spin"></div>
+  <span class="btxt">✦ AIで投稿文を生成する</span>
+</button>
+<div class="err" id="CAP_ERR"></div>
+```
+
   </div>
 
   <div class="res" id="RES_cap">
@@ -534,6 +542,7 @@ label.fl .lb em{font-style:normal;font-size:9px;color:var(--mt);font-weight:400}
 </div>
 
 <!-- ════════ PANE: 画像＋サムネ ════════ -->
+
 <div class="pane" id="P_img">
   <div class="phdr">
     <div class="phdr-badge">IMAGE + THUMBNAIL</div>
@@ -626,27 +635,31 @@ label.fl .lb em{font-style:normal;font-size:9px;color:var(--mt);font-weight:400}
       </div>
     </div>
 
-    <div class="card">
-      <div class="card-hd">サムネイル（自動生成）</div>
-      <div class="thumb-pair">
-        <div class="thumb-wrap-169">
-          <canvas id="TH1"></canvas>
-          <div class="thumb-lbl">横型 16:9</div>
-        </div>
-        <div class="thumb-wrap-916">
-          <canvas id="TH2"></canvas>
-          <div class="thumb-lbl">縦型 9:16</div>
-        </div>
-      </div>
-      <div style="display:flex;gap:8px">
-        <button class="sbtn" style="flex:1" onclick="dlThumb(1)">横型DL</button>
-        <button class="sbtn" style="flex:1" onclick="dlThumb(2)">縦型DL</button>
-      </div>
+```
+<div class="card">
+  <div class="card-hd">サムネイル（自動生成）</div>
+  <div class="thumb-pair">
+    <div class="thumb-wrap-169">
+      <canvas id="TH1"></canvas>
+      <div class="thumb-lbl">横型 16:9</div>
     </div>
+    <div class="thumb-wrap-916">
+      <canvas id="TH2"></canvas>
+      <div class="thumb-lbl">縦型 9:16</div>
+    </div>
+  </div>
+  <div style="display:flex;gap:8px">
+    <button class="sbtn" style="flex:1" onclick="dlThumb(1)">横型DL</button>
+    <button class="sbtn" style="flex:1" onclick="dlThumb(2)">縦型DL</button>
+  </div>
+</div>
+```
+
   </div>
 </div>
 
 <!-- ════════ PANE: 動画編集 ════════ -->
+
 <div class="pane" id="P_vid">
   <div class="phdr">
     <div class="phdr-badge">VIDEO EDITOR</div>
@@ -655,6 +668,7 @@ label.fl .lb em{font-style:normal;font-size:9px;color:var(--mt);font-weight:400}
   </div>
 
   <!-- クリップ管理 -->
+
   <div class="card">
     <div class="card-hd">STEP 1　動画クリップをアップロード</div>
     <div class="note nb">複数の動画を追加して繋げることができます（クリップ結合機能）</div>
@@ -676,107 +690,111 @@ label.fl .lb em{font-style:normal;font-size:9px;color:var(--mt);font-weight:400}
       </div>
     </div>
 
-    <!-- カット -->
-    <div class="card">
-      <div class="card-hd">STEP 2　カット（トリミング）</div>
-      <div style="display:flex;justify-content:space-between;
-        font-size:11px;font-weight:700;color:var(--nv);margin-bottom:4px">
-        <span>開始: <code id="TL_IN_T">0:00</code></span>
-        <span>長さ: <code id="TL_DUR_T">0:00</code></span>
-        <span>終了: <code id="TL_OUT_T">0:00</code></span>
-      </div>
-      <div class="timeline" id="TL">
-        <div class="tl-waves" id="TL_WAVES"></div>
-        <div class="tl-range" id="TL_RANGE"></div>
-        <div class="tl-handle" id="TL_IN" style="left:0%;margin-left:-3px"></div>
-        <div class="tl-handle" id="TL_OUT" style="right:0%;margin-right:-3px"></div>
-        <div class="tl-playhead" id="TL_HEAD" style="left:0%"></div>
-      </div>
-      <div style="display:flex;gap:8px;margin-top:4px;flex-wrap:wrap">
-        <button class="sbtn" onclick="previewTrim()">▶ カット箇所を確認</button>
-        <div style="flex:1"></div>
-        <label style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--mt)">
-          出力形式
-          <select class="fs" id="VID_FMT" style="padding:6px 10px;font-size:12px;width:auto">
-            <option value="reel">リール 9:16</option>
-            <option value="feed">フィード 1:1</option>
-            <option value="story">ストーリーズ 9:16</option>
-          </select>
-        </label>
-      </div>
-    </div>
+```
+<!-- カット -->
+<div class="card">
+  <div class="card-hd">STEP 2　カット（トリミング）</div>
+  <div style="display:flex;justify-content:space-between;
+    font-size:11px;font-weight:700;color:var(--nv);margin-bottom:4px">
+    <span>開始: <code id="TL_IN_T">0:00</code></span>
+    <span>長さ: <code id="TL_DUR_T">0:00</code></span>
+    <span>終了: <code id="TL_OUT_T">0:00</code></span>
+  </div>
+  <div class="timeline" id="TL">
+    <div class="tl-waves" id="TL_WAVES"></div>
+    <div class="tl-range" id="TL_RANGE"></div>
+    <div class="tl-handle" id="TL_IN" style="left:0%;margin-left:-3px"></div>
+    <div class="tl-handle" id="TL_OUT" style="right:0%;margin-right:-3px"></div>
+    <div class="tl-playhead" id="TL_HEAD" style="left:0%"></div>
+  </div>
+  <div style="display:flex;gap:8px;margin-top:4px;flex-wrap:wrap">
+    <button class="sbtn" onclick="previewTrim()">▶ カット箇所を確認</button>
+    <div style="flex:1"></div>
+    <label style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--mt)">
+      出力形式
+      <select class="fs" id="VID_FMT" style="padding:6px 10px;font-size:12px;width:auto">
+        <option value="reel">リール 9:16</option>
+        <option value="feed">フィード 1:1</option>
+        <option value="story">ストーリーズ 9:16</option>
+      </select>
+    </label>
+  </div>
+</div>
 
-    <!-- 字幕 -->
-    <div class="card">
-      <div class="card-hd">STEP 3　字幕を追加</div>
-      <div class="note ny"><strong>Instagram視聴の85%は無音。</strong>字幕は必ず入れてください。</div>
-      <div class="sub-list" id="SUB_LIST"></div>
-      <div style="display:grid;grid-template-columns:72px 1fr auto;gap:7px;align-items:end;margin-bottom:8px">
-        <label class="fl" style="margin:0">
-          <div class="lb">時間</div>
-          <input class="fi" id="SUB_T" placeholder="0:05" style="padding:8px 9px">
-        </label>
-        <label class="fl" style="margin:0">
-          <div class="lb">字幕テキスト</div>
-          <input class="fi" id="SUB_TXT" placeholder="例：遺伝子でわかる最適な運動法"
-            onkeydown="if(event.key==='Enter')addSub()">
-        </label>
-        <button class="sbtn" style="margin-top:auto" onclick="addSub()">追加</button>
-      </div>
-      <div style="display:flex;align-items:center;gap:8px">
-        <span style="font-size:11px;color:var(--mt)">スタイル：</span>
-        <select class="fs" id="SUB_STYLE" style="width:auto;padding:6px 10px;font-size:12px">
-          <option value="bottom">下部 白テキスト</option>
-          <option value="insta">Instagram風 背景あり</option>
-          <option value="center">中央 大文字</option>
-        </select>
-      </div>
-    </div>
+<!-- 字幕 -->
+<div class="card">
+  <div class="card-hd">STEP 3　字幕を追加</div>
+  <div class="note ny"><strong>Instagram視聴の85%は無音。</strong>字幕は必ず入れてください。</div>
+  <div class="sub-list" id="SUB_LIST"></div>
+  <div style="display:grid;grid-template-columns:72px 1fr auto;gap:7px;align-items:end;margin-bottom:8px">
+    <label class="fl" style="margin:0">
+      <div class="lb">時間</div>
+      <input class="fi" id="SUB_T" placeholder="0:05" style="padding:8px 9px">
+    </label>
+    <label class="fl" style="margin:0">
+      <div class="lb">字幕テキスト</div>
+      <input class="fi" id="SUB_TXT" placeholder="例：遺伝子でわかる最適な運動法"
+        onkeydown="if(event.key==='Enter')addSub()">
+    </label>
+    <button class="sbtn" style="margin-top:auto" onclick="addSub()">追加</button>
+  </div>
+  <div style="display:flex;align-items:center;gap:8px">
+    <span style="font-size:11px;color:var(--mt)">スタイル：</span>
+    <select class="fs" id="SUB_STYLE" style="width:auto;padding:6px 10px;font-size:12px">
+      <option value="bottom">下部 白テキスト</option>
+      <option value="insta">Instagram風 背景あり</option>
+      <option value="center">中央 大文字</option>
+    </select>
+  </div>
+</div>
 
-    <!-- サムネイルキャプチャ -->
-    <div class="card">
-      <div class="card-hd">STEP 4　サムネイルを取得</div>
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
-        <input type="range" id="THUMB_SEEK" min="0" max="100" value="10" step="0.5"
-          oninput="seekThumb(this.value)"
-          style="flex:1;accent-color:var(--nv2)">
-        <code style="font-size:10px;color:var(--mt);min-width:36px" id="THUMB_TIME">0:00</code>
-      </div>
-      <canvas id="VID_THUMB" style="width:100%;border-radius:8px;display:block;background:var(--bg2)"></canvas>
-      <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap">
-        <button class="sbtn" onclick="captureVidThumb()">このフレームをサムネに</button>
-        <button class="sbtn" onclick="genThumbFromVid()">✦ AIサムネを自動生成</button>
-      </div>
-      <div class="thumb-pair" id="VID_THUMB_PAIR" style="display:none;margin-top:10px">
-        <div class="thumb-wrap">
-          <canvas id="VTH1"></canvas>
-          <div class="thumb-lbl">横型 16:9</div>
-        </div>
-        <div class="thumb-wrap">
-          <canvas id="VTH2"></canvas>
-          <div class="thumb-lbl">縦型 9:16</div>
-        </div>
-      </div>
-      <div id="VID_THUMB_DL" style="display:none;margin-top:8px">
-        <div style="display:flex;gap:8px">
-          <button class="sbtn" style="flex:1" onclick="dlVidThumb(1)">横型DL</button>
-          <button class="sbtn" style="flex:1" onclick="dlVidThumb(2)">縦型DL</button>
-        </div>
-      </div>
+<!-- サムネイルキャプチャ -->
+<div class="card">
+  <div class="card-hd">STEP 4　サムネイルを取得</div>
+  <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+    <input type="range" id="THUMB_SEEK" min="0" max="100" value="10" step="0.5"
+      oninput="seekThumb(this.value)"
+      style="flex:1;accent-color:var(--nv2)">
+    <code style="font-size:10px;color:var(--mt);min-width:36px" id="THUMB_TIME">0:00</code>
+  </div>
+  <canvas id="VID_THUMB" style="width:100%;border-radius:8px;display:block;background:var(--bg2)"></canvas>
+  <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap">
+    <button class="sbtn" onclick="captureVidThumb()">このフレームをサムネに</button>
+    <button class="sbtn" onclick="genThumbFromVid()">✦ AIサムネを自動生成</button>
+  </div>
+  <div class="thumb-pair" id="VID_THUMB_PAIR" style="display:none;margin-top:10px">
+    <div class="thumb-wrap">
+      <canvas id="VTH1"></canvas>
+      <div class="thumb-lbl">横型 16:9</div>
     </div>
+    <div class="thumb-wrap">
+      <canvas id="VTH2"></canvas>
+      <div class="thumb-lbl">縦型 9:16</div>
+    </div>
+  </div>
+  <div id="VID_THUMB_DL" style="display:none;margin-top:8px">
+    <div style="display:flex;gap:8px">
+      <button class="sbtn" style="flex:1" onclick="dlVidThumb(1)">横型DL</button>
+      <button class="sbtn" style="flex:1" onclick="dlVidThumb(2)">縦型DL</button>
+    </div>
+  </div>
+</div>
 
-    <button class="gbtn" id="VID_EXP_BTN" onclick="exportVid()">
-      <div class="ld-spin"></div>
-      <span class="btxt">✦ 動画を書き出す（字幕合成）</span>
-    </button>
-    <div class="note nb" style="margin-top:8px;font-size:10px">
-      WebM形式で書き出し。Instagramへのアップロードに対応しています。
-    </div>
-    <div class="err" id="VID_ERR"></div>
+<button class="gbtn" id="VID_EXP_BTN" onclick="exportVid()">
+  <div class="ld-spin"></div>
+  <span class="btxt">✦ 動画を書き出す（字幕合成）</span>
+</button>
+<div class="note nb" style="margin-top:8px;font-size:10px">
+  WebM形式で書き出し。Instagramへのアップロードに対応しています。
+</div>
+<div class="err" id="VID_ERR"></div>
+```
+
   </div>
 </div>
 
 <!-- ════════ PANE: TPPO ════════ -->
+
 <div class="pane" id="P_tppo">
   <div class="phdr">
     <div class="phdr-badge">TPPO RESEARCH</div>
@@ -785,6 +803,7 @@ label.fl .lb em{font-style:normal;font-size:9px;color:var(--mt);font-weight:400}
   </div>
 
   <!-- モード切替 -->
+
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px">
     <button class="tppo-mode on" id="TM_PURPOSE" onclick="switchTPPOMode('purpose')">
       <div style="font-size:16px">🎯</div>
@@ -799,6 +818,7 @@ label.fl .lb em{font-style:normal;font-size:9px;color:var(--mt);font-weight:400}
   </div>
 
   <!-- 目的別TPPO -->
+
   <div id="TPPO_PURPOSE">
     <div class="card">
       <div class="card-hd">STEP 1　投稿タイプを選ぶ</div>
@@ -830,69 +850,73 @@ label.fl .lb em{font-style:normal;font-size:9px;color:var(--mt);font-weight:400}
       </div>
     </div>
 
-    <div class="card">
-      <div class="card-hd">STEP 2　調査条件を設定</div>
-      <div class="g2">
-        <label class="fl"><div class="lb">ジャンル</div>
-          <select class="fs" id="TP_GENRE">
-            <option>フィットネス・筋トレ</option>
-            <option>ダイエット・体重管理</option>
-            <option>遺伝子・体質改善</option>
-            <option>40〜50代の健康</option>
-            <option>姿勢改善・腰痛</option>
-            <option>食事・栄養管理</option>
-            <option>メンタル・ストレス管理</option>
-          </select></label>
-        <label class="fl"><div class="lb">ターゲット <em>任意</em></div>
-          <select class="fs" id="TP_TARGET">
-            <option value="">指定なし</option>
-            <option>40〜50代女性</option>
-            <option>30〜40代男性</option>
-            <option>運動初心者</option>
-            <option>ダイエット希望</option>
-            <option>腰痛・肩こりあり</option>
-          </select></label>
-      </div>
-      <label class="fl"><div class="lb">追加リクエスト <em>任意</em></div>
-        <input class="fi" id="TP_REQ" placeholder="例：保存率が高い構成、小規模ジムの成功事例"></label>
-      <button class="gbtn" id="TP_BTN" onclick="runTPPO()">
-        <div class="ld-spin"></div>
-        <span class="btxt">✦ このタイプのバズパターンを調査する</span>
-      </button>
-      <div class="err" id="TP_ERR"></div>
-    </div>
+```
+<div class="card">
+  <div class="card-hd">STEP 2　調査条件を設定</div>
+  <div class="g2">
+    <label class="fl"><div class="lb">ジャンル</div>
+      <select class="fs" id="TP_GENRE">
+        <option>フィットネス・筋トレ</option>
+        <option>ダイエット・体重管理</option>
+        <option>遺伝子・体質改善</option>
+        <option>40〜50代の健康</option>
+        <option>姿勢改善・腰痛</option>
+        <option>食事・栄養管理</option>
+        <option>メンタル・ストレス管理</option>
+      </select></label>
+    <label class="fl"><div class="lb">ターゲット <em>任意</em></div>
+      <select class="fs" id="TP_TARGET">
+        <option value="">指定なし</option>
+        <option>40〜50代女性</option>
+        <option>30〜40代男性</option>
+        <option>運動初心者</option>
+        <option>ダイエット希望</option>
+        <option>腰痛・肩こりあり</option>
+      </select></label>
+  </div>
+  <label class="fl"><div class="lb">追加リクエスト <em>任意</em></div>
+    <input class="fi" id="TP_REQ" placeholder="例：保存率が高い構成、小規模ジムの成功事例"></label>
+  <button class="gbtn" id="TP_BTN" onclick="runTPPO()">
+    <div class="ld-spin"></div>
+    <span class="btxt">✦ このタイプのバズパターンを調査する</span>
+  </button>
+  <div class="err" id="TP_ERR"></div>
+</div>
 
-    <div class="res" id="RES_tppo">
-      <div id="TP_TYPE_BANNER" style="background:var(--nv);color:#fff;border-radius:var(--r2);
-        padding:10px 14px;margin-bottom:10px;display:none;align-items:center;gap:10px">
-        <span id="TP_TYPE_ICO" style="font-size:20px"></span>
-        <div style="flex:1">
-          <div style="font-size:10px;opacity:.65">調査タイプ</div>
-          <div style="font-size:13px;font-weight:700" id="TP_TYPE_LBL"></div>
-        </div>
-        <div style="font-size:10px;opacity:.55" id="TP_UPDATED"></div>
-      </div>
-      <div class="note nb" id="TP_SUMMARY" style="font-size:12px;line-height:1.8;display:none"></div>
-      <div id="TP_CARDS"></div>
-      <div class="card" id="TP_ORIG" style="display:none">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
-          <div class="card-hd" style="margin:0">TPPO化：ケアネス北島バージョン</div>
-          <div style="display:flex;gap:6px">
-            <button class="ibtn" id="TP_REGEN_BTN" style="font-size:10px;padding:5px 10px">再生成</button>
-            <button class="sbtn" style="font-size:10px;padding:5px 10px" onclick="doCopy('TP_ORIG_TXT',this)">コピー</button>
-          </div>
-        </div>
-        <div id="TP_ORIG_META" style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:8px"></div>
-        <div class="rtxt" id="TP_ORIG_TXT" style="font-size:12px;line-height:1.95;white-space:pre-wrap"></div>
-        <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
-          <button class="sbtn" onclick="sendTPPOtoCap()">→ 投稿文タブに送る</button>
-          <button class="sbtn" onclick="sendTPPOtoImg()">→ 画像タブに送る</button>
-        </div>
+<div class="res" id="RES_tppo">
+  <div id="TP_TYPE_BANNER" style="background:var(--nv);color:#fff;border-radius:var(--r2);
+    padding:10px 14px;margin-bottom:10px;display:none;align-items:center;gap:10px">
+    <span id="TP_TYPE_ICO" style="font-size:20px"></span>
+    <div style="flex:1">
+      <div style="font-size:10px;opacity:.65">調査タイプ</div>
+      <div style="font-size:13px;font-weight:700" id="TP_TYPE_LBL"></div>
+    </div>
+    <div style="font-size:10px;opacity:.55" id="TP_UPDATED"></div>
+  </div>
+  <div class="note nb" id="TP_SUMMARY" style="font-size:12px;line-height:1.8;display:none"></div>
+  <div id="TP_CARDS"></div>
+  <div class="card" id="TP_ORIG" style="display:none">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+      <div class="card-hd" style="margin:0">TPPO化：ケアネス北島バージョン</div>
+      <div style="display:flex;gap:6px">
+        <button class="ibtn" id="TP_REGEN_BTN" style="font-size:10px;padding:5px 10px">再生成</button>
+        <button class="sbtn" style="font-size:10px;padding:5px 10px" onclick="doCopy('TP_ORIG_TXT',this)">コピー</button>
       </div>
     </div>
+    <div id="TP_ORIG_META" style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:8px"></div>
+    <div class="rtxt" id="TP_ORIG_TXT" style="font-size:12px;line-height:1.95;white-space:pre-wrap"></div>
+    <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
+      <button class="sbtn" onclick="sendTPPOtoCap()">→ 投稿文タブに送る</button>
+      <button class="sbtn" onclick="sendTPPOtoImg()">→ 画像タブに送る</button>
+    </div>
+  </div>
+</div>
+```
+
   </div>
 
   <!-- トレンドモニター -->
+
   <div id="TPPO_MONITOR" style="display:none">
     <div class="card">
       <div class="card-hd">今週のInstagramトレンドを一括調査</div>
@@ -918,23 +942,27 @@ label.fl .lb em{font-style:normal;font-size:9px;color:var(--mt);font-weight:400}
       <div class="err" id="MON_ERR"></div>
     </div>
 
-    <div class="res" id="RES_monitor">
-      <div class="card" id="MON_SCOREBOARD" style="display:none">
-        <div class="card-hd">投稿タイプ別 トレンドスコア</div>
-        <div id="MON_SCORES" style="display:flex;flex-direction:column;gap:8px;margin-bottom:8px"></div>
-        <div style="font-size:10px;color:var(--mt);text-align:right" id="MON_DATE"></div>
-      </div>
-      <div id="MON_CARDS"></div>
-      <div class="card" id="MON_KEYWORDS" style="display:none">
-        <div class="card-hd">📈 急上昇キーワード TOP10</div>
-        <div id="MON_KW_LIST" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px"></div>
-        <div style="font-size:10px;color:var(--mt)">タップすると目的別TPPOで調査できます</div>
-      </div>
-    </div>
+```
+<div class="res" id="RES_monitor">
+  <div class="card" id="MON_SCOREBOARD" style="display:none">
+    <div class="card-hd">投稿タイプ別 トレンドスコア</div>
+    <div id="MON_SCORES" style="display:flex;flex-direction:column;gap:8px;margin-bottom:8px"></div>
+    <div style="font-size:10px;color:var(--mt);text-align:right" id="MON_DATE"></div>
+  </div>
+  <div id="MON_CARDS"></div>
+  <div class="card" id="MON_KEYWORDS" style="display:none">
+    <div class="card-hd">📈 急上昇キーワード TOP10</div>
+    <div id="MON_KW_LIST" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px"></div>
+    <div style="font-size:10px;color:var(--mt)">タップすると目的別TPPOで調査できます</div>
+  </div>
+</div>
+```
+
   </div>
 </div>
 
 <!-- ════════ PANE: 使い方 ════════ -->
+
 <div class="pane" id="P_guide">
   <div class="phdr">
     <div class="phdr-badge">HOW TO USE</div>
@@ -952,6 +980,7 @@ label.fl .lb em{font-style:normal;font-size:9px;color:var(--mt);font-weight:400}
   </div>
 
   <!-- CVR理論 -->
+
   <div class="gsec on" id="G_cvr">
     <div class="theory">
       <h3>📌 なぜCVR重視なのか？</h3>
@@ -1004,6 +1033,7 @@ label.fl .lb em{font-style:normal;font-size:9px;color:var(--mt);font-weight:400}
   </div>
 
   <!-- 投稿文 -->
+
   <div class="gsec" id="G_cap">
     <div class="card">
       <div class="card-hd">投稿文タブの使い方</div>
@@ -1047,6 +1077,7 @@ label.fl .lb em{font-style:normal;font-size:9px;color:var(--mt);font-weight:400}
   </div>
 
   <!-- 画像生成 -->
+
   <div class="gsec" id="G_img">
     <div class="card">
       <div class="card-hd">画像生成タブの使い方</div>
@@ -1084,6 +1115,7 @@ label.fl .lb em{font-style:normal;font-size:9px;color:var(--mt);font-weight:400}
   </div>
 
   <!-- 動画編集 -->
+
   <div class="gsec" id="G_vid">
     <div class="card">
       <div class="card-hd">動画編集タブの使い方</div>
@@ -1126,6 +1158,7 @@ label.fl .lb em{font-style:normal;font-size:9px;color:var(--mt);font-weight:400}
   </div>
 
   <!-- TPPO -->
+
   <div class="gsec" id="G_tppo">
     <div class="card">
       <div class="card-hd">TPPOとは？</div>
@@ -1166,6 +1199,7 @@ label.fl .lb em{font-style:normal;font-size:9px;color:var(--mt);font-weight:400}
   </div>
 
   <!-- 初期設定 -->
+
   <div class="gsec" id="G_setup">
     <div class="note ny" style="margin-bottom:12px">
       <strong>投稿文生成・TPPO調査のみ必要です。</strong><br>
@@ -1256,6 +1290,7 @@ label.fl .lb em{font-style:normal;font-size:9px;color:var(--mt);font-weight:400}
 </div>
 
 <!-- ── TABBAR ── -->
+
 <nav class="tabbar">
   <button class="tab on" id="TB_cap" onclick="showTab('cap')">
     <span class="ticon">✍️</span>投稿文
@@ -2984,5 +3019,6 @@ window.copyWorkerCode = copyWorkerCode;
 window.doCopy = doCopy;
 
 </script>
+
 </body>
 </html>
